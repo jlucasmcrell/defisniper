@@ -8,7 +8,8 @@
  */
 
 const readline = require('readline');
-const { SecurityManager } = require('../security/securityManager');
+const path = require('path');
+const SecurityManager = require('../security/securityManager');
 const ConfigManager = require('../config/configManager');
 const { Logger } = require('../utils/logger');
 

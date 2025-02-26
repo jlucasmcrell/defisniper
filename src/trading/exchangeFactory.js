@@ -1,71 +1,148 @@
 /**
  * Exchange Factory for CryptoSniperBot
- * Creates and configures exchange connectors
+ * Creates and manages exchange instances
  */
-const logger = require('../utils/logger');
+const { Logger } = require('../utils/logger');
 
 class ExchangeFactory {
-  /**
-   * Create an exchange connector based on name and configuration
-   * @param {string} exchangeName - Name of the exchange (e.g., 'binance')
-   * @param {object} config - Exchange configuration
-   * @returns {object} Exchange connector
-   */
-  static createExchange(exchangeName, config) {
-    logger.info(`[ExchangeFactory] Creating exchange connector for ${exchangeName}`);
-    
-    try {
-      // Normalize exchange name to lowercase for consistency
-      exchangeName = exchangeName.toLowerCase();
-      
-      switch (exchangeName) {
-        case 'binance':
-          return this.createBinanceConnector(config);
-        case 'kucoin':
-          return this.createKucoinConnector(config);
-        case 'coinbase':
-          return this.createCoinbaseConnector(config);
-        default:
-          throw new Error(`Unsupported exchange: ${exchangeName}`);
-      }
-    } catch (error) {
-      logger.error(`[ExchangeFactory] Failed to create exchange: ${error.message}`);
-      throw error;
+    static createExchange(type, config) {
+        const logger = new Logger('ExchangeFactory');
+        
+        try {
+            switch (type.toLowerCase()) {
+                case 'binanceus':
+                    return new BinanceUSExchange(config);
+                case 'cryptocom':
+                    return new CryptoComExchange(config);
+                default:
+                    throw new Error(`Unknown exchange type: ${type}`);
+            }
+        } catch (error) {
+            logger.error(`Failed to create exchange of type ${type}`, error);
+            throw error;
+        }
     }
-  }
-  
-  /**
-   * Create Binance exchange connector
-   * @param {object} config - Exchange configuration
-   * @returns {object} Binance connector
-   */
-  static createBinanceConnector(config) {
-    // This would typically use the ccxt library or a custom binance connector
-    const BinanceConnector = require('./exchanges/binanceConnector');
-    return new BinanceConnector(config);
-  }
-  
-  /**
-   * Create KuCoin exchange connector
-   * @param {object} config - Exchange configuration
-   * @returns {object} KuCoin connector
-   */
-  static createKucoinConnector(config) {
-    // This would typically use the ccxt library or a custom kucoin connector
-    const KucoinConnector = require('./exchanges/kucoinConnector');
-    return new KucoinConnector(config);
-  }
-  
-  /**
-   * Create Coinbase exchange connector
-   * @param {object} config - Exchange configuration
-   * @returns {object} Coinbase connector
-   */
-  static createCoinbaseConnector(config) {
-    // This would typically use the ccxt library or a custom coinbase connector
-    const CoinbaseConnector = require('./exchanges/coinbaseConnector');
-    return new CoinbaseConnector(config);
-  }
+}
+
+class BaseExchange {
+    constructor(config) {
+        this.logger = new Logger(this.constructor.name);
+        this.config = config;
+        this.initialized = false;
+        this.markets = new Map();
+    }
+
+    async initialize() {
+        throw new Error('Method not implemented');
+    }
+
+    async updateMarketData() {
+        throw new Error('Method not implemented');
+    }
+
+    async getCurrentPrice(symbol) {
+        throw new Error('Method not implemented');
+    }
+
+    async createOrder(order) {
+        throw new Error('Method not implemented');
+    }
+
+    async cancelOrder(orderId) {
+        throw new Error('Method not implemented');
+    }
+
+    async closeTrade(trade) {
+        throw new Error('Method not implemented');
+    }
+}
+
+class BinanceUSExchange extends BaseExchange {
+    constructor(config) {
+        super(config);
+        this.name = 'BinanceUS';
+    }
+
+    async initialize() {
+        try {
+            // Initialize Binance.US API connection
+            this.initialized = true;
+            this.logger.info('Initialized Binance.US exchange');
+        } catch (error) {
+            this.logger.error('Failed to initialize Binance.US exchange', error);
+            throw error;
+        }
+    }
+
+    async updateMarketData() {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement market data update logic
+    }
+
+    async getCurrentPrice(symbol) {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement price fetching logic
+        return 0;
+    }
+
+    async createOrder(order) {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement order creation logic
+    }
+
+    async cancelOrder(orderId) {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement order cancellation logic
+    }
+
+    async closeTrade(trade) {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement trade closing logic
+    }
+}
+
+class CryptoComExchange extends BaseExchange {
+    constructor(config) {
+        super(config);
+        this.name = 'CryptoCom';
+    }
+
+    async initialize() {
+        try {
+            // Initialize Crypto.com API connection
+            this.initialized = true;
+            this.logger.info('Initialized Crypto.com exchange');
+        } catch (error) {
+            this.logger.error('Failed to initialize Crypto.com exchange', error);
+            throw error;
+        }
+    }
+
+    async updateMarketData() {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement market data update logic
+    }
+
+    async getCurrentPrice(symbol) {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement price fetching logic
+        return 0;
+    }
+
+    async createOrder(order) {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement order creation logic
+    }
+
+    async cancelOrder(orderId) {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement order cancellation logic
+    }
+
+    async closeTrade(trade) {
+        if (!this.initialized) throw new Error('Exchange not initialized');
+        // Implement trade closing logic
+    }
 }
 
 module.exports = ExchangeFactory;
