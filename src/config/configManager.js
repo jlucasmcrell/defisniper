@@ -1,228 +1,126 @@
 /**
- * Configuration Manager
- * 
- * Handles loading, saving, and managing bot configuration.
+ * Configuration Manager for CryptoSniperBot
+ * Responsible for loading, validating and providing access to configuration
  */
-
 const fs = require('fs');
 const path = require('path');
-const { Logger } = require('../utils/logger');
+const logger = require('../utils/logger');
 
 class ConfigManager {
   constructor() {
-    this.logger = new Logger('ConfigManager');
-    this.config = this.loadConfig();
+    this.config = {};
+    this.configPath = path.join(process.cwd(), 'config.json');
+    this.loadConfig();
   }
-  
+
   /**
    * Load configuration from file
    */
   loadConfig() {
     try {
-      const configPath = path.join(process.cwd(), 'secure-config', 'config.json');
-      
-      if (fs.existsSync(configPath)) {
-        const configData = fs.readFileSync(configPath, 'utf8');
-        return JSON.parse(configData);
+      if (fs.existsSync(this.configPath)) {
+        const configData = fs.readFileSync(this.configPath, 'utf8');
+        this.config = JSON.parse(configData);
+        logger.info('[ConfigManager] Configuration loaded successfully');
+      } else {
+        logger.warn('[ConfigManager] Config file not found, using default settings');
+        this.config = this.getDefaultConfig();
+        this.saveConfig();
       }
     } catch (error) {
-      this.logger.error('Error loading config', error);
+      logger.error(`[ConfigManager] Failed to load config: ${error.message}`);
+      this.config = this.getDefaultConfig();
     }
-    
-    // Return default config if not found or error
-    return {
-      version: '1.0.0',
-      configured: false,
-      ethereum: {
-        enabled: false,
-        network: 'mainnet'
-      },
-      bnbChain: {
-        enabled: false
-      },
-      exchanges: {
-        binanceUS: {
-          enabled: false
-        },
-        cryptoCom: {
-          enabled: false
-        }
-      },
-      strategies: {
-        tokenSniper: {
-          enabled: false,
-          minLiquidity: 10000,
-          maxBuyTax: 10,
-          maxSellTax: 10,
-          requireAudit: false
-        },
-        scalping: {
-          enabled: false,
-          minPriceChange: 0.5,
-          maxTradeTime: 300
-        },
-        trendTrading: {
-          enabled: false,
-          rsiLow: 30,
-          rsiHigh: 70,
-          macdFast: 12,
-          macdSlow: 26,
-          macdSignal: 9
-        }
-      },
-      trading: {
-        walletBuyPercentage: 5,
-        stopLoss: 2.5,
-        takeProfit: 5,
-        maxConcurrentTrades: 5,
-        maxTradesPerHour: 10,
-        closeTradesOnStop: true,
-        autoStart: false
-      },
-      riskManagement: {
-        maxTradeSize: 0,
-        dailyLossLimit: 0
-      }
-    };
   }
-  
+
   /**
-   * Save configuration to file
+   * Save current configuration to file
    */
   saveConfig() {
     try {
-      const configDir = path.join(process.cwd(), 'secure-config');
-      
-      if (!fs.existsSync(configDir)) {
-        fs.mkdirSync(configDir, { recursive: true });
-      }
-      
-      const configPath = path.join(configDir, 'config.json');
-      
-      // Mark as configured
-      this.config.configured = true;
-      
-      fs.writeFileSync(
-        configPath,
-        JSON.stringify(this.config, null, 2)
-      );
-      
-      return true;
+      fs.writeFileSync(this.configPath, JSON.stringify(this.config, null, 2));
+      logger.info('[ConfigManager] Configuration saved successfully');
     } catch (error) {
-      this.logger.error('Error saving config', error);
-      return false;
+      logger.error(`[ConfigManager] Failed to save config: ${error.message}`);
     }
   }
-  
+
   /**
-   * Get the current configuration
+   * Get the entire configuration object
+   * @returns {Object} The configuration object
    */
   getConfig() {
     return this.config;
   }
-  
-  /**
-   * Update configuration with new values
-   */
-  updateConfig(newConfig) {
-    try {
-      // Deep merge the new config with the existing one
-      this.config = this.deepMerge(this.config, newConfig);
-      
-      // Save the updated config
-      return this.saveConfig();
-    } catch (error) {
-      this.logger.error('Error updating config', error);
-      return false;
-    }
-  }
-  
-  /**
-   * Deep merge two objects
-   */
-  deepMerge(target, source) {
-    // Create a copy of the target
-    const output = { ...target };
-    
-    // If source is not an object, return target
-    if (!source || typeof source !== 'object') {
-      return output;
-    }
-    
-    // Go through each key in source
-    Object.keys(source).forEach(key => {
-      if (source[key] instanceof Object && key in target && target[key] instanceof Object) {
-        // If the key is an object in both source and target, merge them
-        output[key] = this.deepMerge(target[key], source[key]);
-      } else {
-        // Otherwise just copy from source to output
-        output[key] = source[key];
-      }
-    });
-    
-    return output;
-  }
-  
-  /**
-   * Check if the bot is configured
-   */
-  isConfigured() {
-    return this.config && this.config.configured === true;
-  }
-  
+
   /**
    * Get a specific configuration value
+   * @param {string} key - The configuration key
+   * @param {any} defaultValue - Default value if key doesn't exist
+   * @returns {any} The configuration value
    */
-  getValue(key, defaultValue = null) {
-    try {
-      // Split the key by dots
-      const keys = key.split('.');
-      let value = this.config;
-      
-      // Traverse the object using the keys
-      for (const k of keys) {
-        if (value[k] === undefined) {
-          return defaultValue;
-        }
-        value = value[k];
+  get(key, defaultValue = null) {
+    const keys = key.split('.');
+    let value = this.config;
+    
+    for (const k of keys) {
+      if (value === undefined || value === null || !Object.prototype.hasOwnProperty.call(value, k)) {
+        return defaultValue;
       }
-      
-      return value;
-    } catch (error) {
-      this.logger.error(`Error getting value for ${key}`, error);
-      return defaultValue;
+      value = value[k];
     }
+    
+    return value;
   }
-  
+
   /**
-   * Set a specific configuration value
+   * Update a specific configuration value
+   * @param {string} key - The configuration key
+   * @param {any} value - The new value
    */
-  setValue(key, value) {
-    try {
-      // Split the key by dots
-      const keys = key.split('.');
-      let target = this.config;
-      
-      // Traverse the object using the keys
-      for (let i = 0; i < keys.length - 1; i++) {
-        const k = keys[i];
-        if (target[k] === undefined) {
-          target[k] = {};
-        }
-        target = target[k];
+  set(key, value) {
+    const keys = key.split('.');
+    let current = this.config;
+    
+    for (let i = 0; i < keys.length - 1; i++) {
+      const k = keys[i];
+      if (!Object.prototype.hasOwnProperty.call(current, k)) {
+        current[k] = {};
       }
-      
-      // Set the value
-      target[keys[keys.length - 1]] = value;
-      
-      // Save the updated config
-      return this.saveConfig();
-    } catch (error) {
-      this.logger.error(`Error setting value for ${key}`, error);
-      return false;
+      current = current[k];
     }
+    
+    current[keys[keys.length - 1]] = value;
+    this.saveConfig();
+  }
+
+  /**
+   * Get default configuration
+   * @returns {Object} Default configuration
+   */
+  getDefaultConfig() {
+    return {
+      general: {
+        tradingEnabled: false,
+        debugMode: true
+      },
+      exchange: {
+        name: 'binance',
+        apiKey: '',
+        apiSecret: '',
+        testMode: true
+      },
+      trading: {
+        baseCurrency: 'USDT',
+        tradingPairs: ['BTC', 'ETH', 'BNB'],
+        orderSize: 100, // in base currency
+        maxOpenTrades: 3,
+        stopLossPercentage: 2.5,
+        takeProfitPercentage: 5.0
+      }
+    };
   }
 }
 
-// Changed export to not use destructuring
-module.exports = ConfigManager;
+// Export as a singleton
+module.exports = new ConfigManager();
