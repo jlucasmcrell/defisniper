@@ -16,7 +16,7 @@ const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const { TradingEngine } = require('./trading/engine');
 const { SecurityManager } = require('./security/securityManager');
-const { ConfigManager } = require('./config/configManager');
+const ConfigManager = require('./config/configManager'); // Changed import
 const { Logger } = require('./utils/logger');
 const apiRoutes = require('./routes/api');
 const { version } = require('../package.json');
@@ -46,9 +46,9 @@ const ensureDirectoriesExist = () => {
 
 ensureDirectoriesExist();
 
-// Initialize managers
-const configManager = new ConfigManager();
-const securityManager = new SecurityManager();
+// Initialize managers as global instances
+global.configManager = new ConfigManager();
+global.securityManager = new SecurityManager();
 
 // Setup Express middleware
 app.use(cors());
@@ -58,7 +58,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Session management
 app.use(session({
-  secret: securityManager.getSessionSecret(),
+  secret: global.securityManager.getSessionSecret(),
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false, maxAge: 3600000 }, // 1 hour
@@ -75,13 +75,13 @@ const authenticate = (req, res, next) => {
 };
 
 // API routes
-app.use('/api', apiRoutes(securityManager, configManager));
+app.use('/api', apiRoutes(global.securityManager, global.configManager));
 
 // Auth routes
 app.post('/auth/login', (req, res) => {
   const { password } = req.body;
   
-  if (securityManager.verifyPassword(password)) {
+  if (global.securityManager.verifyPassword(password)) {
     req.session.authenticated = true;
     res.json({ success: true });
   } else {
@@ -97,17 +97,22 @@ app.post('/auth/logout', (req, res) => {
 app.get('/auth/status', (req, res) => {
   res.json({ 
     authenticated: req.session.authenticated === true,
-    configured: configManager.isConfigured()
+    configured: global.configManager.isConfigured()
   });
 });
 
 // Check if the bot is configured
 app.get('/api/status', (req, res) => {
-  res.json({
-    configured: configManager.isConfigured(),
-    running: global.tradingEngine ? global.tradingEngine.isRunning() : false,
-    version: version
-  });
+  try {
+    res.json({
+      configured: global.configManager.isConfigured(),
+      running: global.tradingEngine ? global.tradingEngine.isRunning() : false,
+      version: version
+    });
+  } catch (error) {
+    logger.error('Error in /status', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
 });
 
 // Serve main page
@@ -135,21 +140,21 @@ io.on('connection', (socket) => {
 });
 
 // Initialize trading engine if configured
-if (configManager.isConfigured()) {
+if (global.configManager.isConfigured()) {
   try {
-    const encryptionKey = securityManager.getEncryptionKey();
+    const encryptionKey = global.securityManager.getEncryptionKey();
     
     if (encryptionKey) {
-      // Create and initialize the trading engine
-      global.tradingEngine = new TradingEngine(configManager, securityManager, io);
+      // Create trading engine with global managers
+      global.tradingEngine = new TradingEngine(global.configManager, global.securityManager, io);
       
-      // Initialize with proper error handling
+      // Initialize the engine
       global.tradingEngine.initialize()
         .then(() => {
           logger.info('Trading engine initialized successfully');
           
           // Auto-start if configured
-          if (configManager.getValue('trading.autoStart', false)) {
+          if (global.configManager.getValue('trading.autoStart')) {
             global.tradingEngine.start()
               .then(() => logger.info('Trading engine auto-started'))
               .catch(err => logger.error('Failed to auto-start trading engine', err));

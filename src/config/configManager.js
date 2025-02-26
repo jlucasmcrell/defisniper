@@ -224,4 +224,5 @@ class ConfigManager {
   }
 }
 
-module.exports = { ConfigManager };
+// Changed export to not use destructuring
+module.exports = ConfigManager;
