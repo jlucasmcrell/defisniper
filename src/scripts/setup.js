@@ -7,7 +7,7 @@ const path = require('path');
 const readline = require('readline');
 const crypto = require('crypto');
 const { Logger } = require('../utils/logger');
-const SecurityManager = require('../security/securityManager');
+const { SecurityManager } = require('../security/securityManager');
 const ConfigManager = require('../config/configManager');
 
 class Setup {
@@ -37,7 +37,9 @@ class Setup {
             await this.setupSecurityConfig();
 
             // Initialize security manager
-            await this.securityManager.initialize();
+            if (typeof this.securityManager.initialize === 'function') {
+                await this.securityManager.initialize();
+            }
 
             // Create config manager with initialized security manager
             const configManager = new ConfigManager(this.securityManager);
