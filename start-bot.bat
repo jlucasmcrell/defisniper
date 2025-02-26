@@ -1,58 +1,74 @@
 @echo off
-title CryptoSniperBot
-
-:: Set colors for better visibility
-color 0A
-
-:: Print banner
 echo.
 echo ========================================================
-echo                  Starting CryptoSniperBot
+echo             Starting CryptoSniperBot
 echo ========================================================
 echo.
 
-:: Check if Node.js is installed
-where node >nul 2>&1
-if %ERRORLEVEL% NEQ 0 (
-    echo Error: Node.js is not installed or not in PATH
-    echo Please install Node.js from https://nodejs.org/
+:: Set working directory to the script location
+cd /d "%~dp0"
+
+:: Check if the bot is configured
+if not exist "secure-config\config.json" (
+    echo Error: Bot is not configured.
+    echo Please run setup.bat first to configure the bot.
     echo.
     pause
     exit /b 1
 )
 
-:: Get the directory where the batch file is located
-set "BOT_DIR=%~dp0"
-cd /d "%BOT_DIR%"
-
-:: Check if node_modules exists, if not run npm install
-if not exist "node_modules\" (
-    echo Installing dependencies...
-    echo.
-    npm install
-    if %ERRORLEVEL% NEQ 0 (
-        echo.
-        echo Error: Failed to install dependencies
-        pause
-        exit /b 1
-    )
-)
-
-:: Create necessary directories
-if not exist "logs\" mkdir logs
-if not exist "config\" mkdir config
-if not exist "data\" mkdir data
-
-:: Start the bot
-echo Starting CryptoSniperBot...
-echo.
-node start.js
-
-:: If the bot crashes, don't close the window immediately
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo Error: Bot crashed or failed to start
-    echo Check the logs for more information
+:: Check environment
+echo Checking environment...
+where node >nul 2>&1
+if %errorLevel% neq 0 (
+    echo Error: Node.js is not installed or not in PATH.
+    echo Please run install.bat to install the required dependencies.
     echo.
     pause
+    exit /b 1
 )
+
+:: Check for dependencies
+if not exist "node_modules" (
+    echo Error: Dependencies not installed.
+    echo Please run install.bat to install the required dependencies.
+    echo.
+    pause
+    exit /b 1
+)
+
+echo Starting trading bot services...
+start /B npm run start-server
+
+:: Wait for the server to start
+echo Waiting for server to initialize...
+timeout /t 5 /nobreak >nul
+
+echo Starting dashboard application...
+start /B npm run start-ui
+
+echo.
+echo ========================================================
+echo         CryptoSniperBot Started Successfully
+echo ========================================================
+echo.
+echo The dashboard should open automatically in your browser.
+echo If it doesn't, please open http://localhost:3000 manually.
+echo.
+echo To stop the bot, press Ctrl+C in this window, or use the
+echo "Stop Bot" button in the dashboard.
+echo.
+pause
+
+:: Keep the window open to show logs
+npm run logs
+
+:: The following code runs when the user presses Ctrl+C
+echo.
+echo Stopping CryptoSniperBot...
+npm run stop
+
+echo.
+echo CryptoSniperBot has been stopped.
+echo.
+pause

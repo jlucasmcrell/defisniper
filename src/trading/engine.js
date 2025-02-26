@@ -95,7 +95,7 @@ class TradingEngine {
       }
       
       // Initialize trading strategies
-      if (decryptedConfig.strategies.tokenSniper.enabled) {
+      if (decryptedConfig.strategies && decryptedConfig.strategies.tokenSniper && decryptedConfig.strategies.tokenSniper.enabled) {
         this.strategies.tokenSniper = new TokenSniperStrategy(
           this.blockchain,
           this.exchanges,
@@ -104,7 +104,7 @@ class TradingEngine {
         );
       }
       
-      if (decryptedConfig.strategies.scalping.enabled) {
+      if (decryptedConfig.strategies && decryptedConfig.strategies.scalping && decryptedConfig.strategies.scalping.enabled) {
         this.strategies.scalping = new ScalpingStrategy(
           this.blockchain,
           this.exchanges,
@@ -113,7 +113,7 @@ class TradingEngine {
         );
       }
       
-      if (decryptedConfig.strategies.trendTrading.enabled) {
+      if (decryptedConfig.strategies && decryptedConfig.strategies.trendTrading && decryptedConfig.strategies.trendTrading.enabled) {
         this.strategies.trendTrading = new TrendTradingStrategy(
           this.blockchain,
           this.exchanges,
@@ -609,156 +609,156 @@ class TradingEngine {
   }
   
   /**
- * Close all active trades
- */
-async closeAllActiveTrades(reason) {
-  this.logger.info(`Closing all active trades: ${Object.keys(this.activeTrades).length}`);
-  
-  const promises = [];
-  
-  for (const tradeId of Object.keys(this.activeTrades)) {
-    const trade = this.activeTrades[tradeId];
-    const currentPrice = await this.getCurrentPrice(trade).catch(() => 0);
+   * Close all active trades
+   */
+  async closeAllActiveTrades(reason) {
+    this.logger.info(`Closing all active trades: ${Object.keys(this.activeTrades).length}`);
     
-    promises.push(this.closeTrade(tradeId, reason, currentPrice));
-  }
-  
-  await Promise.allSettled(promises);
-  
-  this.logger.info('All trades closed');
-}
-
-/**
- * Update wallet and exchange balances
- */
-async updateBalances() {
-  try {
-    const balances = {};
+    const promises = [];
     
-    // Get blockchain balances
-    for (const [network, connector] of Object.entries(this.blockchain)) {
-      const blockchainBalance = await connector.getBalances();
-      balances[network] = blockchainBalance;
+    for (const tradeId of Object.keys(this.activeTrades)) {
+      const trade = this.activeTrades[tradeId];
+      const currentPrice = await this.getCurrentPrice(trade).catch(() => 0);
+      
+      promises.push(this.closeTrade(tradeId, reason, currentPrice));
     }
     
-    // Get exchange balances
-    for (const [exchange, connector] of Object.entries(this.exchanges)) {
-      const exchangeBalance = await connector.getBalances();
-      balances[exchange] = exchangeBalance;
-    }
+    await Promise.allSettled(promises);
     
-    this.balances = balances;
-    
-    // Emit balance update
-    this.socketIo.emit('balances', balances);
-    
-    return balances;
-  } catch (error) {
-    this.logger.error('Error updating balances', error);
-    return {};
+    this.logger.info('All trades closed');
   }
-}
-
-/**
- * Load trade history from storage
- */
-loadTradeHistory() {
-  try {
-    const fs = require('fs');
-    const path = require('path');
-    const historyFile = path.join(process.cwd(), 'data', 'trade-history.json');
-    
-    if (fs.existsSync(historyFile)) {
-      const historyData = fs.readFileSync(historyFile, 'utf8');
-      this.tradeHistory = JSON.parse(historyData);
+  
+  /**
+   * Update wallet and exchange balances
+   */
+  async updateBalances() {
+    try {
+      const balances = {};
       
-      // Update stats based on history
-      this.stats.totalTrades = this.tradeHistory.length;
-      this.stats.successfulTrades = this.tradeHistory.filter(t => t.profitLoss > 0).length;
-      this.stats.failedTrades = this.tradeHistory.filter(t => t.profitLoss <= 0).length;
-      this.stats.profitLoss = this.tradeHistory.reduce((sum, trade) => sum + (trade.profitLoss || 0), 0);
-      
-      if (this.stats.totalTrades > 0) {
-        this.stats.winRate = (this.stats.successfulTrades / this.stats.totalTrades) * 100;
+      // Get blockchain balances
+      for (const [network, connector] of Object.entries(this.blockchain)) {
+        const blockchainBalance = await connector.getBalances();
+        balances[network] = blockchainBalance;
       }
       
-      this.logger.info(`Loaded ${this.tradeHistory.length} historical trades`);
+      // Get exchange balances
+      for (const [exchange, connector] of Object.entries(this.exchanges)) {
+        const exchangeBalance = await connector.getBalances();
+        balances[exchange] = exchangeBalance;
+      }
+      
+      this.balances = balances;
+      
+      // Emit balance update
+      this.socketIo.emit('balances', balances);
+      
+      return balances;
+    } catch (error) {
+      this.logger.error('Error updating balances', error);
+      return {};
     }
-  } catch (error) {
-    this.logger.error('Error loading trade history', error);
   }
-}
-
-/**
- * Save trade history to storage
- */
-saveTradeHistory() {
-  try {
-    const fs = require('fs');
-    const path = require('path');
-    const dataDir = path.join(process.cwd(), 'data');
-    
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
+  
+  /**
+   * Load trade history from storage
+   */
+  loadTradeHistory() {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const historyFile = path.join(process.cwd(), 'data', 'trade-history.json');
+      
+      if (fs.existsSync(historyFile)) {
+        const historyData = fs.readFileSync(historyFile, 'utf8');
+        this.tradeHistory = JSON.parse(historyData);
+        
+        // Update stats based on history
+        this.stats.totalTrades = this.tradeHistory.length;
+        this.stats.successfulTrades = this.tradeHistory.filter(t => t.profitLoss > 0).length;
+        this.stats.failedTrades = this.tradeHistory.filter(t => t.profitLoss <= 0).length;
+        this.stats.profitLoss = this.tradeHistory.reduce((sum, trade) => sum + (trade.profitLoss || 0), 0);
+        
+        if (this.stats.totalTrades > 0) {
+          this.stats.winRate = (this.stats.successfulTrades / this.stats.totalTrades) * 100;
+        }
+        
+        this.logger.info(`Loaded ${this.tradeHistory.length} historical trades`);
+      }
+    } catch (error) {
+      this.logger.error('Error loading trade history', error);
     }
-    
-    const historyFile = path.join(dataDir, 'trade-history.json');
-    
-    fs.writeFileSync(
-      historyFile,
-      JSON.stringify(this.tradeHistory, null, 2)
-    );
-  } catch (error) {
-    this.logger.error('Error saving trade history', error);
   }
-}
-
-/**
- * Emit status update to connected clients
- */
-emitStatus() {
-  this.socketIo.emit('botStatus', {
-    running: this.running,
-    activeTrades: this.activeTrades,
-    balances: this.balances,
-    stats: this.stats
-  });
-}
-
-/**
- * Get active trades
- */
-getActiveTrades() {
-  return this.activeTrades;
-}
-
-/**
- * Get wallet balances
- */
-getBalances() {
-  return this.balances;
-}
-
-/**
- * Get trading stats
- */
-getStats() {
-  return this.stats;
-}
-
-/**
- * Get trade history
- */
-getTradeHistory() {
-  return this.tradeHistory;
-}
-
-/**
- * Check if the trading engine is running
- */
-isRunning() {
-  return this.running;
-}
+  
+  /**
+   * Save trade history to storage
+   */
+  saveTradeHistory() {
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const dataDir = path.join(process.cwd(), 'data');
+      
+      if (!fs.existsSync(dataDir)) {
+        fs.mkdirSync(dataDir, { recursive: true });
+      }
+      
+      const historyFile = path.join(dataDir, 'trade-history.json');
+      
+      fs.writeFileSync(
+        historyFile,
+        JSON.stringify(this.tradeHistory, null, 2)
+      );
+    } catch (error) {
+      this.logger.error('Error saving trade history', error);
+    }
+  }
+  
+  /**
+   * Emit status update to connected clients
+   */
+  emitStatus() {
+    this.socketIo.emit('botStatus', {
+      running: this.running,
+      activeTrades: this.activeTrades,
+      balances: this.balances,
+      stats: this.stats
+    });
+  }
+  
+  /**
+   * Get active trades
+   */
+  getActiveTrades() {
+    return this.activeTrades;
+  }
+  
+  /**
+   * Get wallet balances
+   */
+  getBalances() {
+    return this.balances;
+  }
+  
+  /**
+   * Get trading stats
+   */
+  getStats() {
+    return this.stats;
+  }
+  
+  /**
+   * Get trade history
+   */
+  getTradeHistory() {
+    return this.tradeHistory;
+  }
+  
+  /**
+   * Check if the trading engine is running
+   */
+  isRunning() {
+    return this.running;
+  }
 }
 
 module.exports = { TradingEngine };
