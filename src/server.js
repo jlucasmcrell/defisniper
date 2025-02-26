@@ -10,42 +10,78 @@ const { Logger } = require('./utils/logger');
 const ConfigManager = require('./config/configManager');
 const SecurityManager = require('./security/securityManager');
 const TradingEngine = require('./trading/tradingEngine');
+const TokenScanner = require('./trading/tokenScanner');
+const MarketAnalyzer = require('./trading/marketAnalyzer');
 
 // Initialize components
 const logger = new Logger('Server');
 const configManager = new ConfigManager();
 const securityManager = new SecurityManager();
 
-// Clean up any legacy files
-securityManager.cleanupLegacyFiles();
-configManager.cleanupLegacyFiles();
-
 // Create Express app
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+// Initialize trading components with dependencies
+const marketAnalyzer = new MarketAnalyzer(configManager, logger);
+const tokenScanner = new TokenScanner(configManager, logger);
+const tradingEngine = new TradingEngine(configManager, securityManager, marketAnalyzer, tokenScanner, logger);
+
+// Clean up any legacy files
+securityManager.cleanupLegacyFiles();
+configManager.cleanupLegacyFiles();
+
 // Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Initialize trading engine with dependencies
-const tradingEngine = new TradingEngine();
-tradingEngine.setDependencies(configManager, securityManager);
 
 // API Routes
 app.get('/api/status', (req, res) => {
     try {
         const status = {
             configured: configManager.isConfigured(),
-            running: tradingEngine ? tradingEngine.isRunning() : false,
+            running: tradingEngine.isRunning(),
             version: require('../package.json').version,
-            uptime: process.uptime()
+            uptime: process.uptime(),
+            stats: tradingEngine.getStats()
         };
         res.json(status);
     } catch (error) {
         logger.error('Error getting status', error);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Settings Routes
+app.get('/api/settings', (req, res) => {
+    try {
+        const settings = configManager.getConfig();
+        res.json(settings);
+    } catch (error) {
+        logger.error('Error getting settings', error);
+        res.status(500).json({ error: 'Failed to get settings' });
+    }
+});
+
+app.post('/api/settings', (req, res) => {
+    try {
+        configManager.updateConfig(req.body);
+        res.json({ success: true });
+    } catch (error) {
+        logger.error('Error updating settings', error);
+        res.status(500).json({ error: 'Failed to update settings' });
+    }
+});
+
+// Logs Routes
+app.get('/api/logs', (req, res) => {
+    try {
+        const logs = logger.getLogs();
+        res.json(logs);
+    } catch (error) {
+        logger.error('Error getting logs', error);
+        res.status(500).json({ error: 'Failed to get logs' });
     }
 });
 
@@ -78,6 +114,14 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+app.get('/settings', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.get('/logs', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 app.get('*', (req, res) => {
     res.redirect('/');
 });
@@ -85,6 +129,10 @@ app.get('*', (req, res) => {
 // Socket.IO
 io.on('connection', (socket) => {
     logger.info(`Client connected: ${socket.id}`);
+    
+    // Send initial data
+    socket.emit('botStatus', { running: tradingEngine.isRunning() });
+    socket.emit('stats', tradingEngine.getStats());
     
     socket.on('disconnect', () => {
         logger.info(`Client disconnected: ${socket.id}`);
@@ -102,13 +150,6 @@ async function startServer() {
         if (!configManager.isConfigured()) {
             console.error('Error: Bot is not configured.');
             console.error('Please run setup.bat first to configure the bot.\n');
-            process.exit(1);
-        }
-
-        // Check encryption key
-        if (!securityManager.isEncryptionKeySet()) {
-            console.error('Error: Encryption key not found.');
-            console.error('Please run setup.bat to set up your encryption key.\n');
             process.exit(1);
         }
 
@@ -132,7 +173,7 @@ async function startServer() {
         // Handle shutdown
         process.on('SIGINT', async () => {
             console.log('\nShutting down...');
-            if (tradingEngine && tradingEngine.isRunning()) {
+            if (tradingEngine.isRunning()) {
                 await tradingEngine.stop();
             }
             server.close();

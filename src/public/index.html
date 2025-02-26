@@ -11,6 +11,19 @@
     <div class="container">
         <header>
             <h1>CryptoSniperBot Dashboard</h1>
+            <nav>
+                <ul class="nav-tabs">
+                    <li class="nav-item">
+                        <a href="#dashboard" class="nav-link active" data-tab="dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#settings" class="nav-link" data-tab="settings">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#logs" class="nav-link" data-tab="logs">Logs</a>
+                    </li>
+                </ul>
+            </nav>
             <div class="status-container">
                 <div id="connectionStatus" class="status-indicator">
                     <span class="status-dot"></span>
@@ -24,72 +37,183 @@
         </header>
 
         <main>
-            <section class="controls">
-                <button id="startBot" class="btn btn-primary">Start Bot</button>
-                <button id="stopBot" class="btn btn-danger" disabled>Stop Bot</button>
-            </section>
+            <!-- Dashboard Tab -->
+            <section id="dashboard" class="tab-content active">
+                <div class="controls">
+                    <button id="startBot" class="btn btn-primary">Start Bot</button>
+                    <button id="stopBot" class="btn btn-danger" disabled>Stop Bot</button>
+                </div>
 
-            <section class="statistics">
-                <h2>Statistics</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Active Trades</h3>
-                        <p id="activeTrades">0</p>
+                <div class="statistics">
+                    <h2>Statistics</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3>Active Trades</h3>
+                            <p id="activeTrades">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Trades</h3>
+                            <p id="totalTrades">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Success Rate</h3>
+                            <p id="successRate">0%</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Total Profit</h3>
+                            <p id="totalProfit">$0.00</p>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <h3>Total Trades</h3>
-                        <p id="totalTrades">0</p>
+                </div>
+
+                <div class="active-trades">
+                    <h2>Active Trades</h2>
+                    <div class="table-container">
+                        <table id="tradesTable">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Exchange</th>
+                                    <th>Entry Price</th>
+                                    <th>Current Price</th>
+                                    <th>P/L</th>
+                                    <th>Duration</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Trades will be inserted here -->
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="stat-card">
-                        <h3>Success Rate</h3>
-                        <p id="successRate">0%</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Total Profit</h3>
-                        <p id="totalProfit">$0.00</p>
+                </div>
+
+                <div class="trade-history">
+                    <h2>Trade History</h2>
+                    <div class="table-container">
+                        <table id="historyTable">
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Exchange</th>
+                                    <th>Entry Price</th>
+                                    <th>Exit Price</th>
+                                    <th>P/L</th>
+                                    <th>Duration</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Trade history will be inserted here -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
 
-            <section class="active-trades">
-                <h2>Active Trades</h2>
-                <div class="table-container">
-                    <table id="tradesTable">
-                        <thead>
-                            <tr>
-                                <th>Symbol</th>
-                                <th>Entry Price</th>
-                                <th>Current Price</th>
-                                <th>P/L</th>
-                                <th>Duration</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Trades will be inserted here -->
-                        </tbody>
-                    </table>
-                </div>
+            <!-- Settings Tab -->
+            <section id="settings" class="tab-content">
+                <h2>Trading Settings</h2>
+                <form id="settingsForm" class="settings-form">
+                    <div class="settings-group">
+                        <h3>General Settings</h3>
+                        <div class="form-group">
+                            <label for="walletBuyPercentage">Wallet Buy Percentage:</label>
+                            <input type="number" id="walletBuyPercentage" name="trading.walletBuyPercentage" min="1" max="100" step="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="stopLoss">Stop Loss (%):</label>
+                            <input type="number" id="stopLoss" name="trading.stopLoss" min="0.1" max="100" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="takeProfit">Take Profit (%):</label>
+                            <input type="number" id="takeProfit" name="trading.takeProfit" min="0.1" max="1000" step="0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxConcurrentTrades">Max Concurrent Trades:</label>
+                            <input type="number" id="maxConcurrentTrades" name="trading.maxConcurrentTrades" min="1" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxTradesPerHour">Max Trades Per Hour:</label>
+                            <input type="number" id="maxTradesPerHour" name="trading.maxTradesPerHour" min="1" max="1000">
+                        </div>
+                        <div class="form-group">
+                            <label for="autoStart">Auto-start Bot:</label>
+                            <input type="checkbox" id="autoStart" name="trading.autoStart">
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Network Settings</h3>
+                        <div class="form-group">
+                            <label for="ethereumEnabled">Enable Ethereum:</label>
+                            <input type="checkbox" id="ethereumEnabled" name="ethereum.enabled">
+                        </div>
+                        <div class="form-group ethereum-settings">
+                            <label for="infuraId">Infura Project ID:</label>
+                            <input type="password" id="infuraId" name="ethereum.infuraId">
+                        </div>
+                        <div class="form-group">
+                            <label for="bnbChainEnabled">Enable BNB Chain:</label>
+                            <input type="checkbox" id="bnbChainEnabled" name="bnbChain.enabled">
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <h3>Exchange Settings</h3>
+                        <div class="form-group">
+                            <label for="binanceUSEnabled">Enable Binance.US:</label>
+                            <input type="checkbox" id="binanceUSEnabled" name="exchanges.binanceUS.enabled">
+                        </div>
+                        <div class="binanceus-settings">
+                            <div class="form-group">
+                                <label for="binanceUSApiKey">API Key:</label>
+                                <input type="password" id="binanceUSApiKey" name="exchanges.binanceUS.apiKey">
+                            </div>
+                            <div class="form-group">
+                                <label for="binanceUSApiSecret">API Secret:</label>
+                                <input type="password" id="binanceUSApiSecret" name="exchanges.binanceUS.apiSecret">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cryptoComEnabled">Enable Crypto.com:</label>
+                            <input type="checkbox" id="cryptoComEnabled" name="exchanges.cryptoCom.enabled">
+                        </div>
+                        <div class="cryptocom-settings">
+                            <div class="form-group">
+                                <label for="cryptoComApiKey">API Key:</label>
+                                <input type="password" id="cryptoComApiKey" name="exchanges.cryptoCom.apiKey">
+                            </div>
+                            <div class="form-group">
+                                <label for="cryptoComApiSecret">API Secret:</label>
+                                <input type="password" id="cryptoComApiSecret" name="exchanges.cryptoCom.apiSecret">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                        <button type="button" class="btn btn-secondary" id="resetSettings">Reset</button>
+                    </div>
+                </form>
             </section>
 
-            <section class="trade-history">
-                <h2>Trade History</h2>
-                <div class="table-container">
-                    <table id="historyTable">
-                        <thead>
-                            <tr>
-                                <th>Symbol</th>
-                                <th>Entry Price</th>
-                                <th>Exit Price</th>
-                                <th>P/L</th>
-                                <th>Duration</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Trade history will be inserted here -->
-                        </tbody>
-                    </table>
+            <!-- Logs Tab -->
+            <section id="logs" class="tab-content">
+                <h2>System Logs</h2>
+                <div class="log-controls">
+                    <select id="logLevel">
+                        <option value="all">All Levels</option>
+                        <option value="error">Errors</option>
+                        <option value="warn">Warnings</option>
+                        <option value="info">Info</option>
+                        <option value="debug">Debug</option>
+                    </select>
+                    <button id="clearLogs" class="btn btn-secondary">Clear Logs</button>
+                    <button id="exportLogs" class="btn btn-secondary">Export Logs</button>
+                </div>
+                <div class="log-container">
+                    <pre id="logOutput"></pre>
                 </div>
             </section>
         </main>
