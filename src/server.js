@@ -16,7 +16,7 @@ const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const { TradingEngine } = require('./trading/engine');
 const { SecurityManager } = require('./security/securityManager');
-const { ConfigManager } = require('./config/configManager');
+const ConfigManager = require('./config/configManager'); // Updated import statement
 const { Logger } = require('./utils/logger');
 const apiRoutes = require('./routes/api');
 const { version } = require('../package.json');
@@ -46,12 +46,12 @@ const ensureDirectoriesExist = () => {
 
 ensureDirectoriesExist();
 
-// Load configuration
-const configManager = new ConfigManager();
-const config = configManager.getConfig();
-
 // Initialize security manager
 const securityManager = new SecurityManager();
+
+// Load configuration
+const configManager = new ConfigManager(securityManager); // Pass securityManager to ConfigManager
+const config = configManager.getConfig();
 
 // Setup Express middleware
 app.use(cors());
