@@ -43,6 +43,22 @@ app.get('/api/config', (req, res) => {
   res.json(safeConfig);
 });
 
+app.post('/api/config', (req, res) => {
+  try {
+    const newConfig = req.body;
+    
+    // Update configuration
+    Object.keys(newConfig).forEach(key => {
+      configManager.set(key, newConfig[key]);
+    });
+    
+    res.json({ success: true, message: 'Configuration updated successfully' });
+  } catch (error) {
+    logger.error(`[Server] Error updating config: ${error.message}`);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
 // Socket.IO
 io.on('connection', (socket) => {
   logger.info(`[Server] Client connected: ${socket.id}`);

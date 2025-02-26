@@ -51,7 +51,7 @@ class TradingEngine {
         this.startTrading();
       }
     } catch (error) {
-      logger.error(`[TradingEngine] Failed to initialize trading engine ${error.message}`);
+      logger.error(`[TradingEngine] Failed to initialize trading engine: ${error.message}`);
       throw error;
     }
   }
