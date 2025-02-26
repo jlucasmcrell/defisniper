@@ -21,6 +21,12 @@ class TokenScanner extends EventEmitter {
         this.factories = new Map();
         this.knownTokens = new Map();
         this.lastScanned = new Map();
+        this.scanStats = {
+            totalScanned: 0,
+            newTokensFound: 0,
+            lastScanTime: null,
+            networkStats: new Map()
+        };
     }
 
     async initialize() {
@@ -41,6 +47,12 @@ class TokenScanner extends EventEmitter {
                     ethProvider
                 );
                 this.factories.set('uniswap', uniswapFactory);
+                this.scanStats.networkStats.set('ethereum', {
+                    pairsScanned: 0,
+                    newTokens: 0,
+                    lastBlock: 0
+                });
+                this.logger.info('Initialized Ethereum/Uniswap scanning');
             }
 
             if (config.bnbChain && config.bnbChain.enabled) {
@@ -56,9 +68,19 @@ class TokenScanner extends EventEmitter {
                     bscProvider
                 );
                 this.factories.set('pancakeswap', pancakeFactory);
+                this.scanStats.networkStats.set('bsc', {
+                    pairsScanned: 0,
+                    newTokens: 0,
+                    lastBlock: 0
+                });
+                this.logger.info('Initialized BSC/PancakeSwap scanning');
             }
 
             this.logger.info('Token scanner initialized successfully');
+            this.emit('scannerInitialized', {
+                networks: Array.from(this.providers.keys()),
+                exchanges: Array.from(this.factories.keys())
+            });
         } catch (error) {
             this.logger.error('Failed to initialize token scanner', error);
             throw error;
@@ -80,6 +102,8 @@ class TokenScanner extends EventEmitter {
             );
 
             this.logger.info('Token scanner started');
+            this.emit('scannerStarted');
+            await this.scan(); // Run initial scan immediately
         } catch (error) {
             this.logger.error('Failed to start token scanner', error);
             throw error;
@@ -100,6 +124,7 @@ class TokenScanner extends EventEmitter {
             }
 
             this.logger.info('Token scanner stopped');
+            this.emit('scannerStopped');
         } catch (error) {
             this.logger.error('Failed to stop token scanner', error);
             throw error;
@@ -108,33 +133,66 @@ class TokenScanner extends EventEmitter {
 
     async scan() {
         try {
+            const scanStartTime = Date.now();
+            this.logger.info('Starting new token scan...');
+
             for (const [network, factory] of this.factories.entries()) {
+                const provider = this.providers.get(network === 'pancakeswap' ? 'bsc' : 'ethereum');
+                const currentBlock = await provider.getBlockNumber();
                 const lastPairIndex = this.lastScanned.get(network) || 0;
                 const currentLength = await factory.allPairsLength();
+                
+                this.logger.info(`Scanning ${network}: ${lastPairIndex} to ${currentLength} pairs at block ${currentBlock}`);
+
+                const networkStats = this.scanStats.networkStats.get(network === 'pancakeswap' ? 'bsc' : 'ethereum');
+                networkStats.lastBlock = currentBlock;
 
                 for (let i = lastPairIndex; i < currentLength; i++) {
                     if (!this.isRunning) break;
 
                     const pairAddress = await factory.allPairs(i);
                     await this.analyzePair(pairAddress, network);
+                    
+                    networkStats.pairsScanned++;
+                    this.scanStats.totalScanned++;
+
+                    // Log progress every 100 pairs
+                    if (i % 100 === 0) {
+                        this.logger.info(`${network}: Scanned ${i}/${currentLength} pairs`);
+                        this.emit('scanProgress', {
+                            network,
+                            current: i,
+                            total: currentLength,
+                            newTokens: networkStats.newTokens
+                        });
+                    }
                 }
 
                 this.lastScanned.set(network, currentLength.toNumber());
             }
+
+            this.scanStats.lastScanTime = Date.now();
+            const scanDuration = (Date.now() - scanStartTime) / 1000;
+            
+            this.logger.info(`Scan completed in ${scanDuration}s. Found ${this.scanStats.newTokensFound} new tokens`);
+            this.emit('scanCompleted', this.scanStats);
         } catch (error) {
             this.logger.error('Error during token scan', error);
+            this.emit('scanError', error);
         }
     }
 
     async analyzePair(pairAddress, network) {
         try {
-            const provider = this.providers.get(network);
+            const provider = this.providers.get(network === 'pancakeswap' ? 'bsc' : 'ethereum');
             const pair = new ethers.Contract(pairAddress, IERC20.abi, provider);
             
             const [token0Address, token1Address] = await Promise.all([
                 pair.token0(),
                 pair.token1()
             ]);
+
+            this.logger.debug(`Analyzing pair ${pairAddress} (${token0Address} - ${token1Address})`);
 
             // Analyze both tokens in the pair
             await Promise.all([
@@ -153,7 +211,7 @@ class TokenScanner extends EventEmitter {
                 return;
             }
 
-            const provider = this.providers.get(network);
+            const provider = this.providers.get(network === 'pancakeswap' ? 'bsc' : 'ethereum');
             const token = new ethers.Contract(tokenAddress, IERC20.abi, provider);
 
             // Get basic token information
@@ -177,10 +235,15 @@ class TokenScanner extends EventEmitter {
 
             // Add to known tokens
             this.knownTokens.set(tokenAddress, tokenInfo);
+            
+            // Update statistics
+            this.scanStats.newTokensFound++;
+            const networkStats = this.scanStats.networkStats.get(network === 'pancakeswap' ? 'bsc' : 'ethereum');
+            networkStats.newTokens++;
 
             // Emit new token event
             this.emit('newToken', tokenInfo);
-            this.logger.info(`New token found: ${symbol} (${tokenAddress})`);
+            this.logger.info(`New token found: ${symbol} (${tokenAddress}) on ${network}`);
 
         } catch (error) {
             this.logger.error(`Error analyzing token ${tokenAddress}`, error);
@@ -193,6 +256,13 @@ class TokenScanner extends EventEmitter {
 
     isTokenKnown(address) {
         return this.knownTokens.has(address);
+    }
+
+    getScanStats() {
+        return {
+            ...this.scanStats,
+            networkStats: Object.fromEntries(this.scanStats.networkStats)
+        };
     }
 
     async getTokenInfo(address, network) {

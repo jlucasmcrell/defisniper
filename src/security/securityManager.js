@@ -1,5 +1,5 @@
 /**
- * Security Manager for CryptoSniperBot
+ * Security Manager
  * Handles encryption, key management, and secure storage
  */
 const crypto = require('crypto');
@@ -10,63 +10,91 @@ const { Logger } = require('../utils/logger');
 class SecurityManager {
     constructor() {
         this.logger = new Logger('SecurityManager');
-        this.keyPath = path.join(__dirname, '../../config/security.key');
+        this.initialized = false;
         this.encryptionKey = null;
-        this.loadEncryptionKey();
+        this.secureConfigPath = path.join(__dirname, '../../secure-config');
+        this.securityConfigFile = path.join(this.secureConfigPath, 'security.json');
+        this.encryptionKeyFile = path.join(this.secureConfigPath, 'encryption.key');
+        this.algorithm = 'aes-256-gcm';
     }
 
-    loadEncryptionKey() {
+    async initialize() {
         try {
-            if (fs.existsSync(this.keyPath)) {
-                this.encryptionKey = fs.readFileSync(this.keyPath, 'utf8');
-                this.logger.info('Encryption key loaded successfully');
+            // Check if secure-config directory exists
+            if (!fs.existsSync(this.secureConfigPath)) {
+                this.logger.error('Secure config directory not found. Please run setup.bat first.');
+                throw new Error('Secure config directory not found');
             }
+
+            // Load encryption key
+            if (!fs.existsSync(this.encryptionKeyFile)) {
+                this.logger.error('Encryption key not found. Please run setup.bat first.');
+                throw new Error('Encryption key not found');
+            }
+
+            // Load security config
+            if (!fs.existsSync(this.securityConfigFile)) {
+                this.logger.error('Security config not found. Please run setup.bat first.');
+                throw new Error('Security config not found');
+            }
+
+            // Read encryption key
+            this.encryptionKey = await fs.promises.readFile(this.encryptionKeyFile, 'utf8');
+
+            // Load security config
+            const securityConfig = JSON.parse(
+                await fs.promises.readFile(this.securityConfigFile, 'utf8')
+            );
+
+            // Validate security config
+            if (!securityConfig.initialized) {
+                this.logger.error('Security config not initialized. Please run setup.bat first.');
+                throw new Error('Security config not initialized');
+            }
+
+            this.initialized = true;
+            this.logger.info('Security manager initialized successfully');
         } catch (error) {
-            this.logger.error('Failed to load encryption key', error);
+            this.logger.error('Failed to initialize security manager', error);
             throw error;
         }
     }
 
-    async generateEncryptionKey() {
+    encrypt(data) {
         try {
-            this.encryptionKey = crypto.randomBytes(32).toString('hex');
-            const keyDir = path.dirname(this.keyPath);
-            
-            if (!fs.existsSync(keyDir)) {
-                fs.mkdirSync(keyDir, { recursive: true });
-            }
-            
-            fs.writeFileSync(this.keyPath, this.encryptionKey);
-            this.logger.info('Generated new encryption key');
-            return true;
-        } catch (error) {
-            this.logger.error('Failed to generate encryption key', error);
-            throw error;
-        }
-    }
-
-    isEncryptionKeySet() {
-        return this.encryptionKey !== null;
-    }
-
-    encrypt(text) {
-        try {
-            if (!this.encryptionKey) {
-                throw new Error('Encryption key not set');
+            if (!this.initialized) {
+                throw new Error('Security manager not initialized');
             }
 
+            if (!data) {
+                return null;
+            }
+
+            // Convert data to string if it's not already
+            const text = typeof data === 'string' ? data : JSON.stringify(data);
+
+            // Generate IV
             const iv = crypto.randomBytes(16);
-            const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(this.encryptionKey, 'hex'), iv);
-            
+
+            // Create cipher
+            const cipher = crypto.createCipheriv(
+                this.algorithm,
+                Buffer.from(this.encryptionKey, 'hex'),
+                iv
+            );
+
+            // Encrypt the data
             let encrypted = cipher.update(text, 'utf8', 'hex');
             encrypted += cipher.final('hex');
-            
+
+            // Get auth tag
             const authTag = cipher.getAuthTag();
-            
+
+            // Return everything needed for decryption
             return {
                 iv: iv.toString('hex'),
-                encrypted: encrypted,
-                authTag: authTag.toString('hex')
+                authTag: authTag.toString('hex'),
+                encrypted: encrypted
             };
         } catch (error) {
             this.logger.error('Encryption failed', error);
@@ -76,65 +104,124 @@ class SecurityManager {
 
     decrypt(encryptedData) {
         try {
-            if (!this.encryptionKey) {
-                throw new Error('Encryption key not set');
+            if (!this.initialized) {
+                throw new Error('Security manager not initialized');
             }
 
-            if (typeof encryptedData === 'string') {
-                return encryptedData; // Return as-is if not encrypted
+            if (!encryptedData) {
+                return null;
             }
 
+            // Create decipher
             const decipher = crypto.createDecipheriv(
-                'aes-256-gcm',
+                this.algorithm,
                 Buffer.from(this.encryptionKey, 'hex'),
                 Buffer.from(encryptedData.iv, 'hex')
             );
 
+            // Set auth tag
             decipher.setAuthTag(Buffer.from(encryptedData.authTag, 'hex'));
-            
+
+            // Decrypt the data
             let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
-            
-            return decrypted;
+
+            // Try to parse as JSON if possible
+            try {
+                return JSON.parse(decrypted);
+            } catch {
+                return decrypted;
+            }
         } catch (error) {
             this.logger.error('Decryption failed', error);
             throw error;
         }
     }
 
-    hashPassword(password) {
-        return crypto.createHash('sha256').update(password).digest('hex');
-    }
-
-    verifyPassword(password, hash) {
-        return this.hashPassword(password) === hash;
-    }
-
     generateApiKeyHash(apiKey) {
-        return crypto.createHash('sha256').update(apiKey).digest('hex');
-    }
-
-    cleanupLegacyFiles() {
-        // Implement cleanup logic if needed
-        this.logger.info('Legacy file cleanup completed');
-    }
-
-    validateSecurityConfig(config) {
         try {
-            if (!config || !config.security) {
-                throw new Error('Security configuration missing');
+            if (!this.initialized) {
+                throw new Error('Security manager not initialized');
             }
 
-            const required = ['encryptionKey'];
-            const missing = required.filter(key => !config.security[key]);
-
-            if (missing.length > 0) {
-                throw new Error(`Missing security configuration: ${missing.join(', ')}`);
-            }
-
-            return true;
+            return crypto
+                .createHash('sha256')
+                .update(apiKey)
+                .digest('hex');
         } catch (error) {
-            this.logger.error('Security configuration validation failed', error);
+            this.logger.error('Failed to generate API key hash', error);
+            throw error;
+        }
+    }
+
+    validateApiKey(apiKey, storedHash) {
+        try {
+            if (!this.initialized) {
+                throw new Error('Security manager not initialized');
+            }
+
+            const hash = this.generateApiKeyHash(apiKey);
+            return hash === storedHash;
+        } catch (error) {
+            this.logger.error('Failed to validate API key', error);
+            throw error;
+        }
+    }
+
+    generateSecureToken(length = 32) {
+        try {
+            if (!this.initialized) {
+                throw new Error('Security manager not initialized');
+            }
+            return crypto.randomBytes(length).toString('hex');
+        } catch (error) {
+            this.logger.error('Failed to generate secure token', error);
+            throw error;
+        }
+    }
+
+    hashPassword(password, salt = null) {
+        try {
+            if (!this.initialized) {
+                throw new Error('Security manager not initialized');
+            }
+
+            salt = salt || crypto.randomBytes(16).toString('hex');
+            const hash = crypto
+                .pbkdf2Sync(password, salt, 10000, 64, 'sha512')
+                .toString('hex');
+            return { hash, salt };
+        } catch (error) {
+            this.logger.error('Failed to hash password', error);
+            throw error;
+        }
+    }
+
+    verifyPassword(password, hash, salt) {
+        try {
+            if (!this.initialized) {
+                throw new Error('Security manager not initialized');
+            }
+
+            const verifyHash = this.hashPassword(password, salt).hash;
+            return verifyHash === hash;
+        } catch (error) {
+            this.logger.error('Failed to verify password', error);
+            throw error;
+        }
+    }
+
+    // Method to check if setup has been completed
+    async isSetupComplete() {
+        try {
+            return (
+                fs.existsSync(this.secureConfigPath) &&
+                fs.existsSync(this.securityConfigFile) &&
+                fs.existsSync(this.encryptionKeyFile) &&
+                this.initialized
+            );
+        } catch (error) {
+            this.logger.error('Failed to check setup status', error);
             return false;
         }
     }

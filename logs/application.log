@@ -1,0 +1,572 @@
+2025-02-26 04:15:46 [WARN]: [ConfigManager] Config file not found, using default settings
+2025-02-26 04:15:46 [INFO]: [ConfigManager] Configuration saved successfully
+2025-02-26 04:15:46 [INFO]: [TradingEngine] Initializing trading engine
+2025-02-26 04:15:46 [INFO]: [TradingEngine] Initializing trading engine
+2025-02-26 04:15:46 [INFO]: [ExchangeFactory] Creating exchange connector for binance
+2025-02-26 04:15:46 [INFO]: [BinanceConnector] Initializing Binance connector
+2025-02-26 04:15:46 [INFO]: [BinanceConnector] Running in test mode
+2025-02-26 04:15:46 [INFO]: [BinanceConnector] Binance connector initialized successfully
+2025-02-26 04:15:46 [INFO]: [TradingEngine] Trading engine initialized with 3 pairs
+2025-02-26 04:15:46 [INFO]: [Server] CryptoSniperBot server running on port 3000
+2025-02-26 04:33:21 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 04:34:53 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:34:56 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:35:20 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:35:45 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:36:21 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:36:43 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:37:33 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 04:38:18 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:38:41 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:39:10 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:39:27 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:47:32 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 04:47:53 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:48:08 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:48:08 [INFO] [Setup]: Trading parameters configured
+2025-02-26 04:51:14 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 04:51:29 [INFO] [Setup]: Dashboard password set successfully
+2025-02-26 04:51:41 [INFO] [Setup]: Encryption key set successfully
+2025-02-26 04:52:10 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:52:10 [INFO] [Setup]: Binance.US configuration saved
+2025-02-26 04:52:33 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:52:33 [INFO] [Setup]: Crypto.com configuration saved
+2025-02-26 04:52:47 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:52:47 [INFO] [Setup]: Trading parameters configured
+2025-02-26 04:54:40 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 04:55:01 [INFO] [Setup]: Dashboard password set successfully
+2025-02-26 04:55:20 [INFO] [Setup]: Encryption key set successfully
+2025-02-26 04:55:46 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:55:46 [INFO] [Setup]: Ethereum configuration saved
+2025-02-26 04:55:48 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:55:48 [INFO] [Setup]: BNB Chain configuration saved
+2025-02-26 04:56:27 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:56:27 [INFO] [Setup]: Crypto.com configuration saved
+2025-02-26 04:56:37 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 04:56:37 [INFO] [Setup]: Trading parameters configured
+2025-02-26 05:03:59 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 05:04:15 [INFO] [SecurityManager]: Security configuration saved successfully
+2025-02-26 05:04:15 [INFO] [Setup]: Dashboard password set successfully
+2025-02-26 05:04:26 [INFO] [Setup]: Encryption key set successfully
+2025-02-26 05:05:00 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 05:05:00 [INFO] [Setup]: Ethereum configuration saved
+2025-02-26 05:05:03 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 05:05:03 [INFO] [Setup]: BNB Chain configuration saved
+2025-02-26 05:05:28 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 05:05:28 [INFO] [Setup]: Binance.US configuration saved
+2025-02-26 05:05:51 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 05:05:51 [INFO] [Setup]: Crypto.com configuration saved
+2025-02-26 05:06:14 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 05:06:14 [INFO] [Setup]: Trading parameters configured
+2025-02-26 05:07:50 [INFO] [SecurityManager]: Security configuration loaded successfully
+2025-02-26 05:07:50 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 05:07:50 [INFO] [SecurityManager]: Encryption key loaded successfully
+2025-02-26 05:08:14 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 05:08:29 [INFO] [ConfigManager]: Configuration saved successfully
+2025-02-26 05:08:29 [INFO] [Setup]: Trading parameters configured
+2025-02-26 05:12:21 [INFO] [Server]: CryptoSniperBot server running on port 3000
+2025-02-26 05:12:21 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 05:12:21 [INFO] [SecurityManager]: Encryption key loaded successfully
+2025-02-26 05:12:21 [INFO] [TradingEngine]: Initializing trading engine
+2025-02-26 05:12:21 [INFO] [TradingEngine]: Trading engine initialized successfully
+2025-02-26 05:13:08 [INFO] [Server]: CryptoSniperBot server running on port 3000
+2025-02-26 05:13:08 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 05:13:08 [INFO] [SecurityManager]: Security configuration loaded successfully
+2025-02-26 05:13:08 [INFO] [TradingEngine]: Initializing trading engine
+2025-02-26 05:13:08 [INFO] [SecurityManager]: Encryption key loaded successfully
+2025-02-26 05:13:08 [INFO] [TradingEngine]: Trading engine initialized successfully
+2025-02-26 05:44:44 [INFO] [Server]: Auto-started trading engine
+2025-02-26 05:44:44 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 05:44:44 [INFO] [SecurityManager]: Security configuration loaded successfully
+2025-02-26 05:44:44 [INFO] [TradingEngine]: Initializing trading engine
+2025-02-26 05:44:44 [INFO] [Server]: CryptoSniperBot server running on port 3000
+2025-02-26 05:44:44 [INFO] [SecurityManager]: Encryption key loaded successfully
+2025-02-26 05:44:44 [INFO] [SecurityManager]: Moved security.json to secure-config directory
+2025-02-26 05:44:44 [INFO] [SecurityManager]: Moved encryption.key to secure-config directory
+2025-02-26 05:44:44 [INFO] [SecurityManager]: Moved config.json to secure-config directory
+2025-02-26 05:44:44 [INFO] [TradingEngine]: Initialized Ethereum connection
+2025-02-26 05:44:44 [INFO] [TradingEngine]: Initialized BNB Chain connection
+2025-02-26 05:44:44 [INFO] [TradingEngine]: Trading engine initialized successfully
+2025-02-26 05:44:44 [INFO] [TradingEngine]: Trading engine started
+2025-02-26 05:44:45 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:46 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:47 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:48 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:49 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:50 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:51 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:52 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:53 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:54 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:55 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:56 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:57 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:58 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:44:59 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:45:00 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:45:01 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:45:02 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:09 [INFO] [Server]: Auto-started trading engine
+2025-02-26 05:48:09 [INFO] [ConfigManager]: Configuration loaded successfully
+2025-02-26 05:48:09 [INFO] [SecurityManager]: Security configuration loaded successfully
+2025-02-26 05:48:09 [INFO] [TradingEngine]: Initializing trading engine
+2025-02-26 05:48:09 [INFO] [Server]: CryptoSniperBot server running on port 3000
+2025-02-26 05:48:09 [INFO] [SecurityManager]: Encryption key loaded successfully
+2025-02-26 05:48:09 [INFO] [TradingEngine]: Initialized Ethereum connection
+2025-02-26 05:48:09 [INFO] [TradingEngine]: Initialized BNB Chain connection
+2025-02-26 05:48:09 [INFO] [TradingEngine]: Trading engine initialized successfully
+2025-02-26 05:48:09 [INFO] [TradingEngine]: Trading engine started
+2025-02-26 05:48:10 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:11 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:12 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:13 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:14 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:14 [INFO] [Server]: Client connected: k1XKayy2RFPAAizJAAAB
+2025-02-26 05:48:15 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:16 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:17 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:18 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:19 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:20 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:21 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:22 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:23 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:24 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:25 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:26 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:27 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:28 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:29 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:30 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:31 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:32 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:33 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:34 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:35 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:36 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:37 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:38 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:39 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:40 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:41 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:42 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:43 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:44 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:45 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:46 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:47 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:48 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:49 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:50 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:51 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:52 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:53 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:54 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:55 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:56 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:57 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:58 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:48:59 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:00 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:01 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:02 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:03 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:04 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:05 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:06 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:07 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:08 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:09 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:10 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:11 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:12 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:13 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:14 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:15 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:16 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:17 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:18 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:19 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:20 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:21 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:22 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:23 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:24 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:25 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:26 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:27 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:28 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:29 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:30 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:31 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:32 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:33 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:34 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:35 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:36 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:37 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:38 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:39 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:40 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:41 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:42 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:43 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:44 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:45 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:46 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:47 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:48 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:49 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:50 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:51 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:52 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:53 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:54 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:55 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:57 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:58 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:49:59 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:00 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:01 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:02 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:03 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:04 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:05 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:06 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:07 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:08 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:09 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:10 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:11 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:12 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:13 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:14 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:15 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:16 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:17 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:18 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:19 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:20 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:21 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:22 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:23 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:24 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:25 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:26 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:27 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:28 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:29 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:30 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:31 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:32 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:33 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:34 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:35 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:36 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:37 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:38 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:39 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:40 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:41 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:42 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:43 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:44 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:45 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:46 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:47 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:48 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:49 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:50 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:51 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:52 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:53 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:54 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:55 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:56 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:57 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:58 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:50:59 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:00 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:01 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:02 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:03 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:04 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:05 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:06 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:07 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:08 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:09 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:10 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:11 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:12 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:13 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:14 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:15 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:16 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:17 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:18 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:19 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:20 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:21 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:22 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:23 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:24 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:25 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:26 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:27 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:28 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:29 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:30 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:31 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:32 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:33 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:34 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:35 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:36 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:37 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:38 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:39 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:40 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:41 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:42 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:43 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:44 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:45 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:46 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:47 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:48 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:49 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:50 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:51 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:52 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:53 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:54 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:55 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:56 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:57 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:58 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:51:59 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:00 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:01 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:02 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:03 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:04 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:05 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:06 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:07 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:08 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:09 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:11 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:12 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:13 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:14 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:15 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:16 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:17 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:18 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:19 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:20 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:21 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:22 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:23 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:24 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:25 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:26 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:27 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:28 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:29 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:30 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:31 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:32 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:33 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:34 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:35 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:36 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:37 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:38 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:39 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:40 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:41 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:42 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:43 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:44 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:45 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:46 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:47 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:48 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:49 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:50 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:51 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:52 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:53 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:54 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:55 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:56 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:57 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:58 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:52:59 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:00 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:01 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:02 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:03 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:04 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:05 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:06 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:07 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:08 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:09 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:10 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:11 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:12 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:13 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:14 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:15 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:16 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:17 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:18 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:19 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:20 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:21 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:22 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:23 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:24 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:25 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:26 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:27 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:28 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:29 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:30 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:31 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:32 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:33 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:34 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:35 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:36 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:37 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:38 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:39 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:40 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:41 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:42 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:43 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:44 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:45 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:46 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:47 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:48 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:49 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:50 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:51 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:52 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:53 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:54 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:55 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:56 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:57 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:58 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:53:59 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:00 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:01 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:02 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:03 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:04 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:05 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:06 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:07 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:08 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:09 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:10 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:11 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:12 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:13 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:14 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:15 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:16 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:17 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:18 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:19 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:20 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:21 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:23 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:24 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:25 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:26 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:27 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:28 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:29 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:30 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:31 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:32 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:33 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:34 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:35 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:36 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:37 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:38 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:39 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:40 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:41 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:42 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:43 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:44 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:45 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:46 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:47 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:48 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:49 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:50 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:51 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:52 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:53 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:54 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:55 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:56 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:57 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:58 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:54:59 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:00 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:01 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:02 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:03 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:04 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:05 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:06 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:07 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:08 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:09 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:10 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:11 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:12 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:13 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:14 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:15 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:16 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:17 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:18 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:19 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:20 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:21 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:22 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:23 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:24 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:25 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:26 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:27 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:28 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:29 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:30 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:31 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:32 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:33 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:34 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:35 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:36 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:37 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:38 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:39 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:40 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:41 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:42 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:43 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:44 [DEBUG] [TradingEngine]: Running main trading loop
+2025-02-26 05:55:44 [INFO] [Server]: Client disconnected: k1XKayy2RFPAAizJAAAB

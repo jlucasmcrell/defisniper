@@ -1,0 +1,50 @@
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-26T12:02:43.138Z"}
+{"level":"info","message":"Configuration saved successfully","module":"ConfigManager","timestamp":"2025-02-26T12:02:43.126Z"}
+{"level":"info","message":"Market analyzer initialized successfully","module":"MarketAnalyzer","timestamp":"2025-02-26T12:02:43.136Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-26T12:02:43.135Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-26T12:02:43.135Z"}
+{"level":"info","message":"Created new configuration with default settings","module":"ConfigManager","timestamp":"2025-02-26T12:02:43.129Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-26T12:02:43.136Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-26T12:40:12.638Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-26T12:40:12.626Z"}
+{"level":"info","message":"Market analyzer initialized successfully","module":"MarketAnalyzer","timestamp":"2025-02-26T12:40:12.636Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-26T12:40:12.635Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-26T12:40:12.634Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-26T12:40:12.636Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-26T12:46:48.343Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-26T12:46:48.331Z"}
+{"level":"info","message":"Market analyzer initialized successfully","module":"MarketAnalyzer","timestamp":"2025-02-26T12:46:48.341Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-26T12:46:48.341Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-26T12:46:48.340Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-26T12:46:48.342Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-26T12:52:14.546Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-26T12:52:14.534Z"}
+{"level":"info","message":"Market analyzer initialized successfully","module":"MarketAnalyzer","timestamp":"2025-02-26T12:52:14.544Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-26T12:52:14.544Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-26T12:52:14.543Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-26T12:52:14.544Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-26T12:52:43.662Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-26T12:52:43.651Z"}
+{"level":"info","message":"Market analyzer initialized successfully","module":"MarketAnalyzer","timestamp":"2025-02-26T12:52:43.660Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-26T12:52:43.660Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-26T12:52:43.659Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-26T12:52:43.660Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-26T13:07:08.100Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-26T13:07:08.088Z"}
+{"level":"info","message":"Market analyzer initialized successfully","module":"MarketAnalyzer","timestamp":"2025-02-26T13:07:08.098Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-26T13:07:08.098Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-26T13:07:08.096Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-26T13:07:08.098Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-26T13:26:58.264Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-26T13:26:58.236Z"}
+{"level":"info","message":"Market analyzer initialized successfully","module":"MarketAnalyzer","timestamp":"2025-02-26T13:26:58.246Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-26T13:26:58.245Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-26T13:26:58.244Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-26T13:26:58.246Z"}
+{"level":"info","message":"Client connected: 5Jyum0qTCZvXjCivAAAB","module":"Server","timestamp":"2025-02-26T13:26:58.693Z"}
+{"level":"info","message":"Configuration saved successfully","module":"ConfigManager","timestamp":"2025-02-26T13:27:39.953Z"}
+{"level":"info","message":"Configuration saved successfully","module":"ConfigManager","timestamp":"2025-02-26T13:27:40.920Z"}
+{"level":"info","message":"Configuration saved successfully","module":"ConfigManager","timestamp":"2025-02-26T13:27:41.085Z"}
+{"level":"info","message":"Starting trading engine","module":"TradingEngine","timestamp":"2025-02-26T13:27:44.085Z"}
+{"level":"info","message":"Token scanner started","module":"TokenScanner","timestamp":"2025-02-26T13:27:44.085Z"}
+{"level":"info","message":"Trading engine started successfully","module":"TradingEngine","timestamp":"2025-02-26T13:27:44.086Z"}

@@ -1,0 +1,60 @@
+{
+  "general": {
+    "tradingEnabled": false,
+    "debugMode": true
+  },
+  "exchange": {
+    "name": "binance",
+    "apiKey": "",
+    "apiSecret": "",
+    "testMode": true
+  },
+  "trading": {
+    "walletBuyPercentage": 10,
+    "stopLoss": 10,
+    "takeProfit": 25,
+    "maxConcurrentTrades": 20,
+    "maxTradesPerHour": 30,
+    "autoStart": true
+  },
+  "ethereum": {
+    "enabled": true,
+    "privateKey": "1d0890c78ed173a08e0066afa4269ff1:72597b1e724b67d832301d42234c063e92125e60a21854e65c5533c2e88b9275b6725871e80032fbb55682671c2386a01ad78e737349e8dcea8b80c7ac4ae4a70d7f992c38c6ef060a192cfefccf191e",
+    "infuraId": "fc23b646a1573ce0ff76d28a2060cf20:820681d119690ec435fdad5077f7439d57ba29d39961fce5bc36c279e1e8ae52bb87b5e0d369fc3704dc6a6fb0393fc3",
+    "provider": "infura"
+  },
+  "bnbChain": {
+    "enabled": true,
+    "privateKey": "1d0890c78ed173a08e0066afa4269ff1:72597b1e724b67d832301d42234c063e92125e60a21854e65c5533c2e88b9275b6725871e80032fbb55682671c2386a01ad78e737349e8dcea8b80c7ac4ae4a70d7f992c38c6ef060a192cfefccf191e"
+  },
+  "exchanges": {
+    "binanceUS": {
+      "enabled": false
+    },
+    "cryptoCom": {
+      "enabled": false
+    }
+  },
+  "strategies": {
+    "tokenSniper": {
+      "enabled": true,
+      "minLiquidity": 20000,
+      "maxBuyTax": 1,
+      "maxSellTax": 1,
+      "requireAudit": false
+    },
+    "scalping": {
+      "enabled": true,
+      "minPriceChange": 2,
+      "maxTradeTime": 180
+    },
+    "trendTrading": {
+      "enabled": true,
+      "rsiLow": 30,
+      "rsiHigh": 80,
+      "macdFast": 12,
+      "macdSlow": 26,
+      "macdSignal": 9
+    }
+  }
+}

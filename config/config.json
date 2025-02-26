@@ -1,33 +1,27 @@
 {
   "trading": {
-    "walletBuyPercentage": 10,
-    "stopLoss": 5,
-    "takeProfit": 20,
-    "maxConcurrentTrades": 5,
-    "maxTradesPerHour": 10,
-    "autoStart": false,
-    "scanInterval": 30000,
-    "analysisInterval": 60000
+    "walletBuyPercentage": "10",
+    "stopLoss": "5",
+    "takeProfit": "20",
+    "maxConcurrentTrades": "5"
   },
   "ethereum": {
-    "enabled": false,
-    "infuraId": "",
-    "privateKey": ""
+    "enabled": "on",
+    "infuraId": "2cd503a6eba54001825efa8710163a26"
   },
   "bnbChain": {
-    "enabled": false,
-    "privateKey": ""
+    "enabled": "on"
   },
   "exchanges": {
     "binanceUS": {
-      "enabled": false,
-      "apiKey": "",
-      "apiSecret": ""
+      "enabled": "on",
+      "apiKey": "Hf1T6SIGoz7xx9pfOevsH7R76tNKYoXt9c4n5RfWVisn0lW2AEHzNBRjBmoznSGO",
+      "apiSecret": "8MSpqJzoXJE1RAMPRQ8v8VB3ynip7UWxCKeeKIWU4Xri4uiUQeqE1sfUZHkGxB59"
     },
     "cryptoCom": {
-      "enabled": false,
-      "apiKey": "",
-      "apiSecret": ""
+      "enabled": "on",
+      "apiKey": "hCCijRjXhV4u2YhW1KxgRx",
+      "apiSecret": "cxakp_Gto5by3gVKmoTbKajF3Dov"
     }
   },
   "security": {
