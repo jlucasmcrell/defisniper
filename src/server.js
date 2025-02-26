@@ -1,6 +1,6 @@
 /**
  * CryptoSniperBot Server
- *
+ * 
  * This file contains the Express server that serves the UI and handles API requests.
  * It also initializes the trading engine and WebSocket connections.
  */
@@ -16,7 +16,7 @@ const { v4: uuidv4 } = require('uuid');
 const fs = require('fs');
 const { TradingEngine } = require('./trading/engine');
 const { SecurityManager } = require('./security/securityManager');
-const ConfigManager = require('./config/configManager'); // Updated import statement
+const { ConfigManager } = require('./config/configManager');
 const { Logger } = require('./utils/logger');
 const apiRoutes = require('./routes/api');
 const { version } = require('../package.json');
@@ -46,12 +46,12 @@ const ensureDirectoriesExist = () => {
 
 ensureDirectoriesExist();
 
+// Load configuration
+const configManager = new ConfigManager();
+const config = configManager.getConfig();
+
 // Initialize security manager
 const securityManager = new SecurityManager();
-
-// Load configuration
-const configManager = new ConfigManager(securityManager); // Pass securityManager to ConfigManager
-const config = configManager.getConfig();
 
 // Setup Express middleware
 app.use(cors());
@@ -83,7 +83,7 @@ app.use('/api', apiRoutes(securityManager, configManager));
 // Auth routes
 app.post('/auth/login', (req, res) => {
   const { password } = req.body;
-
+  
   if (securityManager.verifyPassword(password)) {
     req.session.authenticated = true;
     res.json({ success: true });
@@ -98,7 +98,7 @@ app.post('/auth/logout', (req, res) => {
 });
 
 app.get('/auth/status', (req, res) => {
-  res.json({
+  res.json({ 
     authenticated: req.session.authenticated === true,
     configured: configManager.isConfigured()
   });
@@ -121,7 +121,7 @@ app.get('/', (req, res) => {
 // Socket.io connection
 io.on('connection', (socket) => {
   logger.info(`Client connected: ${socket.id}`);
-
+  
   // Send initial data
   if (global.tradingEngine) {
     socket.emit('botStatus', {
@@ -131,7 +131,7 @@ io.on('connection', (socket) => {
       stats: global.tradingEngine.getStats()
     });
   }
-
+  
   socket.on('disconnect', () => {
     logger.info(`Client disconnected: ${socket.id}`);
   });
@@ -141,13 +141,13 @@ io.on('connection', (socket) => {
 if (configManager.isConfigured()) {
   try {
     const encryptionKey = securityManager.getEncryptionKey();
-
+    
     if (encryptionKey) {
       global.tradingEngine = new TradingEngine(configManager, securityManager, io);
       global.tradingEngine.initialize()
         .then(() => {
           logger.info('Trading engine initialized successfully');
-
+          
           // Auto-start if configured
           if (config.autoStart) {
             global.tradingEngine.start()
@@ -175,12 +175,12 @@ server.listen(PORT, () => {
 // Handle graceful shutdown
 process.on('SIGINT', async () => {
   logger.info('Shutting down server...');
-
+  
   if (global.tradingEngine && global.tradingEngine.isRunning()) {
     logger.info('Stopping trading engine...');
     await global.tradingEngine.stop();
   }
-
+  
   server.close(() => {
     logger.info('Server stopped');
     process.exit(0);

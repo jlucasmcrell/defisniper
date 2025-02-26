@@ -75,7 +75,7 @@ class TradingEngine {
       
       // Initialize exchange connectors
       if (decryptedConfig.exchanges) {
-        if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) {
+        if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exances.binanceUS.enabled) {
           this.exchanges.binanceUS = new BinanceExchange(
             decryptedConfig.exchanges.binanceUS.apiKey,
             decryptedConfig.exchanges.binanceUS.apiSecret,
@@ -95,7 +95,7 @@ class TradingEngine {
       }
       
       // Initialize trading strategies
-      if (decryptedConfig.strategies && decryptedConfig.strategies.tokenSniper && decryptedConfig.strategies.tokenSniper.enabled) {
+      if (decryptedConfig.strategies.tokenSniper.enabled) {
         this.strategies.tokenSniper = new TokenSniperStrategy(
           this.blockchain,
           this.exchanges,
@@ -104,7 +104,7 @@ class TradingEngine {
         );
       }
       
-      if (decryptedConfig.strategies && decryptedConfig.strategies.scalping && decryptedConfig.strategies.scalping.enabled) {
+      if (decryptedConfig.strategies.scalping.enabled) {
         this.strategies.scalping = new ScalpingStrategy(
           this.blockchain,
           this.exchanges,
@@ -113,7 +113,7 @@ class TradingEngine {
         );
       }
       
-      if (decryptedConfig.strategies && decryptedConfig.strategies.trendTrading && decryptedConfig.strategies.trendTrading.enabled) {
+      if (decryptedConfig.strategies.trendTrading.enabled) {
         this.strategies.trendTrading = new TrendTradingStrategy(
           this.blockchain,
           this.exchanges,

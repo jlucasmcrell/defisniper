@@ -39,6 +39,13 @@ if not exist "node_modules" (
 
 echo Starting trading bot services...
 start /B npm run start-server
+if %errorLevel% neq 0 (
+    echo Error: Failed to start the server.
+    echo Check the logs for more details.
+    echo.
+    pause
+    exit /b 1
+)
 
 :: Wait for the server to start
 echo Waiting for server to initialize...
@@ -46,6 +53,13 @@ timeout /t 5 /nobreak >nul
 
 echo Starting dashboard application...
 start /B npm run start-ui
+if %errorLevel% neq 0 (
+    echo Error: Failed to start the dashboard application.
+    echo Check the logs for more details.
+    echo.
+    pause
+    exit /b 1
+)
 
 echo.
 echo ========================================================
@@ -67,6 +81,13 @@ npm run logs
 echo.
 echo Stopping CryptoSniperBot...
 npm run stop
+if %errorLevel% neq 0 (
+    echo Error: Failed to stop the bot.
+    echo Check the logs for more details.
+    echo.
+    pause
+    exit /b 1
+)
 
 echo.
 echo CryptoSniperBot has been stopped.
