@@ -1,218 +1,190 @@
 /**
  * CryptoSniperBot Server
- * Main entry point for the application
+ *
+ * This file contains the Express server that serves the UI and handles API requests.
+ * It also initializes the trading engine and WebSocket connections.
  */
+
 const express = require('express');
 const http = require('http');
-const socketIo = require('socket.io');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const path = require('path');
+const socketIo = require('socket.io');
+const session = require('express-session');
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const { TradingEngine } = require('./trading/engine');
+const { SecurityManager } = require('./security/securityManager');
+const { ConfigManager } = require('./config/configManager');
 const { Logger } = require('./utils/logger');
-const ConfigManager = require('./config/configManager');
-const TradingEngine = require('./trading/tradingEngine');
-const TokenScanner = require('./trading/tokenScanner');
-const MarketAnalyzer = require('./trading/marketAnalyzer');
+const apiRoutes = require('./routes/api');
+const { version } = require('../package.json');
 
-class Server {
-    constructor(securityManager) {
-        if (!securityManager) {
-            throw new Error('SecurityManager is required');
-        }
+// Initialize logger
+const logger = new Logger('Server');
 
-        this.logger = new Logger('Server');
-        this.app = express();
-        this.server = http.createServer(this.app);
-        this.io = socketIo(this.server, {
-            cors: {
-                origin: "*",
-                methods: ["GET", "POST"]
-            }
-        });
-        
-        this.securityManager = securityManager;
-        this.configManager = new ConfigManager(this.securityManager);
-        this.marketAnalyzer = new MarketAnalyzer(this.configManager);
-        this.tokenScanner = new TokenScanner(this.configManager);
-        this.tradingEngine = new TradingEngine(
-            this.configManager,
-            this.securityManager,
-            this.marketAnalyzer,
-            this.tokenScanner
-        );
+// Create Express app
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
 
-        this.setupMiddleware();
-        this.setupRoutes();
-        this.setupWebSocket();
+// Create required directories if they don't exist
+const ensureDirectoriesExist = () => {
+  const dirs = ['logs', 'data', 'secure-config'];
+  dirs.forEach(dir => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
     }
+  });
+};
 
-    setupMiddleware() {
-        // CORS configuration
-        this.app.use(cors({
-            origin: '*',
-            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-            allowedHeaders: ['Content-Type', 'Authorization']
-        }));
+ensureDirectoriesExist();
 
-        // JSON body parser
-        this.app.use(express.json());
+// Load configuration
+const configManager = new ConfigManager();
+const config = configManager.getConfig();
 
-        // Serve static files from the public directory
-        this.app.use(express.static(path.join(__dirname, 'public')));
+// Initialize security manager
+const securityManager = new SecurityManager();
 
-        // Error handling middleware
-        this.app.use((err, req, res, next) => {
-            this.logger.error('Express error:', err);
-            res.status(500).json({ error: err.message });
+// Setup Express middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Session management
+app.use(session({
+  secret: securityManager.getSessionSecret(),
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false, maxAge: 3600000 }, // 1 hour
+  genid: () => uuidv4()
+}));
+
+// Authentication middleware
+const authenticate = (req, res, next) => {
+  if (req.session.authenticated) {
+    next();
+  } else {
+    res.status(401).json({ success: false, message: 'Authentication required' });
+  }
+};
+
+// API routes
+app.use('/api', apiRoutes(securityManager, configManager));
+
+// Auth routes
+app.post('/auth/login', (req, res) => {
+  const { password } = req.body;
+
+  if (securityManager.verifyPassword(password)) {
+    req.session.authenticated = true;
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, message: 'Invalid password' });
+  }
+});
+
+app.post('/auth/logout', (req, res) => {
+  req.session.destroy();
+  res.json({ success: true });
+});
+
+app.get('/auth/status', (req, res) => {
+  res.json({
+    authenticated: req.session.authenticated === true,
+    configured: configManager.isConfigured()
+  });
+});
+
+// Check if the bot is configured
+app.get('/api/status', (req, res) => {
+  res.json({
+    configured: configManager.isConfigured(),
+    running: global.tradingEngine ? global.tradingEngine.isRunning() : false,
+    version: version
+  });
+});
+
+// Serve main page
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
+
+// Socket.io connection
+io.on('connection', (socket) => {
+  logger.info(`Client connected: ${socket.id}`);
+
+  // Send initial data
+  if (global.tradingEngine) {
+    socket.emit('botStatus', {
+      running: global.tradingEngine.isRunning(),
+      activeTrades: global.tradingEngine.getActiveTrades(),
+      balances: global.tradingEngine.getBalances(),
+      stats: global.tradingEngine.getStats()
+    });
+  }
+
+  socket.on('disconnect', () => {
+    logger.info(`Client disconnected: ${socket.id}`);
+  });
+});
+
+// Initialize trading engine if configured
+if (configManager.isConfigured()) {
+  try {
+    const encryptionKey = securityManager.getEncryptionKey();
+
+    if (encryptionKey) {
+      global.tradingEngine = new TradingEngine(configManager, securityManager, io);
+      global.tradingEngine.initialize()
+        .then(() => {
+          logger.info('Trading engine initialized successfully');
+
+          // Auto-start if configured
+          if (config.autoStart) {
+            global.tradingEngine.start()
+              .then(() => logger.info('Trading engine auto-started'))
+              .catch(err => logger.error('Failed to auto-start trading engine', err));
+          }
+        })
+        .catch(err => {
+          logger.error('Failed to initialize trading engine', err);
         });
+    } else {
+      logger.warn('Encryption key not available, trading engine not initialized');
     }
-
-    setupRoutes() {
-        // API Routes
-        const apiRouter = express.Router();
-
-        apiRouter.post('/bot/start', async (req, res) => {
-            try {
-                await this.tradingEngine.start();
-                res.json({ success: true, message: 'Bot started successfully' });
-            } catch (error) {
-                this.logger.error('Failed to start bot', error);
-                res.status(500).json({ error: error.message });
-            }
-        });
-
-        apiRouter.post('/bot/stop', async (req, res) => {
-            try {
-                await this.tradingEngine.stop();
-                res.json({ success: true, message: 'Bot stopped successfully' });
-            } catch (error) {
-                this.logger.error('Failed to stop bot', error);
-                res.status(500).json({ error: error.message });
-            }
-        });
-
-        apiRouter.get('/status', (req, res) => {
-            try {
-                const status = {
-                    running: this.tradingEngine.isRunning,
-                    stats: this.tradingEngine.getStats(),
-                    trades: {
-                        active: Array.from(this.tradingEngine.activeTrades.values()),
-                        history: this.tradingEngine.tradeHistory
-                    }
-                };
-                res.json(status);
-            } catch (error) {
-                this.logger.error('Failed to get status', error);
-                res.status(500).json({ error: error.message });
-            }
-        });
-
-        apiRouter.get('/settings', (req, res) => {
-            try {
-                const config = this.configManager.getConfig();
-                res.json(config);
-            } catch (error) {
-                this.logger.error('Failed to get settings', error);
-                res.status(500).json({ error: error.message });
-            }
-        });
-
-        apiRouter.post('/settings', (req, res) => {
-            try {
-                this.configManager.updateConfig(req.body);
-                res.json({ success: true, message: 'Settings updated successfully' });
-            } catch (error) {
-                this.logger.error('Failed to update settings', error);
-                res.status(500).json({ error: error.message });
-            }
-        });
-
-        apiRouter.post('/trades/:id/close', async (req, res) => {
-            try {
-                await this.tradingEngine.closeTrade(req.params.id);
-                res.json({ success: true, message: 'Trade closed successfully' });
-            } catch (error) {
-                this.logger.error('Failed to close trade', error);
-                res.status(500).json({ error: error.message });
-            }
-        });
-
-        // Mount API routes
-        this.app.use('/api', apiRouter);
-
-        // Serve frontend for all other routes
-        this.app.get('*', (req, res) => {
-            res.sendFile(path.join(__dirname, 'public', 'index.html'));
-        });
-    }
-
-    setupWebSocket() {
-        this.io.on('connection', (socket) => {
-            this.logger.info(`Client connected: ${socket.id}`);
-
-            socket.on('disconnect', () => {
-                this.logger.info(`Client disconnected: ${socket.id}`);
-            });
-        });
-
-        // Trading Engine Events
-        this.tradingEngine.on('status', (status) => {
-            this.io.emit('botStatus', status);
-        });
-
-        this.tradingEngine.on('newTrade', (trade) => {
-            this.io.emit('tradeUpdate', {
-                active: Array.from(this.tradingEngine.activeTrades.values()),
-                history: this.tradingEngine.tradeHistory
-            });
-        });
-
-        this.tradingEngine.on('tradeClosed', (trade) => {
-            this.io.emit('tradeUpdate', {
-                active: Array.from(this.tradingEngine.activeTrades.values()),
-                history: this.tradingEngine.tradeHistory
-            });
-            this.io.emit('statsUpdate', this.tradingEngine.getStats());
-        });
-    }
-
-    async start() {
-        try {
-            const port = process.env.PORT || 3000;
-
-            // Initialize components
-            await this.tradingEngine.initialize();
-
-            // Start server
-            this.server.listen(port, () => {
-                this.logger.info(`CryptoSniperBot server running on port ${port}`);
-            });
-
-            if (this.configManager.getConfig().trading.autoStart) {
-                await this.tradingEngine.start();
-            }
-
-        } catch (error) {
-            this.logger.error('Failed to start server', error);
-            throw error;
-        }
-    }
-
-    stop() {
-        this.server.close(() => {
-            this.logger.info('CryptoSniperBot server stopped');
-        });
-    }
+  } catch (err) {
+    logger.error('Error initializing trading engine', err);
+  }
 }
 
 // Start the server
-if (require.main === module) {
-    const securityManager = new (require('./security/securityManager'))();
-    const server = new Server(securityManager);
-    server.start().catch(error => {
-        console.error('Failed to start server:', error);
-        process.exit(1);
-    });
-}
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  logger.info(`CryptoSniperBot server running on port ${PORT}`);
+});
 
-module.exports = Server;
+// Handle graceful shutdown
+process.on('SIGINT', async () => {
+  logger.info('Shutting down server...');
+
+  if (global.tradingEngine && global.tradingEngine.isRunning()) {
+    logger.info('Stopping trading engine...');
+    await global.tradingEngine.stop();
+  }
+
+  server.close(() => {
+    logger.info('Server stopped');
+    process.exit(0);
+  });
+});
+
+module.exports = { app, server, io };
