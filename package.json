@@ -1,82 +1,36 @@
 {
   "name": "crypto-sniper-bot",
   "version": "1.0.0",
-  "description": "Cryptocurrency trading, scalping, and sniping bot with automatic trading capabilities",
-  "main": "src/main.js",
+  "description": "Automated cryptocurrency trading bot for multiple exchanges",
+  "main": "src/server.js",
   "scripts": {
-    "setup-desktop": "electron-builder install-app-deps",
+    "start": "node src/server.js",
     "start-server": "node src/server.js",
-    "start-ui": "electron src/electron.js",
-    "logs": "node src/scripts/showLogs.js",
-    "stop": "node src/scripts/stopBot.js",
-    "setup": "node src/scripts/setup.js",
-    "start": "npm run start-server && npm run start-ui",
-    "build": "electron-builder --win"
+    "test": "jest",
+    "setup": "node src/setup.js"
   },
-  "keywords": [
-    "cryptocurrency",
-    "trading",
-    "bot",
-    "ethereum",
-    "binance",
-    "crypto.com",
-    "scalping",
-    "sniping"
-  ],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
-    "axios": "^1.3.4",
-    "bcrypt": "^5.1.0",
-    "body-parser": "^1.20.2",
-    "ccxt": "^3.0.0",
-    "chart.js": "^4.2.1",
+    "@pancakeswap/sdk": "^2.4.5",
+    "@uniswap/sdk": "^3.0.3",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
+    "axios": "^1.6.2",
+    "binance-api-node": "^0.12.6",
     "cors": "^2.8.5",
-    "crypto-js": "^4.1.1",
-    "dotenv": "^16.0.3",
-    "electron-log": "^4.4.8",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.3.1",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
-    "express-session": "^1.17.3",
-    "lokijs": "^1.5.12",
-    "moment": "^2.29.4",
-    "node-binance-api": "^0.13.1",
-    "node-schedule": "^2.1.1",
-    "socket.io": "^4.6.1",
-    "socket.io-client": "^4.6.1",
-    "sqlite3": "^5.1.6",
-    "tailwindcss": "^3.2.7",
-    "technicalindicators": "^3.1.0",
-    "uuid": "^9.0.0",
-    "web3": "^4.16.0",
-    "winston": "^3.8.2"
+    "socket.io": "^4.7.2",
+    "web3": "^1.10.0",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
-    "electron": "^23.2.0",
-    "electron-builder": "^23.6.0"
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2"
   },
-  "build": {
-    "appId": "com.cryptosniperbot.app",
-    "productName": "CryptoSniperBot",
-    "directories": {
-      "output": "dist"
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "public/assets/icon.ico"
-    },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "createStartMenuShortcut": true,
-      "shortcutName": "CryptoSniperBot"
-    },
-    "files": [
-      "src/**/*",
-      "node_modules/**/*",
-      "package.json",
-      "public/**/*"
-    ]
-  }
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "private": true
 }

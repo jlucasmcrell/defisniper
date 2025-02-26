@@ -1,367 +1,334 @@
 /**
  * Market Analyzer for CryptoSniperBot
- * Analyzes market conditions and token metrics for trading decisions
+ * Analyzes market conditions and token metrics
  */
+const { ethers } = require('ethers');
 const { Logger } = require('../utils/logger');
-const technicalIndicators = require('technicalindicators');
+const IERC20 = require('../contracts/IERC20.json');
 
 class MarketAnalyzer {
-    constructor(configManager, logger) {
+    constructor(configManager) {
         this.configManager = configManager;
-        this.logger = logger || new Logger('MarketAnalyzer');
-        this.marketData = new Map();
-        this.tokenMetrics = new Map();
-        this.trendAnalysis = new Map();
-        this.lastUpdate = 0;
+        this.logger = new Logger('MarketAnalyzer');
+        this.providers = new Map();
+        this.liquidityThreshold = 50000; // Minimum liquidity in USD
+        this.holdersThreshold = 100; // Minimum number of holders
+        this.minMarketCap = 100000; // Minimum market cap in USD
     }
 
     async initialize() {
         try {
             const config = this.configManager.getConfig();
-            this.updateInterval = config.trading.analysisInterval || 60000; // Default 1 minute
-            this.logger.info('MarketAnalyzer initialized successfully');
+
+            // Initialize providers
+            if (config.ethereum && config.ethereum.enabled) {
+                const ethProvider = new ethers.providers.JsonRpcProvider(
+                    `https://mainnet.infura.io/v3/${config.ethereum.infuraId}`
+                );
+                this.providers.set('ethereum', ethProvider);
+            }
+
+            if (config.bnbChain && config.bnbChain.enabled) {
+                const bscProvider = new ethers.providers.JsonRpcProvider(
+                    'https://bsc-dataseed.binance.org/'
+                );
+                this.providers.set('bsc', bscProvider);
+            }
+
+            this.logger.info('Market analyzer initialized successfully');
         } catch (error) {
-            this.logger.error('Failed to initialize MarketAnalyzer', error);
+            this.logger.error('Failed to initialize market analyzer', error);
             throw error;
         }
     }
 
     async analyzeNewToken(token) {
         try {
-            const metrics = await this.calculateTokenMetrics(token);
-            const analysis = await this.analyzeTradingPotential(token, metrics);
-            
-            this.tokenMetrics.set(token.address, metrics);
-            this.trendAnalysis.set(token.address, analysis);
+            const provider = this.providers.get(token.network);
+            if (!provider) {
+                throw new Error(`Provider not found for network: ${token.network}`);
+            }
 
-            return {
-                metrics,
-                analysis,
-                recommendation: this.generateTradingRecommendation(metrics, analysis)
-            };
-        } catch (error) {
-            this.logger.error(`Error analyzing token ${token.address}`, error);
-            return null;
-        }
-    }
+            const tokenContract = new ethers.Contract(token.address, IERC20.abi, provider);
 
-    async calculateTokenMetrics(token) {
-        try {
-            const metrics = {
-                liquidityUSD: await this.getLiquidityMetrics(token),
-                volume24h: await this.get24HourVolume(token),
-                priceChange: await this.getPriceChanges(token),
-                marketCap: await this.getMarketCap(token),
-                holders: await this.getHoldersCount(token),
-                creationTime: await this.getTokenCreationTime(token),
-                socialMetrics: await this.getSocialMetrics(token)
-            };
+            // Gather token metrics
+            const [
+                liquidity,
+                holders,
+                marketCap,
+                transactionVolume,
+                priceHistory
+            ] = await Promise.all([
+                this.getLiquidity(token),
+                this.getHolderCount(token),
+                this.getMarketCap(token),
+                this.getTransactionVolume(token),
+                this.getPriceHistory(token)
+            ]);
 
-            // Calculate additional metrics
-            metrics.liquidityToMarketCapRatio = metrics.liquidityUSD / metrics.marketCap;
-            metrics.volumeToMarketCapRatio = metrics.volume24h / metrics.marketCap;
-            metrics.volatility = await this.calculateVolatility(token);
+            // Calculate metrics
+            const volatility = this.calculateVolatility(priceHistory);
+            const momentum = this.calculateMomentum(priceHistory);
+            const buyPressure = this.calculateBuyPressure(transactionVolume);
+            const fundamentalScore = this.calculateFundamentalScore({
+                liquidity,
+                holders,
+                marketCap,
+                volatility
+            });
+            const riskScore = this.calculateRiskScore({
+                liquidity,
+                holders,
+                volatility,
+                age: Date.now() - token.timestamp
+            });
 
-            return metrics;
-        } catch (error) {
-            this.logger.error(`Error calculating metrics for token ${token.address}`, error);
-            return null;
-        }
-    }
-
-    async analyzeTradingPotential(token, metrics) {
-        try {
+            // Generate analysis result
             const analysis = {
-                technicalIndicators: await this.calculateTechnicalIndicators(token),
-                fundamentalScore: await this.calculateFundamentalScore(metrics),
-                riskScore: await this.calculateRiskScore(metrics),
-                marketSentiment: await this.analyzeMarketSentiment(token),
-                trendStrength: await this.analyzeTrendStrength(token)
+                token: token,
+                metrics: {
+                    liquidity,
+                    holders,
+                    marketCap,
+                    volatility,
+                    momentum,
+                    buyPressure,
+                    transactionVolume
+                },
+                scores: {
+                    fundamental: fundamentalScore,
+                    risk: riskScore
+                },
+                recommendation: this.generateRecommendation({
+                    fundamentalScore,
+                    riskScore,
+                    momentum,
+                    buyPressure
+                }),
+                timestamp: Date.now()
             };
+
+            this.logger.info(`Analysis completed for token ${token.symbol}`, {
+                address: token.address,
+                scores: analysis.scores
+            });
 
             return analysis;
+
         } catch (error) {
-            this.logger.error(`Error analyzing trading potential for ${token.address}`, error);
-            return null;
+            this.logger.error(`Failed to analyze token ${token.symbol}`, error);
+            throw error;
         }
     }
 
-    async calculateTechnicalIndicators(token) {
+    async getLiquidity(token) {
         try {
-            const prices = await this.getPriceHistory(token);
-            const periods = this.configManager.getConfig().trading.indicatorPeriods || {
-                rsi: 14,
-                macd: { fast: 12, slow: 26, signal: 9 },
-                ema: [9, 21]
-            };
-
-            return {
-                rsi: this.calculateRSI(prices, periods.rsi),
-                macd: this.calculateMACD(prices, periods.macd),
-                ema: this.calculateEMA(prices, periods.ema),
-                support: this.findSupportLevels(prices),
-                resistance: this.findResistanceLevels(prices)
-            };
+            // Implement liquidity calculation using DEX pair reserves
+            return 0;
         } catch (error) {
-            this.logger.error(`Error calculating technical indicators for ${token.address}`, error);
-            return null;
-        }
-    }
-
-    calculateRSI(prices, period) {
-        try {
-            const rsi = technicalIndicators.RSI.calculate({
-                values: prices,
-                period: period
-            });
-            return rsi[rsi.length - 1];
-        } catch (error) {
-            this.logger.error('Error calculating RSI', error);
-            return null;
-        }
-    }
-
-    calculateMACD(prices, periods) {
-        try {
-            const macd = technicalIndicators.MACD.calculate({
-                values: prices,
-                fastPeriod: periods.fast,
-                slowPeriod: periods.slow,
-                signalPeriod: periods.signal
-            });
-            return macd[macd.length - 1];
-        } catch (error) {
-            this.logger.error('Error calculating MACD', error);
-            return null;
-        }
-    }
-
-    calculateEMA(prices, periods) {
-        try {
-            const emaResults = {};
-            for (const period of periods) {
-                const ema = technicalIndicators.EMA.calculate({
-                    values: prices,
-                    period: period
-                });
-                emaResults[period] = ema[ema.length - 1];
-            }
-            return emaResults;
-        } catch (error) {
-            this.logger.error('Error calculating EMA', error);
-            return null;
-        }
-    }
-
-    findSupportLevels(prices) {
-        try {
-            // Implement support level detection algorithm
-            return [];
-        } catch (error) {
-            this.logger.error('Error finding support levels', error);
-            return [];
-        }
-    }
-
-    findResistanceLevels(prices) {
-        try {
-            // Implement resistance level detection algorithm
-            return [];
-        } catch (error) {
-            this.logger.error('Error finding resistance levels', error);
-            return [];
-        }
-    }
-
-    async calculateFundamentalScore(metrics) {
-        try {
-            const weights = this.configManager.getConfig().trading.fundamentalWeights || {
-                liquidity: 0.3,
-                volume: 0.2,
-                marketCap: 0.2,
-                holders: 0.15,
-                age: 0.15
-            };
-
-            let score = 0;
-            score += (metrics.liquidityToMarketCapRatio * weights.liquidity);
-            score += (metrics.volumeToMarketCapRatio * weights.volume);
-            score += (Math.log10(metrics.marketCap) / 10 * weights.marketCap);
-            score += (Math.log10(metrics.holders) / 4 * weights.holders);
-            score += (Math.min(metrics.creationTime / (30 * 24 * 60 * 60), 1) * weights.age);
-
-            return Math.min(Math.max(score, 0), 100);
-        } catch (error) {
-            this.logger.error('Error calculating fundamental score', error);
+            this.logger.error(`Failed to get liquidity for ${token.symbol}`, error);
             return 0;
         }
     }
 
-    async calculateRiskScore(metrics) {
+    async getHolderCount(token) {
         try {
-            const weights = this.configManager.getConfig().trading.riskWeights || {
+            // Implement holder count calculation
+            return 0;
+        } catch (error) {
+            this.logger.error(`Failed to get holder count for ${token.symbol}`, error);
+            return 0;
+        }
+    }
+
+    async getMarketCap(token) {
+        try {
+            // Implement market cap calculation
+            return 0;
+        } catch (error) {
+            this.logger.error(`Failed to get market cap for ${token.symbol}`, error);
+            return 0;
+        }
+    }
+
+    async getTransactionVolume(token) {
+        try {
+            // Implement transaction volume calculation
+            return {
+                buy: 0,
+                sell: 0,
+                total: 0
+            };
+        } catch (error) {
+            this.logger.error(`Failed to get transaction volume for ${token.symbol}`, error);
+            return { buy: 0, sell: 0, total: 0 };
+        }
+    }
+
+    async getPriceHistory(token) {
+        try {
+            // Implement price history retrieval
+            return [];
+        } catch (error) {
+            this.logger.error(`Failed to get price history for ${token.symbol}`, error);
+            return [];
+        }
+    }
+
+    calculateVolatility(priceHistory) {
+        try {
+            if (!priceHistory || priceHistory.length < 2) {
+                return 0;
+            }
+
+            // Calculate standard deviation of price returns
+            const returns = [];
+            for (let i = 1; i < priceHistory.length; i++) {
+                returns.push(
+                    (priceHistory[i].price - priceHistory[i - 1].price) /
+                    priceHistory[i - 1].price
+                );
+            }
+
+            const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+            const variance = returns.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / returns.length;
+            
+            return Math.sqrt(variance);
+        } catch (error) {
+            this.logger.error('Failed to calculate volatility', error);
+            return 0;
+        }
+    }
+
+    calculateMomentum(priceHistory) {
+        try {
+            if (!priceHistory || priceHistory.length < 2) {
+                return 0;
+            }
+
+            // Calculate price momentum using exponential moving average
+            const periods = Math.min(20, priceHistory.length);
+            const alpha = 2 / (periods + 1);
+            let ema = priceHistory[0].price;
+
+            for (let i = 1; i < priceHistory.length; i++) {
+                ema = (priceHistory[i].price - ema) * alpha + ema;
+            }
+
+            return (priceHistory[priceHistory.length - 1].price - ema) / ema;
+        } catch (error) {
+            this.logger.error('Failed to calculate momentum', error);
+            return 0;
+        }
+    }
+
+    calculateBuyPressure(volume) {
+        try {
+            if (!volume.total) {
+                return 0;
+            }
+            return volume.buy / volume.total;
+        } catch (error) {
+            this.logger.error('Failed to calculate buy pressure', error);
+            return 0;
+        }
+    }
+
+    calculateFundamentalScore({ liquidity, holders, marketCap, volatility }) {
+        try {
+            // Weight factors
+            const weights = {
                 liquidity: 0.3,
-                volatility: 0.3,
-                age: 0.2,
-                holders: 0.2
+                holders: 0.2,
+                marketCap: 0.3,
+                volatility: 0.2
             };
 
-            let riskScore = 0;
-            riskScore += (1 - metrics.liquidityToMarketCapRatio) * weights.liquidity;
-            riskScore += metrics.volatility * weights.volatility;
-            riskScore += (1 - Math.min(metrics.creationTime / (30 * 24 * 60 * 60), 1)) * weights.age;
-            riskScore += (1 - Math.min(Math.log10(metrics.holders) / 4, 1)) * weights.holders;
+            // Normalize metrics
+            const normalizedLiquidity = Math.min(liquidity / this.liquidityThreshold, 1);
+            const normalizedHolders = Math.min(holders / this.holdersThreshold, 1);
+            const normalizedMarketCap = Math.min(marketCap / this.minMarketCap, 1);
+            const normalizedVolatility = Math.max(0, 1 - volatility);
 
-            return Math.min(Math.max(riskScore * 100, 0), 100);
+            // Calculate weighted score
+            const score = 
+                (normalizedLiquidity * weights.liquidity) +
+                (normalizedHolders * weights.holders) +
+                (normalizedMarketCap * weights.marketCap) +
+                (normalizedVolatility * weights.volatility);
+
+            return Math.min(Math.max(score * 100, 0), 100);
         } catch (error) {
-            this.logger.error('Error calculating risk score', error);
+            this.logger.error('Failed to calculate fundamental score', error);
+            return 0;
+        }
+    }
+
+    calculateRiskScore({ liquidity, holders, volatility, age }) {
+        try {
+            // Weight factors
+            const weights = {
+                liquidity: 0.3,
+                holders: 0.2,
+                volatility: 0.3,
+                age: 0.2
+            };
+
+            // Normalize metrics
+            const normalizedLiquidity = Math.max(0, 1 - (liquidity / this.liquidityThreshold));
+            const normalizedHolders = Math.max(0, 1 - (holders / this.holdersThreshold));
+            const normalizedVolatility = Math.min(volatility, 1);
+            const normalizedAge = Math.max(0, 1 - (age / (7 * 24 * 60 * 60 * 1000))); // 7 days
+
+            // Calculate weighted score
+            const score = 
+                (normalizedLiquidity * weights.liquidity) +
+                (normalizedHolders * weights.holders) +
+                (normalizedVolatility * weights.volatility) +
+                (normalizedAge * weights.age);
+
+            return Math.min(Math.max(score * 100, 0), 100);
+        } catch (error) {
+            this.logger.error('Failed to calculate risk score', error);
             return 100;
         }
     }
 
-    async analyzeMarketSentiment(token) {
+    generateRecommendation({ fundamentalScore, riskScore, momentum, buyPressure }) {
         try {
-            // Implement market sentiment analysis
-            return {
-                sentiment: 'neutral',
-                score: 50
+            // Define thresholds
+            const thresholds = {
+                fundamental: 70,
+                risk: 30,
+                momentum: 0.05,
+                buyPressure: 0.6
             };
-        } catch (error) {
-            this.logger.error('Error analyzing market sentiment', error);
-            return null;
-        }
-    }
 
-    async analyzeTrendStrength(token) {
-        try {
-            // Implement trend strength analysis
-            return {
-                trend: 'neutral',
-                strength: 50
-            };
-        } catch (error) {
-            this.logger.error('Error analyzing trend strength', error);
-            return null;
-        }
-    }
+            let action = 'hold';
+            let confidence = 0;
 
-    generateTradingRecommendation(metrics, analysis) {
-        try {
-            const config = this.configManager.getConfig().trading;
-            
-            // Calculate overall score
-            const technicalScore = this.calculateTechnicalScore(analysis.technicalIndicators);
-            const overallScore = (
-                technicalScore * 0.4 +
-                analysis.fundamentalScore * 0.3 +
-                (100 - analysis.riskScore) * 0.3
-            );
-
-            // Generate recommendation
-            if (analysis.riskScore > config.maxRiskScore) {
-                return { action: 'avoid', confidence: 100 };
+            // Generate recommendation based on metrics
+            if (fundamentalScore >= thresholds.fundamental &&
+                riskScore <= thresholds.risk &&
+                momentum >= thresholds.momentum &&
+                buyPressure >= thresholds.buyPressure) {
+                action = 'buy';
+                confidence = (
+                    (fundamentalScore / 100) * 0.4 +
+                    ((100 - riskScore) / 100) * 0.3 +
+                    (Math.min(momentum * 10, 1)) * 0.15 +
+                    (buyPressure) * 0.15
+                ) * 100;
             }
 
-            if (overallScore >= config.strongBuyThreshold) {
-                return { action: 'strong_buy', confidence: overallScore };
-            } else if (overallScore >= config.buyThreshold) {
-                return { action: 'buy', confidence: overallScore };
-            } else if (overallScore <= config.strongSellThreshold) {
-                return { action: 'strong_sell', confidence: 100 - overallScore };
-            } else if (overallScore <= config.sellThreshold) {
-                return { action: 'sell', confidence: 100 - overallScore };
-            }
-
-            return { action: 'hold', confidence: 50 };
+            return {
+                action,
+                confidence: Math.round(confidence)
+            };
         } catch (error) {
-            this.logger.error('Error generating trading recommendation', error);
+            this.logger.error('Failed to generate recommendation', error);
             return { action: 'hold', confidence: 0 };
         }
-    }
-
-    calculateTechnicalScore(indicators) {
-        try {
-            let score = 50; // Neutral base score
-
-            // RSI Analysis
-            if (indicators.rsi) {
-                if (indicators.rsi < 30) score += 20; // Oversold
-                else if (indicators.rsi > 70) score -= 20; // Overbought
-            }
-
-            // MACD Analysis
-            if (indicators.macd) {
-                if (indicators.macd.MACD > indicators.macd.signal) score += 15;
-                else score -= 15;
-            }
-
-            // EMA Analysis
-            if (indicators.ema) {
-                const emaValues = Object.values(indicators.ema);
-                if (emaValues.length >= 2) {
-                    if (emaValues[0] > emaValues[1]) score += 15;
-                    else score -= 15;
-                }
-            }
-
-            return Math.min(Math.max(score, 0), 100);
-        } catch (error) {
-            this.logger.error('Error calculating technical score', error);
-            return 50;
-        }
-    }
-
-    async getLiquidityMetrics(token) {
-        // Implement liquidity metrics calculation
-        return 0;
-    }
-
-    async get24HourVolume(token) {
-        // Implement 24h volume calculation
-        return 0;
-    }
-
-    async getPriceChanges(token) {
-        // Implement price changes calculation
-        return {
-            change1h: 0,
-            change24h: 0,
-            change7d: 0
-        };
-    }
-
-    async getMarketCap(token) {
-        // Implement market cap calculation
-        return 0;
-    }
-
-    async getHoldersCount(token) {
-        // Implement holders count retrieval
-        return 0;
-    }
-
-    async getTokenCreationTime(token) {
-        // Implement token creation time retrieval
-        return 0;
-    }
-
-    async getSocialMetrics(token) {
-        // Implement social metrics retrieval
-        return {
-            telegram: 0,
-            twitter: 0,
-            reddit: 0
-        };
-    }
-
-    async calculateVolatility(token) {
-        // Implement volatility calculation
-        return 0;
-    }
-
-    async getPriceHistory(token) {
-        // Implement price history retrieval
-        return [];
     }
 }
 

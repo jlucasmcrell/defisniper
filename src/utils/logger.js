@@ -1,81 +1,96 @@
 /**
- * Logger utility for CryptoSniperBot
- * Provides consistent logging throughout the application
+ * Logger Utility for CryptoSniperBot
  */
 const winston = require('winston');
 const path = require('path');
 const fs = require('fs');
 
-// Create logs directory if it doesn't exist
-const logsDir = path.join(process.cwd(), 'logs');
-if (!fs.existsSync(logsDir)) {
-  fs.mkdirSync(logsDir);
-}
-
-// Define log format
-const logFormat = winston.format.combine(
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  winston.format.printf(({ level, message, timestamp, component }) => {
-    return `${timestamp} [${level.toUpperCase()}]${component ? ` [${component}]` : ''}: ${message}`;
-  })
-);
-
 class Logger {
-  constructor(component) {
-    this.component = component;
-    this.logger = winston.createLogger({
-      level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-      format: logFormat,
-      defaultMeta: { component },
-      transports: [
-        // Console output
-        new winston.transports.Console({
-          format: winston.format.combine(
-            winston.format.colorize(),
-            logFormat
-          )
-        }),
-        // File output - general log
-        new winston.transports.File({ 
-          filename: path.join(logsDir, 'application.log'),
-          maxsize: 5242880, // 5MB
-          maxFiles: 5
-        }),
-        // File output - error log
-        new winston.transports.File({ 
-          level: 'error',
-          filename: path.join(logsDir, 'error.log'),
-          maxsize: 5242880, // 5MB
-          maxFiles: 5
-        })
-      ]
-    });
-  }
+    constructor(module) {
+        this.module = module;
+        this.logDir = path.join(__dirname, '../../logs');
+        this.logPath = path.join(this.logDir, 'cryptosniperbot.log');
+        
+        // Create logs directory if it doesn't exist
+        if (!fs.existsSync(this.logDir)) {
+            fs.mkdirSync(this.logDir, { recursive: true });
+        }
 
-  info(message) {
-    this.logger.info(message);
-  }
+        this.logger = winston.createLogger({
+            level: 'debug',
+            format: winston.format.combine(
+                winston.format.timestamp(),
+                winston.format.errors({ stack: true }),
+                winston.format.json()
+            ),
+            defaultMeta: { module },
+            transports: [
+                new winston.transports.File({ 
+                    filename: path.join(this.logDir, 'error.log'), 
+                    level: 'error' 
+                }),
+                new winston.transports.File({ 
+                    filename: this.logPath 
+                })
+            ]
+        });
 
-  warn(message) {
-    this.logger.warn(message);
-  }
-
-  error(message, error) {
-    if (error && error.stack) {
-      this.logger.error(`${message}: ${error.stack}`);
-    } else {
-      this.logger.error(`${message}: ${error || ''}`);
+        if (process.env.NODE_ENV !== 'production') {
+            this.logger.add(new winston.transports.Console({
+                format: winston.format.combine(
+                    winston.format.colorize(),
+                    winston.format.simple()
+                )
+            }));
+        }
     }
-  }
 
-  debug(message) {
-    this.logger.debug(message);
-  }
+    info(message, meta = {}) {
+        this.logger.info(message, { ...meta });
+    }
+
+    error(message, error = null) {
+        if (error instanceof Error) {
+            this.logger.error(message, { 
+                error: error.message,
+                stack: error.stack
+            });
+        } else {
+            this.logger.error(message, { error });
+        }
+    }
+
+    warn(message, meta = {}) {
+        this.logger.warn(message, { ...meta });
+    }
+
+    debug(message, meta = {}) {
+        this.logger.debug(message, { ...meta });
+    }
+
+    getLogs(options = {}) {
+        try {
+            const logs = [];
+            const logFile = fs.readFileSync(this.logPath, 'utf8');
+            const lines = logFile.split('\n').filter(line => line.trim());
+
+            for (const line of lines) {
+                try {
+                    const log = JSON.parse(line);
+                    if (options.level && log.level !== options.level) continue;
+                    if (options.module && log.module !== options.module) continue;
+                    logs.push(log);
+                } catch (e) {
+                    continue;
+                }
+            }
+
+            return logs;
+        } catch (error) {
+            this.error('Failed to get logs', error);
+            return [];
+        }
+    }
 }
 
-// Create default logger instance
-const defaultLogger = new Logger('System');
-
-// Export both the Logger class and a default instance
-module.exports = defaultLogger;
-module.exports.Logger = Logger;
+module.exports = { Logger };

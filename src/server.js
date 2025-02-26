@@ -1,10 +1,11 @@
 /**
  * CryptoSniperBot Server
- * Main entry point for the trading bot application
+ * Main entry point for the application
  */
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const cors = require('cors');
 const path = require('path');
 const { Logger } = require('./utils/logger');
 const ConfigManager = require('./config/configManager');
@@ -13,182 +14,172 @@ const TradingEngine = require('./trading/tradingEngine');
 const TokenScanner = require('./trading/tokenScanner');
 const MarketAnalyzer = require('./trading/marketAnalyzer');
 
-// Initialize components
-const logger = new Logger('Server');
-const configManager = new ConfigManager();
-const securityManager = new SecurityManager();
+class Server {
+    constructor() {
+        this.logger = new Logger('Server');
+        this.app = express();
+        this.server = http.createServer(this.app);
+        this.io = socketIo(this.server);
+        
+        this.configManager = new ConfigManager();
+        this.securityManager = new SecurityManager();
+        this.marketAnalyzer = new MarketAnalyzer(this.configManager);
+        this.tokenScanner = new TokenScanner(this.configManager);
+        this.tradingEngine = new TradingEngine(
+            this.configManager,
+            this.securityManager,
+            this.marketAnalyzer,
+            this.tokenScanner
+        );
 
-// Create Express app
-const app = express();
-const server = http.createServer(app);
-const io = socketIo(server);
-
-// Initialize trading components with dependencies
-const marketAnalyzer = new MarketAnalyzer(configManager, logger);
-const tokenScanner = new TokenScanner(configManager, logger);
-const tradingEngine = new TradingEngine(configManager, securityManager, marketAnalyzer, tokenScanner, logger);
-
-// Clean up any legacy files
-securityManager.cleanupLegacyFiles();
-configManager.cleanupLegacyFiles();
-
-// Middleware
-app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
-
-// API Routes
-app.get('/api/status', (req, res) => {
-    try {
-        const status = {
-            configured: configManager.isConfigured(),
-            running: tradingEngine.isRunning(),
-            version: require('../package.json').version,
-            uptime: process.uptime(),
-            stats: tradingEngine.getStats()
-        };
-        res.json(status);
-    } catch (error) {
-        logger.error('Error getting status', error);
-        res.status(500).json({ error: 'Internal server error' });
+        this.setupMiddleware();
+        this.setupRoutes();
+        this.setupWebSocket();
     }
-});
 
-// Settings Routes
-app.get('/api/settings', (req, res) => {
-    try {
-        const settings = configManager.getConfig();
-        res.json(settings);
-    } catch (error) {
-        logger.error('Error getting settings', error);
-        res.status(500).json({ error: 'Failed to get settings' });
+    setupMiddleware() {
+        this.app.use(cors());
+        this.app.use(express.json());
+        this.app.use(express.static(path.join(__dirname, 'public')));
     }
-});
 
-app.post('/api/settings', (req, res) => {
-    try {
-        configManager.updateConfig(req.body);
-        res.json({ success: true });
-    } catch (error) {
-        logger.error('Error updating settings', error);
-        res.status(500).json({ error: 'Failed to update settings' });
+    setupRoutes() {
+        // API Routes
+        this.app.post('/api/bot/start', async (req, res) => {
+            try {
+                await this.tradingEngine.start();
+                res.json({ success: true });
+            } catch (error) {
+                this.logger.error('Failed to start bot', error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+
+        this.app.post('/api/bot/stop', async (req, res) => {
+            try {
+                await this.tradingEngine.stop();
+                res.json({ success: true });
+            } catch (error) {
+                this.logger.error('Failed to stop bot', error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+
+        this.app.get('/api/status', (req, res) => {
+            try {
+                const status = {
+                    running: this.tradingEngine.isRunning,
+                    stats: this.tradingEngine.getStats(),
+                    trades: {
+                        active: Array.from(this.tradingEngine.activeTrades.values()),
+                        history: this.tradingEngine.tradeHistory
+                    }
+                };
+                res.json(status);
+            } catch (error) {
+                this.logger.error('Failed to get status', error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+
+        this.app.get('/api/settings', (req, res) => {
+            try {
+                const config = this.configManager.getConfig();
+                res.json(config);
+            } catch (error) {
+                this.logger.error('Failed to get settings', error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+
+        this.app.post('/api/settings', (req, res) => {
+            try {
+                this.configManager.updateConfig(req.body);
+                res.json({ success: true });
+            } catch (error) {
+                this.logger.error('Failed to update settings', error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+
+        this.app.post('/api/trades/:id/close', async (req, res) => {
+            try {
+                await this.tradingEngine.closeTrade(req.params.id);
+                res.json({ success: true });
+            } catch (error) {
+                this.logger.error('Failed to close trade', error);
+                res.status(500).json({ error: error.message });
+            }
+        });
+
+        // Serve frontend
+        this.app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, 'public', 'index.html'));
+        });
     }
-});
 
-// Logs Routes
-app.get('/api/logs', (req, res) => {
-    try {
-        const logs = logger.getLogs();
-        res.json(logs);
-    } catch (error) {
-        logger.error('Error getting logs', error);
-        res.status(500).json({ error: 'Failed to get logs' });
+    setupWebSocket() {
+        this.io.on('connection', (socket) => {
+            this.logger.info(`Client connected: ${socket.id}`);
+
+            socket.on('disconnect', () => {
+                this.logger.info(`Client disconnected: ${socket.id}`);
+            });
+        });
+
+        // Trading Engine Events
+        this.tradingEngine.on('status', (status) => {
+            this.io.emit('botStatus', status);
+        });
+
+        this.tradingEngine.on('newTrade', (trade) => {
+            this.io.emit('tradeUpdate', {
+                active: Array.from(this.tradingEngine.activeTrades.values()),
+                history: this.tradingEngine.tradeHistory
+            });
+        });
+
+        this.tradingEngine.on('tradeClosed', (trade) => {
+            this.io.emit('tradeUpdate', {
+                active: Array.from(this.tradingEngine.activeTrades.values()),
+                history: this.tradingEngine.tradeHistory
+            });
+            this.io.emit('statsUpdate', this.tradingEngine.getStats());
+        });
     }
-});
 
-// Trading Engine Routes
-app.post('/api/bot/start', async (req, res) => {
-    try {
-        if (!configManager.isConfigured()) {
-            return res.status(400).json({ error: 'Bot is not configured' });
-        }
-        await tradingEngine.start();
-        res.json({ success: true });
-    } catch (error) {
-        logger.error('Error starting bot', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+    async start() {
+        try {
+            const port = process.env.PORT || 3000;
 
-app.post('/api/bot/stop', async (req, res) => {
-    try {
-        await tradingEngine.stop();
-        res.json({ success: true });
-    } catch (error) {
-        logger.error('Error stopping bot', error);
-        res.status(500).json({ error: error.message });
-    }
-});
+            // Initialize components
+            await this.tradingEngine.initialize();
 
-// Frontend Routes
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+            // Start server
+            this.server.listen(port, () => {
+                this.logger.info(`CryptoSniperBot server running on port ${port}`);
+                
+                console.log('\nStarting dashboard application...');
+                console.log('\n========================================================');
+                console.log('        CryptoSniperBot Started Successfully');
+                console.log('========================================================\n');
+                console.log('The dashboard should open automatically in your browser.');
+                console.log(`If it doesn't, please open http://localhost:${port} manually.\n`);
+                console.log('To stop the bot, press Ctrl+C in this window, or use the');
+                console.log('"Stop Bot" button in the dashboard.\n\n');
+            });
 
-app.get('/settings', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
+            if (this.configManager.getConfig().trading.autoStart) {
+                await this.tradingEngine.start();
+            }
 
-app.get('/logs', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('*', (req, res) => {
-    res.redirect('/');
-});
-
-// Socket.IO
-io.on('connection', (socket) => {
-    logger.info(`Client connected: ${socket.id}`);
-    
-    // Send initial data
-    socket.emit('botStatus', { running: tradingEngine.isRunning() });
-    socket.emit('stats', tradingEngine.getStats());
-    
-    socket.on('disconnect', () => {
-        logger.info(`Client disconnected: ${socket.id}`);
-    });
-});
-
-// Start server
-async function startServer() {
-    try {
-        console.log('\n========================================================');
-        console.log('            Starting CryptoSniperBot');
-        console.log('========================================================\n');
-
-        // Check if bot is configured
-        if (!configManager.isConfigured()) {
-            console.error('Error: Bot is not configured.');
-            console.error('Please run setup.bat first to configure the bot.\n');
+        } catch (error) {
+            this.logger.error('Failed to start server', error);
             process.exit(1);
         }
-
-        // Initialize trading engine
-        await tradingEngine.initialize();
-        
-        // Start server
-        const PORT = process.env.PORT || 3000;
-        server.listen(PORT, () => {
-            logger.info(`CryptoSniperBot server running on port ${PORT}`);
-            console.log(`✅ Bot started successfully on port ${PORT}\n`);
-        });
-
-        // Auto-start trading if configured
-        const config = configManager.getConfig();
-        if (config.trading && config.trading.autoStart) {
-            await tradingEngine.start();
-            logger.info('Auto-started trading engine');
-        }
-
-        // Handle shutdown
-        process.on('SIGINT', async () => {
-            console.log('\nShutting down...');
-            if (tradingEngine.isRunning()) {
-                await tradingEngine.stop();
-            }
-            server.close();
-            process.exit(0);
-        });
-
-    } catch (error) {
-        logger.error('Failed to start server', error);
-        console.error('\nError:', error.message);
-        console.error('Failed to start the bot. Please check the logs for more details.\n');
-        process.exit(1);
     }
 }
 
 // Start the server
-startServer();
-
-module.exports = app;
+const server = new Server();
+server.start();
