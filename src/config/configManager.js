@@ -1,42 +1,52 @@
 /**
- * Configuration Manager for CryptoSniperBot
+ * Configuration Manager
+ * Handles loading and saving of bot configuration
  */
 const fs = require('fs');
 const path = require('path');
 const { Logger } = require('../utils/logger');
 
 class ConfigManager {
-    constructor() {
+    constructor(securityManager) {
+        if (!securityManager) {
+            throw new Error('SecurityManager is required');
+        }
+
         this.logger = new Logger('ConfigManager');
-        this.configPath = path.join(__dirname, '../../config/config.json');
+        this.securityManager = securityManager;
+        this.configPath = path.join(__dirname, '../../secure-config/config.json');
         this.config = null;
-        this.loadConfig();
     }
 
     loadConfig() {
         try {
-            if (fs.existsSync(this.configPath)) {
-                const configFile = fs.readFileSync(this.configPath, 'utf8');
-                this.config = JSON.parse(configFile);
-                this.logger.info('Configuration loaded successfully');
-            } else {
-                this.config = this.getDefaultConfig();
-                this.saveConfig();
-                this.logger.info('Created new configuration with default settings');
+            if (!fs.existsSync(this.configPath)) {
+                throw new Error('Configuration file not found');
             }
+
+            const encryptedConfig = JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
+            this.config = this.securityManager.decrypt(encryptedConfig);
+            
+            this.logger.info('Configuration loaded successfully');
+            return this.config;
         } catch (error) {
             this.logger.error('Failed to load configuration', error);
-            this.config = this.getDefaultConfig();
+            throw error;
         }
     }
 
-    saveConfig() {
+    getConfig() {
+        if (!this.config) {
+            return this.loadConfig();
+        }
+        return this.config;
+    }
+
+    saveConfig(config) {
         try {
-            const configDir = path.dirname(this.configPath);
-            if (!fs.existsSync(configDir)) {
-                fs.mkdirSync(configDir, { recursive: true });
-            }
-            fs.writeFileSync(this.configPath, JSON.stringify(this.config, null, 2));
+            const encryptedConfig = this.securityManager.encrypt(config);
+            fs.writeFileSync(this.configPath, JSON.stringify(encryptedConfig, null, 2));
+            this.config = config;
             this.logger.info('Configuration saved successfully');
         } catch (error) {
             this.logger.error('Failed to save configuration', error);
@@ -44,64 +54,16 @@ class ConfigManager {
         }
     }
 
-    getConfig() {
-        return this.config;
-    }
-
-    updateConfig(newConfig) {
-        this.config = { ...this.config, ...newConfig };
-        this.saveConfig();
-    }
-
-    isConfigured() {
-        return this.config !== null && 
-               this.config.ethereum && 
-               this.config.ethereum.infuraId &&
-               this.config.trading &&
-               this.config.trading.walletBuyPercentage;
-    }
-
-    getDefaultConfig() {
-        return {
-            trading: {
-                walletBuyPercentage: 10,
-                stopLoss: 5,
-                takeProfit: 20,
-                maxConcurrentTrades: 5,
-                maxTradesPerHour: 10,
-                autoStart: false,
-                scanInterval: 30000,
-                analysisInterval: 60000
-            },
-            ethereum: {
-                enabled: false,
-                infuraId: '',
-                privateKey: ''
-            },
-            bnbChain: {
-                enabled: false,
-                privateKey: ''
-            },
-            exchanges: {
-                binanceUS: {
-                    enabled: false,
-                    apiKey: '',
-                    apiSecret: ''
-                },
-                cryptoCom: {
-                    enabled: false,
-                    apiKey: '',
-                    apiSecret: ''
-                }
-            },
-            security: {
-                encryptionKey: ''
-            }
-        };
-    }
-
-    cleanupLegacyFiles() {
-        // Implement cleanup logic if needed
+    updateConfig(updates) {
+        try {
+            const currentConfig = this.getConfig();
+            const newConfig = { ...currentConfig, ...updates };
+            this.saveConfig(newConfig);
+            return newConfig;
+        } catch (error) {
+            this.logger.error('Failed to update configuration', error);
+            throw error;
+        }
     }
 }
 

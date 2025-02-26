@@ -22,20 +22,17 @@ class SecurityManager {
         try {
             // Check if secure-config directory exists
             if (!fs.existsSync(this.secureConfigPath)) {
-                this.logger.error('Secure config directory not found. Please run setup.bat first.');
-                throw new Error('Secure config directory not found');
+                throw new Error('Secure config directory not found. Please run setup.bat first.');
             }
 
             // Load encryption key
             if (!fs.existsSync(this.encryptionKeyFile)) {
-                this.logger.error('Encryption key not found. Please run setup.bat first.');
-                throw new Error('Encryption key not found');
+                throw new Error('Encryption key not found. Please run setup.bat first.');
             }
 
             // Load security config
             if (!fs.existsSync(this.securityConfigFile)) {
-                this.logger.error('Security config not found. Please run setup.bat first.');
-                throw new Error('Security config not found');
+                throw new Error('Security config not found. Please run setup.bat first.');
             }
 
             // Read encryption key
@@ -48,8 +45,7 @@ class SecurityManager {
 
             // Validate security config
             if (!securityConfig.initialized) {
-                this.logger.error('Security config not initialized. Please run setup.bat first.');
-                throw new Error('Security config not initialized');
+                throw new Error('Security config not initialized. Please run setup.bat first.');
             }
 
             this.initialized = true;
@@ -108,8 +104,8 @@ class SecurityManager {
                 throw new Error('Security manager not initialized');
             }
 
-            if (!encryptedData) {
-                return null;
+            if (!encryptedData || !encryptedData.iv || !encryptedData.authTag || !encryptedData.encrypted) {
+                throw new Error('Invalid encrypted data format');
             }
 
             // Create decipher
