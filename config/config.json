@@ -1,0 +1,36 @@
+{
+  "trading": {
+    "walletBuyPercentage": 10,
+    "stopLoss": 5,
+    "takeProfit": 20,
+    "maxConcurrentTrades": 5,
+    "maxTradesPerHour": 10,
+    "autoStart": false,
+    "scanInterval": 30000,
+    "analysisInterval": 60000
+  },
+  "ethereum": {
+    "enabled": false,
+    "infuraId": "",
+    "privateKey": ""
+  },
+  "bnbChain": {
+    "enabled": false,
+    "privateKey": ""
+  },
+  "exchanges": {
+    "binanceUS": {
+      "enabled": false,
+      "apiKey": "",
+      "apiSecret": ""
+    },
+    "cryptoCom": {
+      "enabled": false,
+      "apiKey": "",
+      "apiSecret": ""
+    }
+  },
+  "security": {
+    "encryptionKey": ""
+  }
+}
