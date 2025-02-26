@@ -4,7 +4,6 @@
  */
 const fs = require('fs');
 const path = require('path');
-const defaultLogger = require('../utils/logger');
 const { Logger } = require('../utils/logger');
 
 class ConfigManager {
@@ -13,6 +12,51 @@ class ConfigManager {
     this.config = {};
     this.configPath = path.join(process.cwd(), 'config.json');
     this.loadConfig();
+  }
+
+  /**
+   * Check if the bot is properly configured
+   * @returns {boolean} True if configured, false otherwise
+   */
+  isConfigured() {
+    try {
+      // Check if config file exists
+      if (!fs.existsSync(this.configPath)) {
+        return false;
+      }
+
+      // Basic configuration checks
+      const config = this.getConfig();
+
+      // Check if essential sections exist
+      if (!config.general || !config.trading) {
+        return false;
+      }
+
+      // Check for essential trading parameters
+      if (!config.trading.walletBuyPercentage || 
+          !config.trading.stopLoss ||
+          !config.trading.takeProfit ||
+          !config.trading.maxConcurrentTrades ||
+          !config.trading.maxTradesPerHour) {
+        return false;
+      }
+
+      // Check if at least one trading method is configured
+      const hasEthereumConfig = config.ethereum && config.ethereum.enabled && config.ethereum.privateKey;
+      const hasBnbChainConfig = config.bnbChain && config.bnbChain.enabled && config.bnbChain.privateKey;
+      const hasBinanceUSConfig = config.exchanges && config.exchanges.binanceUS && config.exchanges.binanceUS.enabled;
+      const hasCryptoComConfig = config.exchanges && config.exchanges.cryptoCom && config.exchanges.cryptoCom.enabled;
+
+      if (!hasEthereumConfig && !hasBnbChainConfig && !hasBinanceUSConfig && !hasCryptoComConfig) {
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      this.logger.error('Error checking configuration', error);
+      return false;
+    }
   }
 
   /**
@@ -32,6 +76,7 @@ class ConfigManager {
     } catch (error) {
       this.logger.error('Failed to load config', error);
       this.config = this.getDefaultConfig();
+      this.saveConfig();
     }
   }
 
@@ -40,10 +85,19 @@ class ConfigManager {
    */
   saveConfig() {
     try {
+      // Create config directory if it doesn't exist
+      const configDir = path.dirname(this.configPath);
+      if (!fs.existsSync(configDir)) {
+        fs.mkdirSync(configDir, { recursive: true });
+      }
+
+      // Save configuration
       fs.writeFileSync(this.configPath, JSON.stringify(this.config, null, 2));
       this.logger.info('Configuration saved successfully');
+      return true;
     } catch (error) {
       this.logger.error('Failed to save config', error);
+      return false;
     }
   }
 
@@ -53,6 +107,18 @@ class ConfigManager {
    */
   getConfig() {
     return this.config;
+  }
+
+  /**
+   * Update configuration with new values
+   * @param {Object} newConfig - New configuration values to merge
+   */
+  updateConfig(newConfig) {
+    this.config = {
+      ...this.config,
+      ...newConfig
+    };
+    this.saveConfig();
   }
 
   /**
@@ -76,19 +142,7 @@ class ConfigManager {
   }
 
   /**
-   * Update configuration with new values
-   * @param {Object} newConfig - New configuration values to merge
-   */
-  updateConfig(newConfig) {
-    this.config = {
-      ...this.config,
-      ...newConfig
-    };
-    this.saveConfig();
-  }
-
-  /**
-   * Update a specific configuration value
+   * Set a specific configuration value
    * @param {string} key - The configuration key
    * @param {any} value - The new value
    */
@@ -118,23 +172,38 @@ class ConfigManager {
         tradingEnabled: false,
         debugMode: true
       },
-      exchange: {
-        name: 'binance',
-        apiKey: '',
-        apiSecret: '',
-        testMode: true
-      },
       trading: {
-        baseCurrency: 'USDT',
-        tradingPairs: ['BTC', 'ETH', 'BNB'],
-        orderSize: 100, // in base currency
-        maxOpenTrades: 3,
-        stopLossPercentage: 2.5,
-        takeProfitPercentage: 5.0
+        walletBuyPercentage: 5,
+        stopLoss: 2.5,
+        takeProfit: 5.0,
+        maxConcurrentTrades: 3,
+        maxTradesPerHour: 10,
+        autoStart: false
+      },
+      ethereum: {
+        enabled: false,
+        privateKey: '',
+        infuraId: '',
+        provider: 'infura'
+      },
+      bnbChain: {
+        enabled: false,
+        privateKey: ''
+      },
+      exchanges: {
+        binanceUS: {
+          enabled: false,
+          apiKey: '',
+          apiSecret: ''
+        },
+        cryptoCom: {
+          enabled: false,
+          apiKey: '',
+          apiSecret: ''
+        }
       }
     };
   }
 }
 
-// Export as a class (not singleton)
 module.exports = ConfigManager;

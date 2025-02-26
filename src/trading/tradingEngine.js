@@ -2,13 +2,16 @@
  * Trading Engine for CryptoSniperBot
  * Core component that manages all trading operations
  */
-const configManager = require('../config/configManager');
-const logger = require('../utils/logger');
+const { Logger } = require('../utils/logger');
 const ExchangeFactory = require('./exchangeFactory');
 
 class TradingEngine {
-  constructor() {
+  constructor(configManager, securityManager) {
+    this.logger = new Logger('TradingEngine');
+    this.configManager = configManager;
+    this.securityManager = securityManager;
     this.initialized = false;
+    this.running = false;
     this.activeOrders = new Map();
     this.activeTrades = new Map();
     this.exchange = null;
@@ -19,39 +22,45 @@ class TradingEngine {
    */
   async initialize() {
     try {
-      logger.info('[TradingEngine] Initializing trading engine');
+      this.logger.info('Initializing trading engine');
       
       // Get configuration
-      const config = configManager.getConfig();
-      if (!config) {
-        throw new Error('Failed to load configuration');
+      const config = this.configManager.getConfig();
+      if (!config || !this.configManager.isConfigured()) {
+        throw new Error('Trading engine not configured');
       }
       
-      // Initialize exchange
-      const exchangeName = config.exchange.name;
-      const exchangeConfig = {
-        apiKey: config.exchange.apiKey,
-        apiSecret: config.exchange.apiSecret,
-        testMode: config.exchange.testMode
-      };
+      // Initialize exchange connections
+      if (config.exchanges) {
+        if (config.exchanges.binanceUS && config.exchanges.binanceUS.enabled) {
+          const apiKey = this.securityManager.decrypt(config.exchanges.binanceUS.apiKey);
+          const apiSecret = this.securityManager.decrypt(config.exchanges.binanceUS.apiSecret);
+          this.exchange = ExchangeFactory.createExchange('binanceUS', { apiKey, apiSecret });
+        } else if (config.exchanges.cryptoCom && config.exchanges.cryptoCom.enabled) {
+          const apiKey = this.securityManager.decrypt(config.exchanges.cryptoCom.apiKey);
+          const apiSecret = this.securityManager.decrypt(config.exchanges.cryptoCom.apiSecret);
+          this.exchange = ExchangeFactory.createExchange('cryptoCom', { apiKey, apiSecret });
+        }
+      }
       
-      this.exchange = ExchangeFactory.createExchange(exchangeName, exchangeConfig);
-      await this.exchange.initialize();
+      // Initialize blockchain connections
+      if (config.ethereum && config.ethereum.enabled) {
+        const privateKey = this.securityManager.decrypt(config.ethereum.privateKey);
+        const infuraId = this.securityManager.decrypt(config.ethereum.infuraId);
+        // Initialize Ethereum connection here
+      }
       
-      // Load trading pairs
-      this.tradingPairs = config.trading.tradingPairs.map(
-        coin => `${coin}/${config.trading.baseCurrency}`
-      );
+      if (config.bnbChain && config.bnbChain.enabled) {
+        const privateKey = this.securityManager.decrypt(config.bnbChain.privateKey);
+        // Initialize BNB Chain connection here
+      }
       
-      logger.info(`[TradingEngine] Trading engine initialized with ${this.tradingPairs.length} pairs`);
       this.initialized = true;
-      
-      // Start market data collection if enabled
-      if (config.general.tradingEnabled) {
-        this.startTrading();
-      }
+      this.logger.info('Trading engine initialized successfully');
+      return true;
     } catch (error) {
-      logger.error(`[TradingEngine] Failed to initialize trading engine: ${error.message}`);
+      this.logger.error('Failed to initialize trading engine', error);
+      this.initialized = false;
       throw error;
     }
   }
@@ -59,70 +68,67 @@ class TradingEngine {
   /**
    * Start trading operations
    */
-  startTrading() {
+  async start() {
     if (!this.initialized) {
-      logger.error('[TradingEngine] Cannot start trading - engine not initialized');
-      return;
+      this.logger.error('Cannot start - trading engine not initialized');
+      return false;
     }
     
-    const config = configManager.getConfig();
-    if (!config.exchange.apiKey || !config.exchange.apiSecret) {
-      logger.error('[TradingEngine] Cannot start trading - API credentials not configured');
-      return;
+    if (this.running) {
+      this.logger.warn('Trading engine is already running');
+      return true;
     }
     
-    logger.info('[TradingEngine] Starting trading operations');
-    // Additional trading initialization logic would go here
-    
-    // Set up periodic tasks
-    this.marketDataInterval = setInterval(() => this.updateMarketData(), 60000);
-    this.orderCheckInterval = setInterval(() => this.checkOpenOrders(), 15000);
+    try {
+      this.running = true;
+      this.logger.info('Trading engine started');
+      return true;
+    } catch (error) {
+      this.logger.error('Failed to start trading engine', error);
+      this.running = false;
+      return false;
+    }
   }
-  
+
   /**
    * Stop trading operations
    */
-  stopTrading() {
-    logger.info('[TradingEngine] Stopping trading operations');
-    
-    if (this.marketDataInterval) {
-      clearInterval(this.marketDataInterval);
+  async stop() {
+    if (!this.running) {
+      this.logger.warn('Trading engine is not running');
+      return true;
     }
     
-    if (this.orderCheckInterval) {
-      clearInterval(this.orderCheckInterval);
+    try {
+      this.running = false;
+      this.logger.info('Trading engine stopped');
+      return true;
+    } catch (error) {
+      this.logger.error('Failed to stop trading engine', error);
+      return false;
     }
   }
 
   /**
-   * Update market data for all trading pairs
+   * Check if trading engine is running
    */
-  async updateMarketData() {
-    if (!this.exchange) return;
-    
-    try {
-      for (const pair of this.tradingPairs) {
-        const ticker = await this.exchange.fetchTicker(pair);
-        // Process market data and potentially generate signals
-      }
-    } catch (error) {
-      logger.error(`[TradingEngine] Error updating market data: ${error.message}`);
-    }
+  isRunning() {
+    return this.running;
   }
 
   /**
-   * Check status of open orders
+   * Get active trades
    */
-  async checkOpenOrders() {
-    if (!this.exchange) return;
-    
-    try {
-      const openOrders = await this.exchange.fetchOpenOrders();
-      // Process open orders
-    } catch (error) {
-      logger.error(`[TradingEngine] Error checking open orders: ${error.message}`);
-    }
+  getActiveTrades() {
+    return Array.from(this.activeTrades.values());
+  }
+
+  /**
+   * Get active orders
+   */
+  getActiveOrders() {
+    return Array.from(this.activeOrders.values());
   }
 }
 
-module.exports = new TradingEngine();
+module.exports = TradingEngine;

@@ -34,8 +34,8 @@ function prompt(question, isSecret = false) {
       console.log('   Press Enter to continue...');
       rl.question('', () => {
         rl.question(`${question}: `, (answer) => {
-          resolve(answer.trim());
           process.stdout.write('\r\x1b[K');
+          resolve(answer.trim());
         });
       });
     } else {
@@ -44,20 +44,6 @@ function prompt(question, isSecret = false) {
       });
     }
   });
-}
-
-/**
- * Validate Ethereum/BNB private key format
- */
-function isValidPrivateKey(key) {
-  return /^(0x)?[0-9a-fA-F]{64}$/.test(key);
-}
-
-/**
- * Validate Infura Project ID format
- */
-function isValidInfuraId(id) {
-  return /^[0-9a-f]{32}$/i.test(id);
 }
 
 /**
@@ -93,6 +79,7 @@ async function setupPassword() {
   }
   
   securityManager.setPassword(password);
+  logger.info('Dashboard password set successfully');
   console.log('✅ Dashboard password set successfully.');
 }
 
@@ -103,8 +90,8 @@ async function setupEncryptionKey() {
   console.log('\n=== Encryption Setup ===');
   
   if (securityManager.isEncryptionKeySet()) {
-    console.log('Encryption key is already set.');
-    return;
+    const changeKey = await prompt('Encryption key is already set. Do you want to change it? (y/n)') === 'y';
+    if (!changeKey) return;
   }
   
   const generateNew = await prompt('Do you want to generate a new encryption key? (y/n)') === 'y';
@@ -131,19 +118,19 @@ async function setupEncryptionKey() {
   }
   
   securityManager.setEncryptionKey(encryptionKey);
+  logger.info('Encryption key set successfully');
   console.log('✅ Encryption key set successfully.');
 }
 
 /**
- * Setup blockchain wallet
+ * Setup wallet credentials
  */
 async function setupWallet() {
   console.log('\n=== Wallet Setup ===');
   
   const config = configManager.getConfig();
-  const decryptedConfig = securityManager.decryptConfig(config);
   
-  if (decryptedConfig.ethereum && decryptedConfig.ethereum.privateKey) {
+  if (config.ethereum.privateKey || config.bnbChain.privateKey) {
     const reconfigureWallet = await prompt('Wallet is already configured. Do you want to reconfigure it? (y/n)') === 'y';
     if (!reconfigureWallet) return;
   }
@@ -151,40 +138,13 @@ async function setupWallet() {
   console.log('\nYou will need your Ethereum/BNB wallet private key.');
   console.log('This key will be encrypted and stored securely.');
   
-  let privateKey;
-  let isValidKey = false;
-  
-  while (!isValidKey) {
-    privateKey = await prompt('Enter your wallet private key (64 hex characters)', true);
-    
-    if (privateKey.startsWith('0x')) {
-      privateKey = privateKey.slice(2);
-    }
-    
-    isValidKey = isValidPrivateKey(`0x${privateKey}`);
-    
-    if (!isValidKey) {
-      console.log('❌ Invalid private key format. Please enter a valid 64-character hex string.\n');
-    }
-  }
-  
+  const privateKey = await prompt('Enter your wallet private key (64 hex characters)', true);
   const encryptedPrivateKey = securityManager.encrypt(privateKey);
   
   const useEthereum = await prompt('Do you want to enable Ethereum trading? (y/n)') === 'y';
   
   if (useEthereum) {
-    let infuraId;
-    let isValidId = false;
-    
-    while (!isValidId) {
-      infuraId = await prompt('Enter your Infura Project ID', true);
-      isValidId = isValidInfuraId(infuraId);
-      
-      if (!isValidId) {
-        console.log('❌ Invalid Infura Project ID. Please check and try again.\n');
-      }
-    }
-    
+    const infuraId = await prompt('Enter your Infura Project ID', true);
     const encryptedInfuraId = securityManager.encrypt(infuraId);
     
     configManager.updateConfig({
@@ -196,9 +156,10 @@ async function setupWallet() {
       }
     });
     
+    logger.info('Ethereum configuration saved');
     console.log('✅ Ethereum configuration saved.');
   }
-
+  
   const useBnbChain = await prompt('Do you want to enable BNB Chain trading? (y/n)') === 'y';
   
   if (useBnbChain) {
@@ -209,14 +170,145 @@ async function setupWallet() {
       }
     });
     
+    logger.info('BNB Chain configuration saved');
     console.log('✅ BNB Chain configuration saved.');
   }
 }
 
 /**
- * Setup exchange connections
+ * Setup exchange API credentials
  */
 async function setupExchanges() {
   console.log('\n=== Exchange Setup ===');
   
-  const useExchanges = await prompt('Do you want to configure centralized exchanges ▋
+  const useExchanges = await prompt('Do you want to configure centralized exchanges? (y/n)') === 'y';
+  
+  if (!useExchanges) {
+    configManager.updateConfig({
+      exchanges: {
+        binanceUS: { enabled: false },
+        cryptoCom: { enabled: false }
+      }
+    });
+    return;
+  }
+  
+  const useBinanceUS = await prompt('Do you want to use Binance.US? (y/n)') === 'y';
+  
+  if (useBinanceUS) {
+    console.log('\nYou will need your Binance.US API Key and Secret.');
+    console.log('These will be encrypted and stored securely.');
+    
+    const apiKey = await prompt('Enter your Binance.US API Key', true);
+    const apiSecret = await prompt('Enter your Binance.US API Secret', true);
+    
+    const encryptedApiKey = securityManager.encrypt(apiKey);
+    const encryptedApiSecret = securityManager.encrypt(apiSecret);
+    
+    configManager.updateConfig({
+      exchanges: {
+        binanceUS: {
+          enabled: true,
+          apiKey: encryptedApiKey,
+          apiSecret: encryptedApiSecret
+        }
+      }
+    });
+    
+    logger.info('Binance.US configuration saved');
+    console.log('✅ Binance.US configuration saved.');
+  }
+  
+  const useCryptoCom = await prompt('Do you want to use Crypto.com? (y/n)') === 'y';
+  
+  if (useCryptoCom) {
+    console.log('\nYou will need your Crypto.com API Key and Secret.');
+    console.log('These will be encrypted and stored securely.');
+    
+    const apiKey = await prompt('Enter your Crypto.com API Key', true);
+    const apiSecret = await prompt('Enter your Crypto.com API Secret', true);
+    
+    const encryptedApiKey = securityManager.encrypt(apiKey);
+    const encryptedApiSecret = securityManager.encrypt(apiSecret);
+    
+    configManager.updateConfig({
+      exchanges: {
+        cryptoCom: {
+          enabled: true,
+          apiKey: encryptedApiKey,
+          apiSecret: encryptedApiSecret
+        }
+      }
+    });
+    
+    logger.info('Crypto.com configuration saved');
+    console.log('✅ Crypto.com configuration saved.');
+  }
+}
+
+/**
+ * Setup trading parameters
+ */
+async function setupTradingParams() {
+  console.log('\n=== Trading Parameters Setup ===');
+  
+  const walletBuyPercentage = parseFloat(await prompt('Wallet percentage to use per trade (1-100)', false) || '5');
+  const stopLoss = parseFloat(await prompt('Stop-loss percentage', false) || '2.5');
+  const takeProfit = parseFloat(await prompt('Take-profit percentage', false) || '5');
+  const maxConcurrentTrades = parseInt(await prompt('Maximum concurrent trades', false) || '3');
+  const maxTradesPerHour = parseInt(await prompt('Maximum trades per hour', false) || '10');
+  const autoStart = await prompt('Auto-start bot when server starts? (y/n)') === 'y';
+  
+  configManager.updateConfig({
+    trading: {
+      walletBuyPercentage,
+      stopLoss,
+      takeProfit,
+      maxConcurrentTrades,
+      maxTradesPerHour,
+      autoStart
+    }
+  });
+  
+  logger.info('Trading parameters configured');
+  console.log('✅ Trading parameters configured successfully.');
+}
+
+/**
+ * Main setup function
+ */
+async function setup() {
+  console.log('\n========================================================');
+  console.log('            Starting CryptoSniperBot Setup');
+  console.log('========================================================\n');
+  
+  try {
+    // Setup dashboard password
+    await setupPassword();
+    
+    // Setup encryption key
+    await setupEncryptionKey();
+    
+    // Setup wallet
+    await setupWallet();
+    
+    // Setup exchanges
+    await setupExchanges();
+    
+    // Setup trading parameters
+    await setupTradingParams();
+    
+    console.log('\n✅ Setup completed successfully!');
+    console.log('\nYou can now start the bot using start_bot.bat\n');
+    
+  } catch (error) {
+    logger.error('Setup failed', error);
+    console.error('\n❌ Setup failed:', error.message);
+    console.error('Please check the error messages above.\n');
+  } finally {
+    rl.close();
+  }
+}
+
+// Run setup
+setup();
