@@ -105,6 +105,7 @@ class SecurityManager {
             }
 
             if (!encryptedData || !encryptedData.iv || !encryptedData.authTag || !encryptedData.encrypted) {
+                this.logger.error('Invalid encrypted data format', { encryptedData });
                 throw new Error('Invalid encrypted data format');
             }
 
