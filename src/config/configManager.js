@@ -4,10 +4,12 @@
  */
 const fs = require('fs');
 const path = require('path');
-const logger = require('../utils/logger');
+const defaultLogger = require('../utils/logger');
+const { Logger } = require('../utils/logger');
 
 class ConfigManager {
   constructor() {
+    this.logger = new Logger('ConfigManager');
     this.config = {};
     this.configPath = path.join(process.cwd(), 'config.json');
     this.loadConfig();
@@ -21,14 +23,14 @@ class ConfigManager {
       if (fs.existsSync(this.configPath)) {
         const configData = fs.readFileSync(this.configPath, 'utf8');
         this.config = JSON.parse(configData);
-        logger.info('[ConfigManager] Configuration loaded successfully');
+        this.logger.info('Configuration loaded successfully');
       } else {
-        logger.warn('[ConfigManager] Config file not found, using default settings');
+        this.logger.warn('Config file not found, using default settings');
         this.config = this.getDefaultConfig();
         this.saveConfig();
       }
     } catch (error) {
-      logger.error(`[ConfigManager] Failed to load config: ${error.message}`);
+      this.logger.error('Failed to load config', error);
       this.config = this.getDefaultConfig();
     }
   }
@@ -39,9 +41,9 @@ class ConfigManager {
   saveConfig() {
     try {
       fs.writeFileSync(this.configPath, JSON.stringify(this.config, null, 2));
-      logger.info('[ConfigManager] Configuration saved successfully');
+      this.logger.info('Configuration saved successfully');
     } catch (error) {
-      logger.error(`[ConfigManager] Failed to save config: ${error.message}`);
+      this.logger.error('Failed to save config', error);
     }
   }
 
@@ -71,6 +73,18 @@ class ConfigManager {
     }
     
     return value;
+  }
+
+  /**
+   * Update configuration with new values
+   * @param {Object} newConfig - New configuration values to merge
+   */
+  updateConfig(newConfig) {
+    this.config = {
+      ...this.config,
+      ...newConfig
+    };
+    this.saveConfig();
   }
 
   /**
@@ -122,5 +136,5 @@ class ConfigManager {
   }
 }
 
-// Export as a singleton
-module.exports = new ConfigManager();
+// Export as a class (not singleton)
+module.exports = ConfigManager;

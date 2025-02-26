@@ -15,37 +15,67 @@ if (!fs.existsSync(logsDir)) {
 // Define log format
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-  winston.format.printf(({ level, message, timestamp }) => {
-    return `${timestamp} [${level.toUpperCase()}]: ${message}`;
+  winston.format.printf(({ level, message, timestamp, component }) => {
+    return `${timestamp} [${level.toUpperCase()}]${component ? ` [${component}]` : ''}: ${message}`;
   })
 );
 
-// Create Winston logger
-const logger = winston.createLogger({
-  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-  format: logFormat,
-  transports: [
-    // Console output
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        logFormat
-      )
-    }),
-    // File output - general log
-    new winston.transports.File({ 
-      filename: path.join(logsDir, 'application.log'),
-      maxsize: 5242880, // 5MB
-      maxFiles: 5
-    }),
-    // File output - error log
-    new winston.transports.File({ 
-      level: 'error',
-      filename: path.join(logsDir, 'error.log'),
-      maxsize: 5242880, // 5MB
-      maxFiles: 5
-    })
-  ]
-});
+class Logger {
+  constructor(component) {
+    this.component = component;
+    this.logger = winston.createLogger({
+      level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+      format: logFormat,
+      defaultMeta: { component },
+      transports: [
+        // Console output
+        new winston.transports.Console({
+          format: winston.format.combine(
+            winston.format.colorize(),
+            logFormat
+          )
+        }),
+        // File output - general log
+        new winston.transports.File({ 
+          filename: path.join(logsDir, 'application.log'),
+          maxsize: 5242880, // 5MB
+          maxFiles: 5
+        }),
+        // File output - error log
+        new winston.transports.File({ 
+          level: 'error',
+          filename: path.join(logsDir, 'error.log'),
+          maxsize: 5242880, // 5MB
+          maxFiles: 5
+        })
+      ]
+    });
+  }
 
-module.exports = logger;
+  info(message) {
+    this.logger.info(message);
+  }
+
+  warn(message) {
+    this.logger.warn(message);
+  }
+
+  error(message, error) {
+    if (error && error.stack) {
+      this.logger.error(`${message}: ${error.stack}`);
+    } else {
+      this.logger.error(`${message}: ${error || ''}`);
+    }
+  }
+
+  debug(message) {
+    this.logger.debug(message);
+  }
+}
+
+// Create default logger instance
+const defaultLogger = new Logger('System');
+
+// Export both the Logger class and a default instance
+module.exports = defaultLogger;
+module.exports.Logger = Logger;
