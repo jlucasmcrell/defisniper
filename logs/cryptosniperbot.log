@@ -1,0 +1,40 @@
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-27T14:19:31.501Z"}
+{"level":"info","message":"Initializing trading engine with enhanced capabilities","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.493Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"Server","timestamp":"2025-02-27T14:19:31.507Z"}
+{"level":"info","message":"Config decrypted successfully","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.497Z"}
+{"level":"info","message":"Initializing blockchain connectors","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.498Z"}
+{"level":"info","message":"Initializing exchange connectors","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.501Z"}
+{"level":"info","message":"Initializing trading strategies","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.502Z"}
+{"level":"info","message":"Initializing token scanner for new token detection","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.502Z"}
+{"level":"info","message":"Initializing enhanced token scanner","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.504Z"}
+{"level":"info","message":"No providers or factories initialized, trying parent initialization","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.504Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.505Z"}
+{"level":"info","message":"Providers initialized: 0 ()","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.505Z"}
+{"level":"info","message":"Factories initialized: 0 ()","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.505Z"}
+{"level":"info","message":"Enhanced token scanner initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.505Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.506Z"}
+{"level":"info","message":"No trade history file found, starting fresh","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.506Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.506Z"}
+{"level":"info","message":"Adding test tokens for debugging","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.507Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T14:19:31.507Z"}
+{"level":"info","message":"Client connected: N908XYz5w6g4gz_AAAAB","module":"Server","timestamp":"2025-02-27T14:19:42.662Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-27T14:20:47.918Z"}
+{"level":"info","message":"Initializing trading engine with enhanced capabilities","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.910Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"Server","timestamp":"2025-02-27T14:20:47.924Z"}
+{"level":"info","message":"Config decrypted successfully","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.914Z"}
+{"level":"info","message":"Initializing blockchain connectors","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.915Z"}
+{"level":"info","message":"Initializing exchange connectors","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.919Z"}
+{"level":"info","message":"Initializing trading strategies","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.919Z"}
+{"level":"info","message":"Initializing token scanner for new token detection","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.919Z"}
+{"level":"info","message":"Initializing enhanced token scanner","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.921Z"}
+{"level":"info","message":"No providers or factories initialized, trying parent initialization","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.921Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.922Z"}
+{"level":"info","message":"Providers initialized: 0 ()","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.922Z"}
+{"level":"info","message":"Factories initialized: 0 ()","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.922Z"}
+{"level":"info","message":"Enhanced token scanner initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.923Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.923Z"}
+{"level":"info","message":"No trade history file found, starting fresh","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.923Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.924Z"}
+{"level":"info","message":"Adding test tokens for debugging","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.924Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T14:20:47.924Z"}
+{"level":"info","message":"Client connected: mXyDkTE2tVwkrw38AAAB","module":"Server","timestamp":"2025-02-27T14:20:58.464Z"}

@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "configured": true,
+  "trading": {
+    "maxConcurrentTrades": 5,
+    "walletBuyPercentage": 10,
+    "takeProfit": 5,
+    "stopLoss": 2,
+    "autoTradeNewTokens": false
+  },
+  "ethereum": {
+    "enabled": false,
+    "network": "mainnet",
+    "infuraId": "",
+    "privateKey": ""
+  },
+  "bnbChain": {
+    "enabled": false,
+    "privateKey": ""
+  },
+  "exchanges": {
+    "binanceUS": {
+      "enabled": false,
+      "apiKey": "",
+      "apiSecret": ""
+    },
+    "cryptoCom": {
+      "enabled": false,
+      "apiKey": "",
+      "apiSecret": ""
+    }
+  },
+  "strategies": {
+    "tokenSniper": {
+      "enabled": false,
+      "minLiquidity": 10000,
+      "maxBuyTax": 10,
+      "maxSellTax": 10
+    },
+    "scalping": {
+      "enabled": false,
+      "minPriceChange": 0.5,
+      "maxTradeTime": 300
+    },
+    "trendTrading": {
+      "enabled": false,
+      "rsiLow": 30,
+      "rsiHigh": 70
+    }
+  }
+}
