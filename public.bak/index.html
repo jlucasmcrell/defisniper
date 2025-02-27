@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CryptoSniperBot</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/socket.io/client-dist/socket.io.min.js"></script>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Login Container -->
+  <div id="login-container" class="fixed inset-0 bg-gray-900 flex justify-center items-center z-50 hidden">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold mb-2">CryptoSniperBot</h1>
+        <p class="text-gray-400">Enter your password to access the dashboard</p>
+      </div>
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label for="password" class="block text-gray-300 mb-1">Password</label>
+          <input type="password" id="password" name="password" class="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div id="login-error" class="text-red-500 text-sm"></div>
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Login
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-gray-800 py-4 px-6 flex justify-between items-center shadow-md">
+      <div class="flex items-center">
+        <h1 class="text-xl font-bold">CryptoSniperBot</h1>
+        <div class="ml-4 flex items-center">
+          <div id="bot-status-indicator" class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+          <span id="bot-status-text">Stopped</span>
+        </div>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button id="bot-control" data-running="false" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+          Start Bot
+        </button>
+        <button id="logout-btn" class="text-gray-300 hover:text-white">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Configuration Alert -->
+    <div id="config-alert" class="bg-yellow-900 border-l-4 border-yellow-500 text-yellow-200 p-4 hidden">
+      <div class="flex">
+        <div class="py-1">
+          <svg class="w-6 h-6 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+        </div>
+        <div>
+          <p class="font-bold">Bot Not Configured</p>
+          <p class="text-sm">Please run setup.bat to configure your bot before starting.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="flex-1 p-6">
+      <!-- Tab Navigation -->
+      <div class="mb-4">
+        <nav class="flex space-x-1">
+          <button data-tab-target="dashboard-tab" class="px-4 py-2 rounded-t-lg bg-gray-800 text-white">
+            Dashboard
+          </button>
+          <button data-tab-target="trades-tab" class="px-4 py-2 rounded-t-lg bg-gray-700 text-gray-300">
+            Trades
+          </button>
+          <button data-tab-target="settings-tab" class="px-4 py-2 rounded-t-lg bg-gray-700 text-gray-300">
+            Settings
+          </button>
+          <button data-tab-target="logs-tab" class="px-4 py-2 rounded-t-lg bg-gray-700 text-gray-300">
+            Logs
+          </button>
+        </nav>
+      </div>
+
+      <!-- Dashboard Tab -->
+      <div id="dashboard-tab" class="tab-content">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <!-- Total Balance -->
+          <div class="bg-gray-800 rounded-lg p-4 shadow">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-400 text-sm">Total Balance</p>
+                <h3 id="total-balance" class="text-2xl font-bold">$0.00</h3>
+              </div>
+              <div class="p-2 bg-blue-900 bg-opacity-50 rounded-full">
+                <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profit/Loss -->
+          <div class="bg-gray-800 rounded-lg p-4 shadow">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-400 text-sm">Profit/Loss</p>
+                <h3 id="profit-loss" class="text-2xl font-bold">0.00%</h3>
+              </div>
+              <div class="p-2 bg-green-900 bg-opacity-50 rounded-full">
+                <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Win Rate -->
+          <div class="bg-gray-800 rounded-lg p-4 shadow">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-400 text-sm">Win Rate</p>
+                <h3 id="win-rate" class="text-2xl font-bold">0.0%</h3>
+              </div>
+              <div class="p-2 bg-purple-900 bg-opacity-50 rounded-full">
+                <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Trades -->
+          <div class="bg-gray-800 rounded-lg p-4 shadow">
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="text-gray-400 text-sm">Active Trades</p>
+                <h3 id="active-trades-count" class="text-2xl font-bold">0</h3>
+              </div>
+              <div class="p-2 bg-indigo-900 bg-opacity-50 rounded-full">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts and Data -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Balance Chart -->
+          <div class="lg:col-span-2 bg-gray-800 rounded-lg p-4 shadow">
+            <h2 class="text-lg font-semibold mb-4">Balance History</h2>
+            <div class="h-64">
+              <canvas id="balance-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Wallet Balances -->
+          <div class="bg-gray-800 rounded-lg p-4 shadow">
+            <h2 class="text-lg font-semibold mb-4">Wallet Balances</h2>
+            <div id="balances-container" class="space-y-2">
+              <!-- Balances will be inserted here -->
+            </div>
+          </div>
+
+          <!-- Profit Chart -->
+          <div class="lg:col-span-2 bg-gray-800 rounded-lg p-4 shadow">
+            <h2 class="text-lg font-semibold mb-4">Daily Profit/Loss</h2>
+            <div class="h-64">
+              <canvas id="profit-chart"></canvas>
+            </div>
+          </div>
+
+          <!-- Trading Stats -->
+          <div class="bg-gray-800 rounded-lg p-4 shadow">
+            <h2 class="text-lg font-semibold mb-4">Trading Statistics</h2>
+            <div class="space-y-4">
+              <div class="flex justify-between">
+                <span class="text-gray-400">Total Trades</span>
+                <span id="total-trades" class="font-semibold">0</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">Successful Trades</span>
+                <span id="successful-trades" class="font-semibold">0</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">Strategy Distribution</span>
+                <span class="font-semibold">-</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">Avg. Trade Duration</span>
+                <span class="font-semibold">-</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-400">Best Performing Asset</span>
+                <span class="font-semibold">-</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trades Tab -->
+      <div id="trades-tab" class="tab-content hidden">
+        <div class="bg-gray-800 rounded-lg shadow mb-6">
+          <div class="px-4 py-3 border-b border-gray-700">
+            <h3 class="text-lg font-semibold">Active Trades</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-900 bg-opacity-50">
+                <tr>
+                  <th class="py-3 px-4 text-left">Time</th>
+                  <th class="py-3 px-4 text-left">Pair/Token</th>
+                  <th class="py-3 px-4 text-left">Network</th>
+                  <th class="py-3 px-4 text-left">Strategy</th>
+                  <th class="py-3 px-4 text-left">Action</th>
+                  <th class="py-3 px-4 text-right">Entry Price</th>
+                </tr>
+              </thead>
+              <tbody id="active-trades-body">
+                <!-- Active trades will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bg-gray-800 rounded-lg shadow">
+          <div class="px-4 py-3 border-b border-gray-700">
+            <h3 class="text-lg font-semibold">Trade History</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-900 bg-opacity-50">
+                <tr>
+                  <th class="py-3 px-4 text-left">Time</th>
+                  <th class="py-3 px-4 text-left">Pair/Token</th>
+                  <th class="py-3 px-4 text-left">Network</th>
+                  <th class="py-3 px-4 text-left">Strategy</th>
+                  <th class="py-3 px-4 text-right">Entry Price</th>
+                  <th class="py-3 px-4 text-right">Exit Price</th>
+                  <th class="py-3 px-4 text-right">Profit/Loss</th>
+                </tr>
+              </thead>
+              <tbody id="trade-history-body">
+                <!-- Trade history will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Tab -->
+      <div id="settings-tab" class="tab-content hidden">
+        <div class="bg-gray-800 rounded-lg shadow">
+          <div class="px-4 py-3 border-b border-gray-700">
+            <h3 class="text-lg font-semibold">Trading Settings</h3>
+          </div>
+          <div class="p-4">
+            <form id="settings-form" class="space-y-6">
+              <!-- Trading Parameters -->
+              <div>
+                <h4 class="text-md font-semibold mb-3 pb-2 border-b border-gray-700">Risk Management</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-gray-300 mb-1 text-sm">Wallet Buy Percentage</label>
+                    <input type="number" name="trading.walletBuyPercentage" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1" max="100" step="1">
+                    <p class="text-gray-400 text-xs mt-1">Percentage of wallet to use per trade (1-100)</p>
+                  </div>
+                  <div>
+                    <label class="block text-gray-300 mb-1 text-sm">Stop Loss Percentage</label>
+                    <input type="number" name="trading.stopLoss" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0.1" step="0.1">
+                    <p class="text-gray-400 text-xs mt-1">Automatic sell when price drops by this percentage</p>
+                  </div>
+                  <div>
+                    <label class="block text-gray-300 mb-1 text-sm">Take Profit Percentage</label>
+                    <input type="number" name="trading.takeProfit" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0.1" step="0.1">
+                    <p class="text-gray-400 text-xs mt-1">Automatic sell when price rises by this percentage</p>
+                  </div>
+                  <div>
+                    <label class="block text-gray-300 mb-1 text-sm">Max Concurrent Trades</label>
+                    <input type="number" name="trading.maxConcurrentTrades" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1" step="1">
+                    <p class="text-gray-400 text-xs mt-1">Maximum number of active trades at once</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Trading Strategies -->
+              <div>
+                <h4 class="text-md font-semibold mb-3 pb-2 border-b border-gray-700">Trading Strategies</h4>
+                
+                <!-- Token Sniping -->
+                <div class="mb-4">
+                  <div class="flex items-center mb-2">
+                    <input type="checkbox" name="strategies.tokenSniper.enabled" id="enable-token-sniper" class="mr-2">
+                    <label for="enable-token-sniper" class="font-medium">Token Sniping Strategy</label>
+                  </div>
+                  <div class="pl-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-gray-300 mb-1 text-sm">Minimum Liquidity ($)</label>
+                      <input type="number" name="strategies.tokenSniper.minLiquidity" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0" step="1000">
+                    </div>
+                    <div>
+                      <label class="block text-gray-300 mb-1 text-sm">Maximum Buy Tax (%)</label>
+                      <input type="number" name="strategies.tokenSniper.maxBuyTax" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0" max="100" step="1">
+                    </div>
+                    <div>
+                      <label class="block text-gray-300 mb-1 text-sm">Maximum Sell Tax (%)</label>
+                      <input type="number" name="strategies.tokenSniper.maxSellTax" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0" max="100" step="1">
+                    </div>
+                    <div>
+                      <label class="flex items-center">
+                        <input type="checkbox" name="strategies.tokenSniper.requireAudit" class="mr-2">
+                        <span class="text-sm">Require Verified Contract</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Scalping -->
+                <div class="mb-4">
+                  <div class="flex items-center mb-2">
+                    <input type="checkbox" name="strategies.scalping.enabled" id="enable-scalping" class="mr-2">
+                    <label for="enable-scalping" class="font-medium">Scalping Strategy</label>
+                  </div>
+                  <div class="pl-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-gray-300 mb-1 text-sm">Minimum Price Change (%)</label>
+                      <input type="number" name="strategies.scalping.minPriceChange" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0.1" step="0.1">
+                    </div>
+                    <div>
+                      <label class="block text-gray-300 mb-1 text-sm">Maximum Trade Time (seconds)</label>
+                      <input type="number" name="strategies.scalping.maxTradeTime" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1" step="1">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Trend Trading -->
+                <div>
+                  <div class="flex items-center mb-2">
+                    <input type="checkbox" name="strategies.trendTrading.enabled" id="enable-trend-trading" class="mr-2">
+                    <label for="enable-trend-trading" class="font-medium">Trend Trading Strategy</label>
+                  </div>
+                  <div class="pl-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-gray-300 mb-1 text-sm">RSI Oversold Threshold</label>
+                      <input type="number" name="strategies.trendTrading.rsiLow" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1" max="100" step="1">
+                    </div>
+                    <div>
+                      <label class="block text-gray-300 mb-1 text-sm">RSI Overbought Threshold</label>
+                      <input type="number" name="strategies.trendTrading.rsiHigh" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1" max="100" step="1">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Submit Button -->
+              <div class="pt-4">
+                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Save Settings
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logs Tab -->
+      <div id="logs-tab" class="tab-content hidden">
+        <div class="bg-gray-800 rounded-lg shadow">
+          <div class="px-4 py-3 border-b border-gray-700 flex justify-between items-center">
+            <h3 class="text-lg font-semibold">Bot Activity Logs</h3>
+            <div>
+              <select id="log-level" class="bg-gray-700 border border-gray-600 rounded px-3 py-1">
+                <option value="all">All Logs</option>
+                <option value="info">Info</option>
+                <option value="warning">Warnings</option>
+                <option value="error">Errors</option>
+              </select>
+            </div>
+          </div>
+          <div class="p-4">
+            <div id="log-container" class="bg-gray-900 p-4 rounded h-96 overflow-y-auto font-mono text-sm">
+              <!-- Logs will be inserted here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
