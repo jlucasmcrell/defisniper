@@ -1,10 +1,6 @@
 /**
  * CryptoSniperBot Server
- * 
- * This file contains the Express server that serves the UI and handles API requests.
- * It also initializes the trading engine and WebSocket connections.
  */
-
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
@@ -34,7 +30,7 @@ const io = socketIo(server, {
   }
 });
 
-// Create required directories if they don't exist
+// Create required directories
 const ensureDirectoriesExist = () => {
   const dirs = ['logs', 'data', 'secure-config'];
   dirs.forEach(dir => {
@@ -53,34 +49,54 @@ const securityManager = new SecurityManager();
 const configManager = new ConfigManager(securityManager);
 const config = configManager.getConfig();
 
-// Setup Express middleware
+// Basic middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, '../public')));
 
 // Session management
 app.use(session({
   secret: securityManager.getSessionSecret(),
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false, maxAge: 3600000 }, // 1 hour
+  saveUninitialized: false, // Changed to false
+  cookie: { 
+    secure: false,
+    maxAge: 3600000,
+    httpOnly: true
+  },
   genid: () => uuidv4()
 }));
 
-// Authentication middleware
+// Authentication middleware for protected routes
 const authenticate = (req, res, next) => {
+  // Allow access to login page and auth endpoints
+  if (req.path === '/login' || 
+      req.path === '/auth/login' || 
+      req.path === '/auth/status') {
+    return next();
+  }
+  
+  // Check authentication for all other routes
   if (req.session.authenticated) {
     next();
   } else {
-    res.status(401).json({ success: false, message: 'Authentication required' });
+    if (req.accepts('html')) {
+      res.redirect('/login');
+    } else {
+      res.status(401).json({ success: false, message: 'Authentication required' });
+    }
   }
 };
 
-// API routes
-app.use('/api', apiRoutes(securityManager, configManager));
+// Auth routes (must be before authentication middleware)
+app.get('/login', (req, res) => {
+  if (req.session.authenticated) {
+    res.redirect('/');
+  } else {
+    res.sendFile(path.join(__dirname, '../public/login.html'));
+  }
+});
 
-// Auth routes
 app.post('/auth/login', (req, res) => {
   const { password } = req.body;
   
@@ -104,38 +120,24 @@ app.get('/auth/status', (req, res) => {
   });
 });
 
-// Add login route
-app.get('/login', (req, res) => {
-    if (req.session.authenticated) {
-        res.redirect('/');
-    } else {
-        res.sendFile(path.join(__dirname, '../public/login.html'));
-    }
-});
+// Apply authentication middleware for all routes after this point
+app.use(authenticate);
 
-// Check if the bot is configured
-app.get('/api/status', (req, res) => {
-  res.json({
-    configured: configManager.isConfigured(),
-    running: global.tradingEngine ? global.tradingEngine.isRunning() : false,
-    version: version
-  });
-});
+// Serve static files (after authentication middleware)
+app.use(express.static(path.join(__dirname, '../public')));
 
-// Update main route to check authentication
+// API routes
+app.use('/api', apiRoutes(securityManager, configManager));
+
+// Main route (already protected by authentication middleware)
 app.get('/', (req, res) => {
-    if (req.session.authenticated) {
-        res.sendFile(path.join(__dirname, '../public/index.html'));
-    } else {
-        res.redirect('/login');
-    }
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 // Socket.io connection
 io.on('connection', (socket) => {
   logger.info(`Client connected: ${socket.id}`);
   
-  // Send initial data
   if (global.tradingEngine) {
     socket.emit('botStatus', {
       running: global.tradingEngine.isRunning(),
@@ -161,7 +163,6 @@ if (configManager.isConfigured()) {
         .then(() => {
           logger.info('Trading engine initialized successfully');
           
-          // Auto-start if configured
           if (config.autoStart) {
             global.tradingEngine.start()
               .then(() => logger.info('Trading engine auto-started'))

@@ -37,6 +37,10 @@
             border-color: #0d6efd;
             padding: 0.5rem 2rem;
         }
+        .alert {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
@@ -75,7 +79,8 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ password })
+                    body: JSON.stringify({ password }),
+                    credentials: 'same-origin' // Add this line
                 });
 
                 const data = await response.json();

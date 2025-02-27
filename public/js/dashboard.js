@@ -223,41 +223,56 @@ class Dashboard {
     }
 
     async checkAuthStatus() {
-        try {
-            const response = await fetch('/auth/status');
-            const data = await response.json();
+    try {
+        const response = await fetch('/auth/status');
+        const data = await response.json();
 
-            if (data.authenticated) {
-                this.isAuthenticated = true;
-                this.initializeDashboard();
-            } else {
-                window.location.href = '/login';
-            }
-        } catch (error) {
-            console.error('Error checking auth status:', error);
-            this.showError('Failed to check authentication status');
+        if (!data.authenticated) {
+            window.location.href = '/login';
+            return;
         }
-    }
 
-    // Include the methods from your existing dashboard.js
-    async updateWalletBalances() {
-        // ... (keep existing implementation)
-    }
-
-    displayWalletBalances(balances) {
-        // ... (keep existing implementation)
-    }
-
-    updateScanProgress(progress) {
-        // ... (keep existing implementation)
-    }
-
-    addNewTokenNotification(token) {
-        // ... (keep existing implementation)
+        // Initialize dashboard only if authenticated
+        this.isAuthenticated = true;
+        this.updateBotStatus(false); // Set initial bot status
+        await this.updateWalletBalances(); // Get initial wallet balances
+        
+    } catch (error) {
+        console.error('Error checking auth status:', error);
+        this.showError('Failed to check authentication status');
     }
 }
 
-// Initialize dashboard when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.dashboard = new Dashboard();
-});
+// Update the updateWalletBalances method
+async updateWalletBalances() {
+    try {
+        const response = await fetch('/api/wallets');
+        if (!response.ok) {
+            throw new Error('Failed to fetch wallet balances');
+        }
+        const balances = await response.json();
+        this.displayWalletBalances(balances);
+    } catch (error) {
+        console.error('Error updating wallet balances:', error);
+        // Don't show error message during initialization
+        if (this.initialized) {
+            this.showError('Failed to update wallet balances');
+        }
+    }
+}
+
+displayWalletBalances(balances) {
+    const walletList = document.getElementById('walletBalances');
+    if (!walletList) return;
+
+    walletList.innerHTML = '';
+    Object.entries(balances).forEach(([chain, balance]) => {
+        const li = document.createElement('li');
+        li.className = 'mb-2';
+        li.innerHTML = `
+            <span class="font-bold">${chain}:</span>
+            <span class="ml-2">${balance}</span>
+        `;
+        walletList.appendChild(li);
+    });
+}
