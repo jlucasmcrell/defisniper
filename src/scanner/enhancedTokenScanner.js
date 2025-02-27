@@ -390,48 +390,52 @@ class EnhancedTokenScanner extends TokenScanner {
      * Analyze token health and security
      */
     async analyzeTokenHealth(tokenInfo) {
-        try {
+    try {
+        let healthScore = 50; // Initialize with base score
+
+        // Check for whitelisted tokens first
+        if (this.isWhitelisted(tokenInfo.address)) {
             this.logger.info(`Token ${tokenInfo.symbol} is whitelisted, higher health score`);
-                healthScore += 40;
-                return healthScore;
-            }
-
-            // Automatically lowest score for blacklisted tokens
-            if (this.isBlacklisted(tokenInfo.address)) {
-                this.logger.info(`Token ${tokenInfo.symbol} is blacklisted, lowest health score`);
-                return 0;
-            }
-
-            // Higher score for known networks
-            if (tokenInfo.network === 'ethereum') {
-                healthScore += 10;
-            } else if (tokenInfo.network === 'bnbChain') {
-                healthScore += 5;
-            }
-
-            // Basic checks on token name and symbol
-            if (!tokenInfo.symbol || !tokenInfo.name) {
-                healthScore -= 10;
-            }
-
-            // Check for scam indicators in name
-            const scamWords = ['test', 'scam', 'fake', 'honeypot', 'airdrop'];
-            const nameAndSymbol = (tokenInfo.name + ' ' + tokenInfo.symbol).toLowerCase();
-
-            for (const word of scamWords) {
-                if (nameAndSymbol.includes(word)) {
-                    this.logger.warn(`Token ${tokenInfo.symbol} contains suspicious word: ${word}`);
-                    healthScore -= 20;
-                }
-            }
-
-            this.logger.info(`Health analysis for ${tokenInfo.symbol}: ${healthScore}/100`);
+            healthScore += 40;
             return healthScore;
-        } catch (error) {
-            this.logger.error(`Error analyzing token health: ${tokenInfo.symbol}`, error);
-            return null;
         }
+
+        // Automatically lowest score for blacklisted tokens
+        if (this.isBlacklisted(tokenInfo.address)) {
+            this.logger.info(`Token ${tokenInfo.symbol} is blacklisted, lowest health score`);
+            return 0;
+        }
+
+        // Higher score for known networks
+        if (tokenInfo.network === 'ethereum') {
+            healthScore += 10;
+        } else if (tokenInfo.network === 'bnbChain') {
+            healthScore += 5;
+        }
+
+        // Basic checks on token name and symbol
+        if (!tokenInfo.symbol || !tokenInfo.name) {
+            healthScore -= 10;
+        }
+
+        // Check for scam indicators in name
+        const scamWords = ['test', 'scam', 'fake', 'honeypot', 'airdrop'];
+        const nameAndSymbol = (tokenInfo.name + ' ' + tokenInfo.symbol).toLowerCase();
+
+        for (const word of scamWords) {
+            if (nameAndSymbol.includes(word)) {
+                this.logger.warn(`Token ${tokenInfo.symbol} contains suspicious word: ${word}`);
+                healthScore -= 20;
+            }
+        }
+
+        this.logger.info(`Health analysis for ${tokenInfo.symbol}: ${healthScore}/100`);
+        return healthScore;
+    } catch (error) {
+        this.logger.error(`Error analyzing token health: ${tokenInfo.symbol}`, error);
+        return null;
     }
+}}
 
     /**
      * Get token by address
