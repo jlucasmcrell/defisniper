@@ -439,46 +439,57 @@ class EnhancedTokenScanner extends TokenScanner {
 
     /**
      * Get token by address
+     * @param {string} address The token address to look up
+     * @returns {Object|undefined} The token information if found
+     */
+        /**
+     * Get token by address
+     * @param {string} address Token address
+     * @returns {Object|undefined} Token information if found
      */
     getToken(address) {
-        return this.knownTokens.get(address);
+        if (!address) return undefined;
+        return this.knownTokens.get(address.toLowerCase());
     }
 
     /**
      * Get all known tokens
+     * @returns {Array} Array of all known tokens
      */
     getAllTokens() {
         return Array.from(this.knownTokens.values());
     }
 
     /**
-     * Get tokens filtered by criteria
+     * Get filtered tokens based on criteria
+     * @param {Object} options Filter options
+     * @returns {Array} Filtered array of tokens
      */
     getFilteredTokens(options = {}) {
         const { network, minScore, maxCount } = options;
-
         let tokens = Array.from(this.knownTokens.values());
-
+        
         if (network) {
             tokens = tokens.filter(t => t.network === network);
         }
-
+        
         if (minScore !== undefined) {
             tokens = tokens.filter(t => {
                 const score = this.tokenScores.get(t.address.toLowerCase());
                 return score !== undefined && score >= minScore;
             });
         }
-
+        
         // Sort by timestamp (newest first)
         tokens.sort((a, b) => b.timestamp - a.timestamp);
-
+        
         if (maxCount) {
             tokens = tokens.slice(0, maxCount);
         }
-
+        
         return tokens;
     }
 }
 
-module.exports = { EnhancedTokenScanner };
+// Export the class
+module.exports = EnhancedTokenScanner;

@@ -16,7 +16,7 @@ const { EthereumConnector } = require('../blockchain/ethereumConnector');
 const { BnbConnector } = require('../blockchain/bnbConnector');
 const { BinanceExchange } = require('../exchanges/binance');
 const { CryptocomExchange } = require('../exchanges/cryptocom');
-const { EnhancedTokenScanner } = require('../scanner/enhancedTokenScanner');
+const EnhancedTokenScanner = require('../scanner/enhancedTokenScanner');
 
 class TradingEngine {
   constructor(configManager, securityManager, socketIo) {
