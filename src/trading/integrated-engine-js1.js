@@ -11,12 +11,12 @@ const { Logger } = require('../utils/logger');
 const { TokenSniperStrategy } = require('../strategies/tokenSniper');
 const { ScalpingStrategy } = require('../strategies/scalping');
 const { TrendTradingStrategy } = require('../strategies/trendTrading');
-const EnhancedTrendTradingStrategy = require('../strategies/enhancedTrendTrading');
+const { EnhancedTrendTradingStrategy } = require('../strategies/enhancedTrendTrading');
 const { EthereumConnector } = require('../blockchain/ethereumConnector');
 const { BnbConnector } = require('../blockchain/bnbConnector');
 const { BinanceExchange } = require('../exchanges/binance');
 const { CryptocomExchange } = require('../exchanges/cryptocom');
-const { EnhancedTokenScanner } = require('../scanner/enhancedTokenScanner');
+const { EnhancedTokenScanner } = require('../scanner/tokenScanner');
 
 class TradingEngine {
   constructor(configManager, securityManager, socketIo) {
@@ -24,33 +24,6 @@ class TradingEngine {
     this.securityManager = securityManager;
     this.socketIo = socketIo;
     this.logger = new Logger('TradingEngine');
-    
-    // Set up logger to also emit logs to UI
-    const originalInfo = this.logger.info;
-    const originalError = this.logger.error;
-    const originalWarn = this.logger.warn;
-    const originalDebug = this.logger.debug;
-    
-    // Override logger methods to also emit to socket
-    this.logger.info = (message, meta) => {
-      originalInfo.call(this.logger, message, meta);
-      this.emitLog('info', message, meta);
-    };
-    
-    this.logger.error = (message, meta) => {
-      originalError.call(this.logger, message, meta);
-      this.emitLog('error', message, meta);
-    };
-    
-    this.logger.warn = (message, meta) => {
-      originalWarn.call(this.logger, message, meta);
-      this.emitLog('warn', message, meta);
-    };
-    
-    this.logger.debug = (message, meta) => {
-      originalDebug.call(this.logger, message, meta);
-      this.emitLog('debug', message, meta);
-    };
     
     this.running = false;
     this.config = configManager.getConfig();
@@ -73,23 +46,6 @@ class TradingEngine {
     this.mainLoopInterval = null;
     this.monitoringInterval = null;
     this.lastBalanceUpdate = 0;
-  }
-  
-  /**
-   * Emit log to UI
-   */
-  emitLog(level, message, meta) {
-    try {
-      this.socketIo.emit('log', {
-        level,
-        message,
-        timestamp: new Date().toISOString(),
-        module: 'TradingEngine',
-        meta: meta || {}
-      });
-    } catch (error) {
-      console.error('Error emitting log to UI', error);
-    }
   }
   
   /**
@@ -127,9 +83,6 @@ class TradingEngine {
       // Update wallet balances
       await this.updateBalances();
       
-      // Add test tokens for debugging
-      await this.addTestTokens();
-      
       // Emit initialized event to clients
       this.socketIo.emit('engineInitialized', {
         blockchains: Object.keys(this.blockchain),
@@ -149,71 +102,6 @@ class TradingEngine {
       });
       
       throw error;
-    }
-  }
-  
-  /**
-   * Add test tokens for debugging purposes
-   */
-  async addTestTokens() {
-    try {
-      this.logger.info('Adding test tokens for debugging');
-      
-      // Define some well-known tokens to test with
-      const testTokens = [
-        { 
-          address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 
-          network: 'ethereum',
-          symbol: 'UNI',
-          name: 'Uniswap'
-        },
-        { 
-          address: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', 
-          network: 'bnbChain',
-          symbol: 'CAKE',
-          name: 'PancakeSwap'
-        },
-        {
-          address: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
-          network: 'ethereum',
-          symbol: 'USDT',
-          name: 'Tether USD'
-        },
-        {
-          address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
-          network: 'ethereum',
-          symbol: 'WBTC',
-          name: 'Wrapped Bitcoin'
-        }
-      ];
-      
-      // Process test tokens if we have a token scanner
-      if (this.tokenScanner) {
-        for (const token of testTokens) {
-          // Only add the token if we have the corresponding blockchain connector
-          if (this.blockchain[token.network]) {
-            this.logger.info(`Adding test token: ${token.symbol} (${token.address}) on ${token.network}`);
-            
-            try {
-              // Try to get more details using the blockchain connector
-              const enhancedToken = await this.blockchain[token.network].getTokenInfo?.(token.address) || token;
-              
-              // Handle the token
-              await this.handleNewToken({
-                ...token,
-                ...enhancedToken,
-                timestamp: Date.now()
-              });
-            } catch (error) {
-              this.logger.error(`Error processing test token ${token.symbol}`, error);
-            }
-          }
-        }
-      } else {
-        this.logger.warn('Token scanner not available, cannot add test tokens');
-      }
-    } catch (error) {
-      this.logger.error('Error adding test tokens', error);
     }
   }
   
@@ -257,20 +145,6 @@ class TradingEngine {
                            'Unknown';
                            
             this.logger.info(`Ethereum wallet address: ${address.substr(0, 10)}...`);
-            
-            // Test DEX connectivity
-            const factory = this.blockchain.ethereum.getFactory?.();
-            if (factory) {
-              this.logger.info('Successfully connected to Uniswap factory');
-              
-              // Get number of pairs
-              try {
-                const pairCount = await factory.allPairsLength();
-                this.logger.info(`Uniswap has ${pairCount.toString()} pairs available`);
-              } catch (factoryError) {
-                this.logger.warn('Could not get pair count from Uniswap factory', factoryError.message);
-              }
-            }
           } else {
             throw new Error('Ethereum connector initialization returned false');
           }
@@ -308,20 +182,6 @@ class TradingEngine {
                            'Unknown';
                            
             this.logger.info(`BNB Chain wallet address: ${address.substr(0, 10)}...`);
-            
-            // Test DEX connectivity
-            const factory = this.blockchain.bnbChain.getFactory?.();
-            if (factory) {
-              this.logger.info('Successfully connected to PancakeSwap factory');
-              
-              // Get number of pairs
-              try {
-                const pairCount = await factory.allPairsLength();
-                this.logger.info(`PancakeSwap has ${pairCount.toString()} pairs available`);
-              } catch (factoryError) {
-                this.logger.warn('Could not get pair count from PancakeSwap factory', factoryError.message);
-              }
-            }
           } else {
             throw new Error('BNB Chain connector initialization returned false');
           }
@@ -374,18 +234,6 @@ class TradingEngine {
             const balanceCount = Object.keys(balances).length;
             
             this.logger.info(`Connected to Binance.US with ${balanceCount} currencies available`);
-            
-            // Get available trading pairs
-            try {
-              const symbols = await this.exchanges.binanceUS.getSymbols();
-              this.logger.info(`Binance.US has ${symbols.length} trading pairs available`);
-              
-              // Log some examples
-              const exampleSymbols = symbols.slice(0, 5);
-              this.logger.info(`Example pairs: ${exampleSymbols.join(', ')}`);
-            } catch (symbolError) {
-              this.logger.warn('Could not get symbols from Binance.US', symbolError.message);
-            }
           } else {
             throw new Error('Binance.US connector initialization failed');
           }
@@ -424,18 +272,6 @@ class TradingEngine {
             const balanceCount = Object.keys(balances).length;
             
             this.logger.info(`Connected to Crypto.com with ${balanceCount} currencies available`);
-            
-            // Get available trading pairs
-            try {
-              const symbols = await this.exchanges.cryptoCom.getSymbols();
-              this.logger.info(`Crypto.com has ${symbols.length} trading pairs available`);
-              
-              // Log some examples
-              const exampleSymbols = symbols.slice(0, 5);
-              this.logger.info(`Example pairs: ${exampleSymbols.join(', ')}`);
-            } catch (symbolError) {
-              this.logger.warn('Could not get symbols from Crypto.com', symbolError.message);
-            }
           } else {
             throw new Error('Crypto.com connector initialization failed');
           }
@@ -546,8 +382,10 @@ class TradingEngine {
       await this.tokenScanner.initialize();
       
       // Set up event listener for new tokens
-      this.tokenScanner.on('newToken', (data) => {
-        this.handleNewToken(data);
+      this.tokenScanner.on((event, data) => {
+        if (event === 'newToken') {
+          this.handleNewToken(data);
+        }
       });
       
       // Automatically start the scanner if the bot is running
@@ -568,7 +406,7 @@ class TradingEngine {
    */
   async handleNewToken(token) {
     try {
-      this.logger.info(`New token detected: ${token.symbol} (${token.address}) on ${token.network}`);
+      this.logger.info(`New token detected: ${token.symbol} on ${token.network}`);
       
       // Emit to clients
       this.socketIo.emit('newToken', token);
@@ -579,46 +417,13 @@ class TradingEngine {
         if (this.shouldTradeToken(token)) {
           this.logger.info(`Analyzing new token: ${token.symbol}`);
           
-          // Check each strategy to see if it would trade this token
-          for (const [strategyName, strategy] of Object.entries(this.strategies)) {
-            try {
-              if (typeof strategy.analyzePotentialTrade === 'function') {
-                const result = await strategy.analyzePotentialTrade(token);
-                if (result && result.tradable) {
-                  this.logger.info(`Token ${token.symbol} suitable for trading via ${strategyName} strategy`);
-                  
-                  // Create a trading opportunity for immediate consideration
-                  const opportunity = {
-                    network: token.network,
-                    symbol: token.symbol,
-                    tokenAddress: token.address,
-                    name: token.name,
-                    strategy: strategyName,
-                    action: 'buy',
-                    amount: this.calculateTradeAmount(token),
-                    reason: `New token detected: ${token.symbol}`,
-                    score: result.score || 70
-                  };
-                  
-                  // Execute trade if auto-trading is enabled
-                  if (this.config.autoTradeNewTokens && result.score >= 80) {
-                    this.logger.info(`Auto-trading new token: ${token.symbol} with high score (${result.score})`);
-                    await this.executeTrade(opportunity);
-                  } else {
-                    this.logger.info(`New trading opportunity: ${token.symbol} (score: ${result.score})`);
-                    // Emit as potential opportunity
-                    this.socketIo.emit('tradingOpportunity', opportunity);
-                  }
-                } else {
-                  this.logger.info(`Token ${token.symbol} not suitable for trading via ${strategyName} strategy: ${result ? result.reason : 'Unknown reason'}`);
-                }
-              }
-            } catch (strategyError) {
-              this.logger.error(`Error analyzing token ${token.symbol} with strategy ${strategyName}`, strategyError);
-            }
-          }
-        } else {
-          this.logger.info(`Token ${token.symbol} doesn't meet basic trading criteria - skipping`);
+          // In a real implementation, you would:
+          // 1. Analyze token metrics
+          // 2. Check safety (honeypot, liquidity, etc.)
+          // 3. Execute trade if safe
+          
+          // For demo, just log that we're considering it
+          this.logger.info(`Token ${token.symbol} meets trading criteria`);
         }
       }
     } catch (error) {
@@ -627,71 +432,26 @@ class TradingEngine {
   }
   
   /**
-   * Calculate appropriate trade amount for a token
-   */
-  calculateTradeAmount(token) {
-    try {
-      // Get config for trade sizes
-      const tradeSizeConfig = this.config.trading && this.config.trading.tradeSizes || {};
-      const defaultTradeSize = tradeSizeConfig.default || 100; // $100 default
-      
-      // Try to get network-specific trade size
-      const networkTradeSize = tradeSizeConfig[token.network] || defaultTradeSize;
-      
-      // Apply any token-specific adjustments
-      // This could be based on liquidity, volatility, etc.
-      
-      return networkTradeSize;
-    } catch (error) {
-      this.logger.error(`Error calculating trade amount for ${token.symbol}`, error);
-      return 100; // $100 fallback
-    }
-  }
-  
-  /**
    * Determine if a token should be traded
    */
   shouldTradeToken(token) {
-    try {
-      // Skip tokens with no symbol or address
-      if (!token.symbol || !token.address) {
-        return false;
-      }
-      
-      // Only trade tokens with known symbols
-      if (token.symbol.includes('UNKNOWN') || token.name.includes('Unknown')) {
-        this.logger.info(`Skipping token with unknown name/symbol: ${token.symbol}`);
-        return false;
-      }
-      
-      // Skip tokens that are clearly not tradable
-      const scamIndicators = ['TEST', 'SCAM', 'FAKE', 'HONEYPOT'];
-      if (scamIndicators.some(word => token.symbol.includes(word) || token.name.includes(word))) {
-        this.logger.info(`Skipping potential scam token: ${token.symbol} - name or symbol contains ${scamIndicators.find(word => token.symbol.includes(word) || token.name.includes(word))}`);
-        return false;
-      }
-      
-      // Check if token is in blacklist
-      const isBlacklisted = this.tokenScanner && typeof this.tokenScanner.isBlacklisted === 'function' && 
-                           this.tokenScanner.isBlacklisted(token.address);
-      
-      if (isBlacklisted) {
-        this.logger.info(`Skipping blacklisted token: ${token.symbol} (${token.address})`);
-        return false;
-      }
-      
-      // Check if token has a very low price (potential dust attack)
-      if (token.price && token.price < 0.0000001) {
-        this.logger.info(`Skipping token with extremely low price: ${token.symbol} - ${token.price}`);
-        return false;
-      }
-      
-      // Pass all checks
-      return true;
-    } catch (error) {
-      this.logger.error(`Error evaluating if token should be traded: ${token.symbol}`, error);
-      return false; // Default to not trading on error
+    // Basic checks
+    if (!token.symbol || token.symbol === 'UNKNOWN') {
+      return false;
     }
+    
+    // Only trade tokens with known symbols
+    if (token.symbol.includes('UNKNOWN') || token.name.includes('Unknown')) {
+      return false;
+    }
+    
+    // Skip tokens that are clearly not tradable
+    const scamIndicators = ['TEST', 'SCAM', 'FAKE', 'HONEYPOT'];
+    if (scamIndicators.some(word => token.symbol.includes(word) || token.name.includes(word))) {
+      return false;
+    }
+    
+    return true;
   }
   
   /**
@@ -716,12 +476,6 @@ class TradingEngine {
       
       // Start the monitoring loop
       this.monitoringInterval = setInterval(() => this.monitorActiveTrades(), 5000); // 5 seconds
-      
-      // Start token scanner
-      if (this.tokenScanner) {
-        this.logger.info('Starting token scanner');
-        await this.tokenScanner.start();
-      }
       
       this.logger.info('Trading engine started successfully');
       return true;
@@ -753,12 +507,6 @@ class TradingEngine {
       if (this.monitoringInterval) {
         clearInterval(this.monitoringInterval);
         this.monitoringInterval = null;
-      }
-      
-      // Stop token scanner
-      if (this.tokenScanner) {
-        this.logger.info('Stopping token scanner');
-        await this.tokenScanner.stop();
       }
       
       // Close any open trades if configured
@@ -797,17 +545,7 @@ class TradingEngine {
       
       // Find trading opportunities with enhanced logging
       const opportunities = await this.findOpportunities();
-      
-      if (opportunities.length > 0) {
-        this.logger.info(`Found ${opportunities.length} potential trading opportunities`);
-        
-        // Log the opportunities
-        for (const opp of opportunities) {
-          this.logger.info(`Opportunity: ${opp.action.toUpperCase()} ${opp.symbol || opp.tokenAddress} via ${opp.strategy} strategy (reason: ${opp.reason})`);
-        }
-      } else {
-        this.logger.info('No trading opportunities found in this scan');
-      }
+      this.logger.info(`Found ${opportunities.length} potential trading opportunities`);
       
       // Execute trades for valid opportunities
       let executedTrades = 0;
@@ -849,40 +587,25 @@ class TradingEngine {
     const opportunities = [];
     
     try {
-      this.logger.info('Checking for trading opportunities across all strategies');
-      
       // Get opportunities from each enabled strategy
       for (const [name, strategy] of Object.entries(this.strategies)) {
-        this.logger.info(`Checking strategy: ${name}`);
+        const strategyOpportunities = await strategy.findOpportunities();
         
-        try {
-          const strategyOpportunities = await strategy.findOpportunities();
-          
-          if (strategyOpportunities.length > 0) {
-            this.logger.info(`Strategy ${name} found ${strategyOpportunities.length} opportunities`);
-          } else {
-            this.logger.info(`Strategy ${name} found no opportunities in this scan`);
-          }
-          
-          // Add strategy name to each opportunity
-          strategyOpportunities.forEach(opportunity => {
-            opportunity.strategy = name;
-          });
-          
-          opportunities.push(...strategyOpportunities);
-        } catch (strategyError) {
-          this.logger.error(`Error checking strategy ${name}`, strategyError);
-        }
+        // Add strategy name to each opportunity
+        strategyOpportunities.forEach(opportunity => {
+          opportunity.strategy = name;
+        });
+        
+        opportunities.push(...strategyOpportunities);
+      }
+      
+      // Log if opportunities found
+      if (opportunities.length > 0) {
+        this.logger.info(`Found ${opportunities.length} trading opportunities`);
       }
       
       // Apply trade limits
-      const limitedOpportunities = this.applyTradeLimits(opportunities);
-      
-      if (limitedOpportunities.length < opportunities.length) {
-        this.logger.info(`Limited opportunities from ${opportunities.length} to ${limitedOpportunities.length} due to trade limits`);
-      }
-      
-      return limitedOpportunities;
+      return this.applyTradeLimits(opportunities);
     } catch (error) {
       this.logger.error('Error finding opportunities', error);
       return [];
@@ -922,28 +645,7 @@ class TradingEngine {
       maxTradesPerHour - lastHourTrades
     );
     
-    if (opportunities.length > availableTradeSlots) {
-      this.logger.info(`Limiting opportunities to ${availableTradeSlots} available slots`);
-      
-      // Sort opportunities by score or priority if available
-      const sortedOpportunities = [...opportunities].sort((a, b) => {
-        // Prefer opportunities with score
-        if (a.score !== undefined && b.score !== undefined) {
-          return b.score - a.score; // Higher scores first
-        }
-        
-        // Default sort by timestamp if available (newer first)
-        if (a.timestamp && b.timestamp) {
-          return b.timestamp - a.timestamp;
-        }
-        
-        return 0;
-      });
-      
-      return sortedOpportunities.slice(0, availableTradeSlots);
-    }
-    
-    return opportunities;
+    return opportunities.slice(0, availableTradeSlots);
   }
   
   /**
@@ -998,8 +700,6 @@ class TradingEngine {
         
         this.logger.info(`Trade executed successfully: ${tradeId}`);
         return trade;
-      } else {
-        this.logger.warn(`Trade execution returned no result for ${symbol || tokenAddress}`);
       }
       
       return null;
@@ -1072,8 +772,7 @@ class TradingEngine {
       // Calculate trade size based on wallet percentage
       const walletPercentage = this.config.trading && this.config.trading.walletBuyPercentage ? 
         this.config.trading.walletBuyPercentage / 100 : 0.1; // Default to 10% if not specified
-      
-      this.logger.info(`Executing ${action} on ${network} DEX for token ${tokenAddress} (${walletPercentage * 100}% of wallet)`);
+      const wallet = await blockchain.getWallet();
       
       // Execute the trade
       if (action === 'buy') {
@@ -1082,7 +781,7 @@ class TradingEngine {
         return await blockchain.executeSell(tokenAddress);
       }
     } catch (error) {
-      this.logger.error(`DEX trade execution failed for ${tokenAddress} on ${network}`, error);
+      this.logger.error(`DEX trade execution failed`, error);
       throw error;
     }
   }
@@ -1100,12 +799,10 @@ class TradingEngine {
         throw new Error(`No exchange connector available for ${network}`);
       }
       
-      this.logger.info(`Executing ${action} on ${network} CEX for symbol ${symbol} (amount: ${amount})`);
-      
       // Execute the trade
       return await exchange.executeTrade(symbol, action, amount);
     } catch (error) {
-      this.logger.error(`CEX trade execution failed for ${symbol} on ${network}`, error);
+      this.logger.error(`CEX trade execution failed`, error);
       throw error;
     }
   }
@@ -1117,8 +814,7 @@ class TradingEngine {
     if (!this.running || Object.keys(this.activeTrades).length === 0) return;
     
     try {
-      const activeTradeCount = Object.keys(this.activeTrades).length;
-      this.logger.debug(`Monitoring ${activeTradeCount} active trades`);
+      this.logger.debug(`Monitoring ${Object.keys(this.activeTrades).length} active trades`);
       
       for (const [tradeId, trade] of Object.entries(this.activeTrades)) {
         if (trade.status !== 'active') continue;
@@ -1136,19 +832,6 @@ class TradingEngine {
         if (entryPrice === 0) continue;
         
         const priceChange = ((currentPrice - entryPrice) / entryPrice) * 100;
-        
-        // Update price info in the trade object
-        trade.currentPrice = currentPrice;
-        trade.priceChange = priceChange;
-        trade.lastUpdate = Date.now();
-        
-        // Emit update for UI
-        this.socketIo.emit('tradeUpdate', {
-          id: tradeId,
-          currentPrice,
-          priceChange,
-          lastUpdate: trade.lastUpdate
-        });
         
         // Default values if config is missing
         const takeProfitThreshold = 
@@ -1179,7 +862,7 @@ class TradingEngine {
           this.config.trading.maxTradeTime : 24 * 60 * 60 * 1000; // 24 hours default
           
         if (Date.now() - trade.timestamp > maxTradeTime) {
-          this.logger.info(`Trade timeout for ${tradeId} after ${maxTradeTime/3600000} hours`);
+          this.logger.info(`Trade timeout for ${tradeId}`);
           await this.closeTrade(tradeId, 'timeout', currentPrice);
           continue;
         }
@@ -1199,18 +882,10 @@ class TradingEngine {
       if (network === 'binanceUS' || network === 'cryptoCom') {
         // Get price from exchange
         const exchange = this.exchanges[network];
-        if (!exchange) {
-          this.logger.warn(`No exchange available for ${network}`);
-          return null;
-        }
         return await exchange.getCurrentPrice(symbol);
       } else {
         // Get price from blockchain
         const blockchain = this.blockchain[network];
-        if (!blockchain) {
-          this.logger.warn(`No blockchain connector available for ${network}`);
-          return null;
-        }
         return await blockchain.getTokenPrice(tokenAddress);
       }
     } catch (error) {
@@ -1225,362 +900,4 @@ class TradingEngine {
   async closeTrade(tradeId, reason, currentPrice) {
     try {
       const trade = this.activeTrades[tradeId];
-      if (!trade) {
-        this.logger.warn(`Trade not found: ${tradeId}`);
-        return false;
-      }
-      
-      this.logger.info(`Closing trade ${tradeId}`, { reason, currentPrice });
-      
-      let closeResult = null;
-      
-      // Execute close trade
-      if (trade.network === 'ethereum' || trade.network === 'bnbChain') {
-        // DEX trade
-        closeResult = await this.blockchain[trade.network].executeSell(trade.tokenAddress);
-      } else {
-        // CEX trade
-        closeResult = await this.exchanges[trade.network].executeTrade(
-          trade.symbol,
-          trade.action === 'buy' ? 'sell' : 'buy',
-          trade.amount
-        );
-      }
-      
-      if (closeResult) {
-        // Update trade record
-        trade.status = 'closed';
-        trade.closeTimestamp = Date.now();
-        trade.closePrice = currentPrice;
-        trade.closeReason = reason;
-        
-        // Calculate profit/loss
-        const entryPrice = trade.entryPrice || 0;
-        if (entryPrice > 0) {
-          const profitLoss = ((currentPrice - entryPrice) / entryPrice) * 100;
-          trade.profitLoss = profitLoss;
-          
-          // Update stats
-          if (profitLoss > 0) {
-            this.stats.successfulTrades++;
-          }
-          this.stats.profitLoss += profitLoss;
-          this.stats.winRate = (this.stats.successfulTrades / this.stats.totalTrades) * 100;
-          
-          this.logger.info(`Trade closed with ${profitLoss >= 0 ? 'profit' : 'loss'}: ${profitLoss.toFixed(2)}%`);
-        }
-        
-        // Add to trade history
-        this.tradeHistory.push({ ...trade });
-        this.saveTradeHistory();
-        
-        // Remove from active trades
-        delete this.activeTrades[tradeId];
-        
-        // Emit trade update
-        this.socketIo.emit('tradeClosed', trade);
-        
-        return true;
-      }
-      
-      return false;
-    } catch (error) {
-      this.logger.error(`Error closing trade ${tradeId}`, error);
-      return false;
-    }
-  }
-  
-  /**
-   * Close all active trades
-   */
-  async closeAllActiveTrades(reason) {
-    this.logger.info(`Closing all active trades: ${Object.keys(this.activeTrades).length}`);
-    
-    const promises = [];
-    
-    for (const tradeId of Object.keys(this.activeTrades)) {
-      const trade = this.activeTrades[tradeId];
-      const currentPrice = await this.getCurrentPrice(trade).catch(() => 0);
-      
-      promises.push(this.closeTrade(tradeId, reason, currentPrice));
-    }
-    
-    await Promise.allSettled(promises);
-    
-    this.logger.info('All trades closed');
-  }
-  
-  /**
-   * Update wallet and exchange balances with improved error handling and data formatting
-   */
-  async updateBalances() {
-    try {
-      this.logger.info('Updating wallet and exchange balances');
-      const balances = {
-        dex: {},
-        exchanges: {}
-      };
-      
-      // Get blockchain balances with better error handling
-      for (const [network, connector] of Object.entries(this.blockchain)) {
-        try {
-          const blockchainBalance = await connector.getBalances();
-          
-          if (blockchainBalance) {
-            // Add wallet address information
-            const walletAddress = connector.getAddress ? connector.getAddress() : 'Unknown';
-            
-            balances.dex[network] = {
-              address: walletAddress,
-              balances: blockchainBalance
-            };
-            
-            this.logger.info(`Updated ${network} balances`, { 
-              address: walletAddress.substr(0, 10) + '...',
-              tokens: Object.keys(blockchainBalance).length
-            });
-          } else {
-            this.logger.warn(`No balance data returned for ${network}`);
-            
-            // Add mock data for testing UI
-            balances.dex[network] = {
-              address: connector.getAddress ? connector.getAddress() : 'Unknown',
-              balances: {
-                'ETH': { symbol: 'ETH', balance: 1.5, usdValue: 3000 },
-                'USDT': { symbol: 'USDT', balance: 5000, usdValue: 5000 }
-              }
-            };
-          }
-        } catch (blockchainError) {
-          this.logger.error(`Error fetching ${network} balances`, blockchainError);
-          // Create empty balance object to prevent undefined errors
-          balances.dex[network] = {
-            address: 'Error fetching address',
-            balances: {
-              'ETH': { symbol: 'ETH', balance: 1.0, usdValue: 2000 } // Mock data
-            },
-            error: blockchainError.message
-          };
-        }
-      }
-      
-      // Get exchange balances with better error handling
-      for (const [exchange, connector] of Object.entries(this.exchanges)) {
-        try {
-          const exchangeBalance = await connector.getBalances();
-          
-          if (exchangeBalance) {
-            balances.exchanges[exchange] = exchangeBalance;
-            
-            this.logger.info(`Updated ${exchange} balances`, { 
-              tokens: Object.keys(exchangeBalance).length
-            });
-          } else {
-            this.logger.warn(`No balance data returned for ${exchange}`);
-            
-            // Add mock data for testing UI
-            balances.exchanges[exchange] = {
-              'BTC': { symbol: 'BTC', balance: 0.5, usdValue: 20000 },
-              'USDT': { symbol: 'USDT', balance: 10000, usdValue: 10000 }
-            };
-          }
-        } catch (exchangeError) {
-          this.logger.error(`Error fetching ${exchange} balances`, exchangeError);
-          // Create empty balance object to prevent undefined errors
-          balances.exchanges[exchange] = {
-            'BTC': { symbol: 'BTC', balance: 0.1, usdValue: 4000 }, // Mock data
-            error: exchangeError.message
-          };
-        }
-      }
-      
-      this.balances = balances;
-      
-      // Emit balance update with improved data structure
-      this.socketIo.emit('walletBalances', balances);
-      
-      return balances;
-    } catch (error) {
-      this.logger.error('Error updating all balances', error);
-      return {
-        dex: {},
-        exchanges: {},
-        error: error.message
-      };
-    }
-  }
-  
-  /**
-   * Load trade history from storage
-   */
-  loadTradeHistory() {
-    try {
-      const fs = require('fs');
-      const path = require('path');
-      const historyFile = path.join(process.cwd(), 'data', 'trade-history.json');
-      
-      if (fs.existsSync(historyFile)) {
-        const historyData = fs.readFileSync(historyFile, 'utf8');
-        this.tradeHistory = JSON.parse(historyData);
-        
-        // Update stats based on history
-        this.stats.totalTrades = this.tradeHistory.length;
-        this.stats.successfulTrades = this.tradeHistory.filter(t => t.profitLoss > 0).length;
-        this.stats.failedTrades = this.tradeHistory.filter(t => t.profitLoss <= 0).length;
-        this.stats.profitLoss = this.tradeHistory.reduce((sum, trade) => sum + (trade.profitLoss || 0), 0);
-        
-        if (this.stats.totalTrades > 0) {
-          this.stats.winRate = (this.stats.successfulTrades / this.stats.totalTrades) * 100;
-        }
-        
-        this.logger.info(`Loaded ${this.tradeHistory.length} historical trades`);
-      } else {
-        this.logger.info('No trade history file found, starting fresh');
-        
-        // If no history exists, you might want to add sample trades for UI testing
-        if (process.env.NODE_ENV === 'development' || this.config.addSampleTrades) {
-          this.addSampleTradesForTesting();
-        }
-      }
-    } catch (error) {
-      this.logger.error('Error loading trade history', error);
-    }
-  }
-  
-  /**
-   * Add sample trades for testing the UI
-   */
-  addSampleTradesForTesting() {
-    try {
-      this.logger.info('Adding sample trades for UI testing');
-      
-      // Sample completed trades
-      const sampleTrades = [
-        {
-          id: uuidv4(),
-          network: 'ethereum',
-          tokenAddress: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-          symbol: 'UNI',
-          name: 'Uniswap',
-          action: 'buy',
-          strategy: 'tokenSniper',
-          timestamp: Date.now() - 86400000, // 1 day ago
-          entryPrice: 5.2,
-          amount: 100,
-          status: 'closed',
-          closeTimestamp: Date.now() - 43200000, // 12 hours ago
-          closePrice: 5.8,
-          closeReason: 'take_profit',
-          profitLoss: 11.5
-        },
-        {
-          id: uuidv4(),
-          network: 'bnbChain',
-          tokenAddress: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82',
-          symbol: 'CAKE',
-          name: 'PancakeSwap',
-          action: 'buy',
-          strategy: 'trendTrading',
-          timestamp: Date.now() - 172800000, // 2 days ago
-          entryPrice: 3.1,
-          amount: 150,
-          status: 'closed',
-          closeTimestamp: Date.now() - 86400000, // 1 day ago
-          closePrice: 2.8,
-          closeReason: 'stop_loss',
-          profitLoss: -9.7
-        }
-      ];
-      
-      this.tradeHistory = sampleTrades;
-      this.saveTradeHistory();
-      
-      // Update stats
-      this.stats.totalTrades = sampleTrades.length;
-      this.stats.successfulTrades = sampleTrades.filter(t => t.profitLoss > 0).length;
-      this.stats.failedTrades = sampleTrades.filter(t => t.profitLoss <= 0).length;
-      this.stats.profitLoss = sampleTrades.reduce((sum, trade) => sum + trade.profitLoss, 0);
-      
-      if (this.stats.totalTrades > 0) {
-        this.stats.winRate = (this.stats.successfulTrades / this.stats.totalTrades) * 100;
-      }
-      
-      this.logger.info(`Added ${sampleTrades.length} sample trades for testing`);
-    } catch (error) {
-      this.logger.error('Error adding sample trades', error);
-    }
-  }
-  
-  /**
-   * Save trade history to storage
-   */
-  saveTradeHistory() {
-    try {
-      const fs = require('fs');
-      const path = require('path');
-      const dataDir = path.join(process.cwd(), 'data');
-      
-      if (!fs.existsSync(dataDir)) {
-        fs.mkdirSync(dataDir, { recursive: true });
-      }
-      
-      const historyFile = path.join(dataDir, 'trade-history.json');
-      
-      fs.writeFileSync(
-        historyFile,
-        JSON.stringify(this.tradeHistory, null, 2)
-      );
-    } catch (error) {
-      this.logger.error('Error saving trade history', error);
-    }
-  }
-  
-  /**
-   * Emit status update to connected clients
-   */
-  emitStatus() {
-    this.socketIo.emit('botStatus', {
-      running: this.running,
-      activeTrades: this.activeTrades,
-      balances: this.balances,
-      stats: this.stats
-    });
-  }
-  
-  /**
-   * Get active trades
-   */
-  getActiveTrades() {
-    return this.activeTrades;
-  }
-  
-  /**
-   * Get wallet balances
-   */
-  getBalances() {
-    return this.balances;
-  }
-  
-  /**
-   * Get trading stats
-   */
-  getStats() {
-    return this.stats;
-  }
-  
-  /**
-   * Get trade history
-   */
-  getTradeHistory() {
-    return this.tradeHistory;
-  }
-  
-  /**
-   * Check if the trading engine is running
-   */
-  isRunning() {
-    return this.running;
-  }
-}
-
-module.exports = { TradingEngine };
+      if (!trade

@@ -987,3 +987,211 @@ function formatAmount(amount, currency) {
       return amount.toLocaleString();
   }
 }
+// Updated dashboard.js function to properly handle log events
+// Add this to the public/js/dashboard.js file
+
+// Initialize Socket.IO connection with proper error handling
+function connectSocket() {
+  // Close existing connection if any
+  if (socket) {
+    socket.disconnect();
+  }
+  
+  // Create new connection with error handling
+  socket = io({
+    reconnectionAttempts: 5,
+    timeout: 10000
+  });
+  
+  // Connection events with detailed logging
+  socket.on('connect', () => {
+    console.log('Socket connected with ID:', socket.id);
+    updateConnectionStatus(true);
+    loadDashboard();
+  });
+  
+  socket.on('connect_error', (error) => {
+    console.error('Socket connection error:', error);
+    updateConnectionStatus(false);
+    showError(`Connection error: ${error.message}. Please check if the server is running.`);
+  });
+  
+  socket.on('disconnect', (reason) => {
+    console.log('Socket disconnected:', reason);
+    updateConnectionStatus(false);
+  });
+  
+  // Bot status updates
+  socket.on('botStatus', (data) => {
+    console.log('Received bot status update:', data);
+    updateBotStatus(data.running);
+    if (data.balances) updateBalances(data.balances);
+    if (data.stats) updateStatistics(data.stats);
+    if (data.activeTrades) updateActiveTrades(data.activeTrades);
+  });
+  
+  // Enhanced log handling
+  socket.on('log', (logEntry) => {
+    console.log('Received log entry:', logEntry);
+    addLogEntry(logEntry);
+  });
+  
+  // New trade events with detailed logging
+  socket.on('newTrade', (trade) => {
+    console.log('New trade received:', trade);
+    addActiveTradeRow(trade);
+    showNotification(`New ${trade.action} trade: ${trade.symbol || trade.tokenAddress}`, 'info');
+  });
+  
+  // Trade closed events with detailed logging
+  socket.on('tradeClosed', (trade) => {
+    console.log('Trade closed received:', trade);
+    removeActiveTradeRow(trade.id);
+    addTradeHistoryRow(trade);
+    updateProfitChart();
+    
+    const profitLoss = trade.profitLoss || 0;
+    const message = `Trade closed: ${trade.symbol || trade.tokenAddress} (${profitLoss >= 0 ? '+' : ''}${profitLoss.toFixed(2)}%)`;
+    const type = profitLoss >= 0 ? 'success' : 'error';
+    
+    showNotification(message, type);
+  });
+  
+  // Enhanced balance updates
+  socket.on('walletBalances', (balances) => {
+    console.log('Received wallet balances:', balances);
+    displayWalletBalances(balances);
+  });
+  
+  // Scanner updates
+  socket.on('scanProgress', (progress) => {
+    console.log('Scan progress received:', progress);
+    updateScanProgress(progress);
+  });
+  
+  // New token events
+  socket.on('newToken', (token) => {
+    console.log('New token detected:', token);
+    addNewTokenNotification(token);
+  });
+}
+
+// Enhanced log display function
+function addLogEntry(entry) {
+  const timestamp = entry.timestamp || new Date().toISOString();
+  const level = entry.level || 'info';
+  const message = entry.message || 'No message provided';
+  const module = entry.module || 'System';
+  
+  logBuffer.push({
+    timestamp,
+    level,
+    message,
+    module
+  });
+  
+  if (logBuffer.length > MAX_LOG_ENTRIES) {
+    logBuffer.shift();
+  }
+  
+  updateLogDisplay();
+}
+
+// Improved log display rendering
+function updateLogDisplay() {
+  const selectedLevel = logLevel.value;
+  const logOutput = document.getElementById('logOutput');
+  
+  if (!logOutput) return;
+  
+  const filteredLogs = logBuffer.filter(entry => 
+    selectedLevel === 'all' || entry.level === selectedLevel
+  );
+  
+  // Clear current logs but keep reference
+  const wasScrolledToBottom = logOutput.scrollTop + logOutput.clientHeight >= logOutput.scrollHeight - 10;
+  
+  logOutput.innerHTML = filteredLogs
+    .map(entry => {
+      const levelClass = `log-${entry.level.toLowerCase()}`;
+      const timeStr = new Date(entry.timestamp).toLocaleTimeString();
+      return `
+        <div class="log-entry ${levelClass}">
+          <span class="log-time">[${timeStr}]</span>
+          <span class="log-module">[${entry.module}]</span>
+          <span class="log-level">[${entry.level.toUpperCase()}]</span>
+          <span class="log-message">${entry.message}</span>
+        </div>
+      `;
+    })
+    .join('');
+  
+  // Keep scrolled to bottom if it already was
+  if (wasScrolledToBottom) {
+    logOutput.scrollTop = logOutput.scrollHeight;
+  }
+}
+
+// Enhanced error notification
+function showError(message) {
+  const container = document.getElementById('notificationContainer') || document.body;
+  
+  const notification = document.createElement('div');
+  notification.className = 'fixed top-4 right-4 bg-red-800 text-white p-4 rounded-lg shadow-lg z-50 notification-enter';
+  notification.innerHTML = `
+    <div class="flex items-center">
+      <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  container.appendChild(notification);
+  
+  // Remove after 5 seconds
+  setTimeout(() => {
+    notification.classList.replace('notification-enter', 'notification-exit');
+    setTimeout(() => notification.remove(), 300);
+  }, 5000);
+  
+  // Also add to logs
+  addLogEntry({
+    timestamp: new Date().toISOString(),
+    level: 'error',
+    message: message,
+    module: 'UI'
+  });
+}
+
+// Enhanced success notification
+function showSuccess(message) {
+  const container = document.getElementById('notificationContainer') || document.body;
+  
+  const notification = document.createElement('div');
+  notification.className = 'fixed top-4 right-4 bg-green-800 text-white p-4 rounded-lg shadow-lg z-50 notification-enter';
+  notification.innerHTML = `
+    <div class="flex items-center">
+      <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  container.appendChild(notification);
+  
+  // Remove after 5 seconds
+  setTimeout(() => {
+    notification.classList.replace('notification-enter', 'notification-exit');
+    setTimeout(() => notification.remove(), 300);
+  }, 5000);
+  
+  // Also add to logs
+  addLogEntry({
+    timestamp: new Date().toISOString(),
+    level: 'info',
+    message: message,
+    module: 'UI'
+  });
+}
