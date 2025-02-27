@@ -22,27 +22,22 @@ if not exist node_modules (
     )
 )
 
-:: Start the server in a new window with error logging
-start "DeFi Sniper Server" cmd /k "npm run start-server 2>&1 | tee server.log"
+:: Create required directories
+if not exist logs mkdir logs
+if not exist data mkdir data
+if not exist secure-config mkdir secure-config
 
-:: Wait a moment for the server to start
+:: Start the server in the background
+echo Starting server...
+start "DeFi Sniper Server" cmd /k "npm run start-server"
+
+:: Wait for the server to start
 echo Waiting for server to start...
 timeout /t 5 /nobreak > nul
 
-:: Check if server started successfully by looking for errors in the log
-findstr /i "error exception failed" server.log > nul
-if %ERRORLEVEL% EQU 0 (
-    echo Server failed to start. Check server.log for details.
-    pause
-    exit /b 1
-)
-
-:: Start the Electron UI
+:: Start the UI
 echo Starting UI...
 npm run start-ui
 
-:: If the UI process ends, kill the server process
-taskkill /FI "WINDOWTITLE eq DeFi Sniper Server" /F
-del server.log 2>nul
-
-exit /b 0
+:: The script will automatically end when the UI is closed
+:: The server window will remain open for debugging

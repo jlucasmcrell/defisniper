@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DeFi Sniper Bot Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white p-6">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Bot Settings</h1>
+            <div id="status-indicator" class="hidden px-4 py-2 rounded text-sm"></div>
+        </div>
+
+        <form id="settingsForm" class="space-y-6">
+            <!-- Trading Settings -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Trading Settings</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300">Wallet Buy Percentage</label>
+                        <input type="number" name="trading.walletBuyPercentage" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1" max="100">
+                        <p class="text-sm text-gray-400 mt-1">Percentage of wallet to use per trade (1-100)</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300">Stop Loss (%)</label>
+                        <input type="number" name="trading.stopLoss" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0.1" step="0.1">
+                        <p class="text-sm text-gray-400 mt-1">Automatic sell when loss reaches this percentage</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300">Take Profit (%)</label>
+                        <input type="number" name="trading.takeProfit" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0.1" step="0.1">
+                        <p class="text-sm text-gray-400 mt-1">Automatic sell when profit reaches this percentage</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300">Max Concurrent Trades</label>
+                        <input type="number" name="trading.maxConcurrentTrades" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1">
+                        <p class="text-sm text-gray-400 mt-1">Maximum number of trades at once</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300">Max Trades Per Hour</label>
+                        <input type="number" name="trading.maxTradesPerHour" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1">
+                        <p class="text-sm text-gray-400 mt-1">Maximum number of trades per hour</p>
+                    </div>
+                    <div class="flex items-center">
+                        <input type="checkbox" name="trading.closeTradesOnStop" class="mr-2">
+                        <span class="text-sm text-gray-300">Close all trades when stopping bot</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Settings -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Network Settings</h2>
+                
+                <!-- Ethereum -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" name="ethereum.enabled" class="mr-2">
+                        <span class="font-medium">Enable Ethereum</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Network</label>
+                            <select name="ethereum.network" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                                <option value="mainnet">Mainnet</option>
+                                <option value="goerli">Goerli</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Private Key</label>
+                            <input type="password" name="ethereum.privateKey" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                            <p class="text-sm text-gray-400 mt-1">Your wallet's private key</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Infura Project ID</label>
+                            <input type="password" name="ethereum.infuraId" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                            <p class="text-sm text-gray-400 mt-1">Optional: Use Infura as provider</p>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Alchemy API Key</label>
+                            <input type="password" name="ethereum.alchemyKey" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                            <p class="text-sm text-gray-400 mt-1">Optional: Use Alchemy as provider</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BNB Chain -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" name="bnbChain.enabled" class="mr-2">
+                        <span class="font-medium">Enable BNB Chain</span>
+                    </div>
+                    <div class="pl-6">
+                        <label class="block text-sm font-medium text-gray-300">Private Key</label>
+                        <input type="password" name="bnbChain.privateKey" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                        <p class="text-sm text-gray-400 mt-1">Your wallet's private key (can be same as Ethereum)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exchange Settings -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Exchange Settings</h2>
+                
+                <!-- Binance.US -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" name="exchanges.binanceUS.enabled" class="mr-2">
+                        <span class="font-medium">Enable Binance.US</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">API Key</label>
+                            <input type="password" name="exchanges.binanceUS.apiKey" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">API Secret</label>
+                            <input type="password" name="exchanges.binanceUS.apiSecret" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Crypto.com -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" name="exchanges.cryptoCom.enabled" class="mr-2">
+                        <span class="font-medium">Enable Crypto.com</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">API Key</label>
+                            <input type="password" name="exchanges.cryptoCom.apiKey" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">API Secret</label>
+                            <input type="password" name="exchanges.cryptoCom.apiSecret" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy Settings -->
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold mb-4">Strategy Settings</h2>
+
+                <!-- Token Sniper -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" name="strategies.tokenSniper.enabled" class="mr-2">
+                        <span class="font-medium">Enable Token Sniper</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Minimum Liquidity ($)</label>
+                            <input type="number" name="strategies.tokenSniper.minLiquidity" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Maximum Buy Tax (%)</label>
+                            <input type="number" name="strategies.tokenSniper.maxBuyTax" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0" max="100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Maximum Sell Tax (%)</label>
+                            <input type="number" name="strategies.tokenSniper.maxSellTax" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0" max="100">
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" name="strategies.tokenSniper.requireAudit" class="mr-2">
+                            <span class="text-sm text-gray-300">Require Contract Audit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scalping Strategy -->
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" name="strategies.scalping.enabled" class="mr-2">
+                        <span class="font-medium">Enable Scalping</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Minimum Price Change (%)</label>
+                            <input type="number" name="strategies.scalping.minPriceChange" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0.1" step="0.1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">Maximum Trade Time (seconds)</label>
+                            <input type="number" name="strategies.scalping.maxTradeTime" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trend Trading -->
+                <div>
+                    <div class="flex items-center mb-4">
+                        <input type="checkbox" name="strategies.trendTrading.enabled" class="mr-2">
+                        <span class="font-medium">Enable Trend Trading</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">RSI Oversold Level</label>
+                            <input type="number" name="strategies.trendTrading.rsiLow" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0" max="100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">RSI Overbought Level</label>
+                            <input type="number" name="strategies.trendTrading.rsiHigh" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="0" max="100">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">MACD Fast Period</label>
+                            <input type="number" name="strategies.trendTrading.macdFast" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300">MACD Slow Period</label>
+                            <input type="number" name="strategies.trendTrading.macdSlow" class="mt-1 w-full bg-gray-700 border border-gray-600 rounded px-3 py-2" min="1">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="testConnection" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
+                    Test Connection
+                </button>
+                <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+                    Save Settings
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        // Global variables
+        let currentSettings = {};
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Load existing settings
+            try {
+                const response = await ipcRenderer.invoke('get-settings');
+                if (response.success) {
+                    currentSettings = response.settings;
+                    populateForm(currentSettings);
+                } else {
+                    showNotification(response.error || 'Failed to load settings', 'error');
+                }
+            } catch (error) {
+                showNotification('Error loading settings: ' + error.message, 'error');
+            }
+
+            // Form submission
+            document.getElementById('settingsForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const settings = getFormData();
+                
+                try {
+                    const saveResponse = await ipcRenderer.invoke('save-settings', settings);
+                    if (saveResponse.success) {
+                        currentSettings = settings;
+                        showNotification('Settings saved successfully', 'success');
+                    } else {
+                        showNotification(saveResponse.error || 'Failed to save settings', 'error');
+                    }
+                } catch (error) {
+                    showNotification('Error saving settings: ' + error.message, 'error');
+                }
+            });
+
+            // Test connection button
+            document.getElementById('testConnection').addEventListener('click', async () => {
+                const settings = getFormData();
+                const statusIndicator = document.getElementById('status-indicator');
+                
+                try {
+                    statusIndicator.textContent = 'Testing connections...';
+                    statusIndicator.className = 'px-4 py-2 rounded text-sm bg-yellow-600';
+                    statusIndicator.classList.remove('hidden');
+
+                    const testResponse = await ipcRenderer.invoke('test-connection', settings);
+                    
+                    if (testResponse.success) {
+                        let message = 'Connection test results:\n';
+                        for (const [service, status] of Object.entries(testResponse.results)) {
+                            message += `${service}: ${status ? '✓' : '✗'}\n`;
+                        }
+                        showNotification(message, 'success');
+                    } else {
+                        showNotification(testResponse.error || 'Connection test failed', 'error');
+                    }
+                } catch (error) {
+                    showNotification('Error testing connection: ' + error.message, 'error');
+                } finally {
+                    statusIndicator.classList.add('hidden');
+                }
+            });
+
+            // Helper functions
+            function populateForm(settings) {
+                const form = document.getElementById('settingsForm');
+                const flatSettings = flattenObject(settings);
+                
+                for (const [key, value] of Object.entries(flatSettings)) {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input) {
+                        if (input.type === 'checkbox') {
+                            input.checked = Boolean(value);
+                        } else {
+                            input.value = value;
+                        }
+
+                        // Handle enabling/disabling related fields
+                        if (key.endsWith('.enabled')) {
+                            const container = input.closest('div').nextElementSibling;
+                            if (container) {
+                                container.style.opacity = value ? '1' : '0.5';
+                                container.querySelectorAll('input, select').forEach(el => {
+                                    el.disabled = !value;
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            function getFormData() {
+                const form = document.getElementById('settingsForm');
+                const formData = new FormData(form);
+                const settings = {};
+
+                for (const [key, value] of formData.entries()) {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input.type === 'checkbox') {
+                        setNestedValue(settings, key, input.checked);
+                    } else if (input.type === 'number' || !isNaN(value)) {
+                        setNestedValue(settings, key, Number(value));
+                    } else {
+                        setNestedValue(settings, key, value);
+                    }
+                }
+
+                return settings;
+            }
+
+            function setNestedValue(obj, path, value) {
+                const keys = path.split('.');
+                let current = obj;
+                
+                for (let i = 0; i < keys.length - 1; i++) {
+                    const key = keys[i];
+                    current[key] = current[key] || {};
+                    current = current[key];
+                }
+                
+                current[keys[keys.length - 1]] = value;
+            }
+
+            function flattenObject(obj, prefix = '') {
+                return Object.keys(obj).reduce((acc, key) => {
+                    const pre = prefix.length ? `${prefix}.` : '';
+                    if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+                        Object.assign(acc, flattenObject(obj[key], `${pre}${key}`));
+                    } else {
+                        acc[`${pre}${key}`] = obj[key];
+                    }
+                    return acc;
+                }, {});
+            }
+
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 right-4 p-4 rounded shadow-lg z-50 ${
+                    type === 'success' ? 'bg-green-600' :
+                    type === 'error' ? 'bg-red-600' : 'bg-blue-600'
+                }`;
+                notification.textContent = message;
+                document.body.appendChild(notification);
+                
+                // Remove notification after 5 seconds
+                setTimeout(() => {
+                    notification.classList.add('opacity-0', 'transition-opacity');
+                    setTimeout(() => notification.remove(), 300);
+                }, 5000);
+            }
+
+            // Add event listeners for enabled checkboxes
+            document.querySelectorAll('input[name$=".enabled"]').forEach(checkbox => {
+                checkbox.addEventListener('change', (e) => {
+                    const container = e.target.closest('div').nextElementSibling;
+                    if (container) {
+                        container.style.opacity = e.target.checked ? '1' : '0.5';
+                        container.querySelectorAll('input, select').forEach(el => {
+                            el.disabled = !e.target.checked;
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
