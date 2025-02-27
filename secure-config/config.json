@@ -9,25 +9,24 @@
     "autoTradeNewTokens": false
   },
   "ethereum": {
-    "enabled": false,
+    "enabled": "on",
     "network": "mainnet",
-    "infuraId": "",
-    "privateKey": ""
+    "infuraId": "5666eeb934620fad888b8eb5:cab7ee213751d535253ebfbdb0372f9d:bbee0ce6caf0bb9d58fc323a23b1d8b4f90b829d326f04d21774e75390edeacc"
   },
   "bnbChain": {
-    "enabled": false,
+    "enabled": "on",
     "privateKey": ""
   },
   "exchanges": {
     "binanceUS": {
-      "enabled": false,
-      "apiKey": "",
-      "apiSecret": ""
+      "enabled": "on",
+      "apiKey": "f6b233c0420dd681057e6a8b:1a19087b3be4d481b8216c1352254701:e293901ac4f497ebcbd64ccd22c62872c8551cafe50d3a81adeb88ef1794881aa86b040f9940c4143fd3ed568e4d247d007b10f4f5804a27b335fb715c22c7b8",
+      "apiSecret": "8ade837c09e459e80456243d:bb0d3d26b2c509997a332cec6430e966:99e9916f6d4a9e0ada38e694e8df76cd28c6ae7fb991f7529127535316fcdeefc0a5b4130be30963ba08376d65702899bf50fda9a72589a5fc42b9d383b44ecf"
     },
     "cryptoCom": {
-      "enabled": false,
-      "apiKey": "",
-      "apiSecret": ""
+      "enabled": "on",
+      "apiKey": "72283a1df975c72d078baba8:f51561ac49f5344ac383ffe61770efc4:10776ccf3ca9c5960527c43112c3bdd7639d00e6bd69",
+      "apiSecret": "9165e9ed1b7c3d957323b6ee:c445da216c7589e8e456be164ebbea6d:4a49533d4d8144af5a5710f012a85e6a24a3a7284b6875c66075184a"
     }
   },
   "strategies": {
