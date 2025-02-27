@@ -27,17 +27,22 @@ if not exist logs mkdir logs
 if not exist data mkdir data
 if not exist secure-config mkdir secure-config
 
-:: Start the server in the background
-echo Starting server...
-start "DeFi Sniper Server" cmd /k "npm run start-server"
+:: Check for --electron flag
+if "%1"=="--electron" (
+    echo Starting in Electron mode...
+    start "DeFi Sniper Bot" cmd /c npm run start-electron
+) else (
+    :: Start the server in the background
+    echo Starting server...
+    start "DeFi Sniper Server" cmd /k "npm run start-server"
+    
+    :: Wait for the server to start
+    echo Waiting for server to start...
+    timeout /t 5 /nobreak > nul
+    
+    :: Start the UI in default browser
+    echo Starting UI...
+    start http://localhost:3000
+)
 
-:: Wait for the server to start
-echo Waiting for server to start...
-timeout /t 5 /nobreak > nul
-
-:: Start the UI
-echo Starting UI...
-npm run start-ui
-
-:: The script will automatically end when the UI is closed
-:: The server window will remain open for debugging
+:: End of script
