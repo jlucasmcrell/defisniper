@@ -27,17 +27,28 @@ if not exist logs mkdir logs
 if not exist data mkdir data
 if not exist secure-config mkdir secure-config
 
+:: Check if configuration exists
+if not exist secure-config\config.json (
+    echo Configuration not found. Running setup...
+    node src/setup.js
+    if %ERRORLEVEL% NEQ 0 (
+        echo Setup failed
+        pause
+        exit /b 1
+    )
+)
+
 :: Check for --electron flag
 if "%1"=="--electron" (
     echo Starting in Electron mode...
     start "DeFi Sniper Bot" cmd /c npm run start-electron
 ) else (
-    :: Start the server in the background
+    :: Start the server with increased visibility
     echo Starting server...
-    start "DeFi Sniper Server" cmd /k "npm run start-server"
+    start "DeFi Sniper Server" cmd /k "node src/server.js --debug"
     
-    :: Wait for the server to start
-    echo Waiting for server to start...
+    :: Wait for server to initialize
+    echo Waiting for server to initialize...
     timeout /t 5 /nobreak > nul
     
     :: Start the UI in default browser
@@ -45,4 +56,8 @@ if "%1"=="--electron" (
     start http://localhost:3000
 )
 
-:: End of script
+:: Keep the main window open
+echo.
+echo DeFi Sniper Bot is running.
+echo Close this window to shut down the bot.
+pause > nul

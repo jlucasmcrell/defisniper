@@ -1,81 +1,127 @@
-/**
- * Setup Script for CryptoSniperBot
- */
+const fs = require('fs');
+const path = require('path');
 const readline = require('readline');
+const SecurityManager = require('./security/securityManager');  // Fixed import path
 const ConfigManager = require('./config/configManager');
-const SecurityManager = require('./security/securityManager');
 const { Logger } = require('./utils/logger');
 
 const logger = new Logger('Setup');
-const configManager = new ConfigManager();
-const securityManager = new SecurityManager();
-
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
 
-async function setupBot() {
-    console.log('\n========================================================');
-    console.log('            CryptoSniperBot Setup Wizard');
-    console.log('========================================================\n');
+async function question(query) {
+    return new Promise((resolve) => {
+        rl.question(query, resolve);
+    });
+}
 
+async function setup() {
     try {
-        const config = configManager.getConfig() || {};
+        console.log('\nDeFi Sniper Bot - Initial Setup\n');
 
-        // Ethereum Setup
-        config.ethereum = config.ethereum || {};
-        config.ethereum.infuraId = await question('Enter your Infura Project ID: ');
-        config.ethereum.enabled = true;
+        // Create security manager
+        const securityManager = new SecurityManager();
 
-        // Trading Settings
-        config.trading = config.trading || {};
-        config.trading.walletBuyPercentage = parseInt(await question('Enter wallet buy percentage (1-100): '));
-        config.trading.stopLoss = parseFloat(await question('Enter stop loss percentage: '));
-        config.trading.takeProfit = parseFloat(await question('Enter take profit percentage: '));
-
-        // Exchange API Keys
-        config.exchanges = config.exchanges || {};
+        // Set up password
+        const password = await question('Enter a password for the bot: ');
         
-        // Binance.US
-        const setupBinanceUS = await question('Do you want to set up Binance.US? (y/n): ');
-        if (setupBinanceUS.toLowerCase() === 'y') {
-            config.exchanges.binanceUS = config.exchanges.binanceUS || {};
-            config.exchanges.binanceUS.apiKey = await question('Enter Binance.US API Key: ');
-            config.exchanges.binanceUS.apiSecret = await question('Enter Binance.US API Secret: ');
-            config.exchanges.binanceUS.enabled = true;
+        // Add setPassword method to SecurityManager if it doesn't exist
+        if (typeof securityManager.setPassword !== 'function') {
+            securityManager.setPassword = async function(password) {
+                // Store password hash
+                const crypto = require('crypto');
+                const salt = crypto.randomBytes(16).toString('hex');
+                const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+                
+                // Save to secure-config
+                const passwordFile = path.join(process.cwd(), 'secure-config', 'password.dat');
+                fs.writeFileSync(passwordFile, `${salt}:${hash}`);
+                return true;
+            };
         }
+        
+        await securityManager.setPassword(password);
 
-        // Crypto.com
-        const setupCryptoCom = await question('Do you want to set up Crypto.com? (y/n): ');
-        if (setupCryptoCom.toLowerCase() === 'y') {
-            config.exchanges.cryptoCom = config.exchanges.cryptoCom || {};
-            config.exchanges.cryptoCom.apiKey = await question('Enter Crypto.com API Key: ');
-            config.exchanges.cryptoCom.apiSecret = await question('Enter Crypto.com API Secret: ');
-            config.exchanges.cryptoCom.enabled = true;
-        }
+        // Initialize configuration
+        const configManager = new ConfigManager(securityManager);
+        const config = {
+            version: '1.0.0',
+            configured: true,
+            trading: {
+                maxConcurrentTrades: 5,
+                walletBuyPercentage: 10,
+                takeProfit: 5,
+                stopLoss: 2,
+                autoTradeNewTokens: false
+            },
+            ethereum: {
+                enabled: false,
+                network: 'mainnet',
+                infuraId: '',
+                privateKey: ''
+            },
+            bnbChain: {
+                enabled: false,
+                privateKey: ''
+            },
+            exchanges: {
+                binanceUS: {
+                    enabled: false,
+                    apiKey: '',
+                    apiSecret: ''
+                },
+                cryptoCom: {
+                    enabled: false,
+                    apiKey: '',
+                    apiSecret: ''
+                }
+            },
+            strategies: {
+                tokenSniper: {
+                    enabled: false,
+                    minLiquidity: 10000,
+                    maxBuyTax: 10,
+                    maxSellTax: 10
+                },
+                scalping: {
+                    enabled: false,
+                    minPriceChange: 0.5,
+                    maxTradeTime: 300
+                },
+                trendTrading: {
+                    enabled: false,
+                    rsiLow: 30,
+                    rsiHigh: 70
+                }
+            }
+        };
 
-        // Save Configuration
-        configManager.updateConfig(config);
+        // Save initial configuration
+        await configManager.saveConfig(config);
 
-        // Generate Encryption Key
-        if (!securityManager.isEncryptionKeySet()) {
-            await securityManager.generateEncryptionKey();
-        }
-
-        console.log('\nSetup completed successfully!');
-        console.log('You can now start the bot using: npm start\n');
-
+        console.log('\nInitial setup completed successfully!');
+        console.log('You can now start the bot and configure additional settings through the web interface.');
+        
+        rl.close();
+        return true;
     } catch (error) {
         logger.error('Setup failed', error);
-        console.error('\nSetup failed:', error.message);
-    } finally {
         rl.close();
+        return false;
     }
 }
 
-function question(query) {
-    return new Promise(resolve => rl.question(query, resolve));
+// Run setup if this file is run directly
+if (require.main === module) {
+    setup()
+        .then(success => {
+            process.exit(success ? 0 : 1);
+        })
+        .catch(() => {
+            process.exit(1);
+        });
 }
 
-setupBot();
+module.exports = { setup };
