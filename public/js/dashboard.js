@@ -23,6 +23,12 @@ class Dashboard {
             });
         });
 
+        // Settings form
+        const settingsForm = document.getElementById('settingsForm');
+        if (settingsForm) {
+            settingsForm.addEventListener('submit', (e) => this.handleSettingsSubmit(e));
+        }
+
         // Bot control buttons
         const startButton = document.getElementById('startBot');
         const stopButton = document.getElementById('stopBot');
@@ -32,12 +38,6 @@ class Dashboard {
         }
         if (stopButton) {
             stopButton.addEventListener('click', () => this.controlBot('stop'));
-        }
-
-        // Settings form
-        const settingsForm = document.getElementById('settingsForm');
-        if (settingsForm) {
-            settingsForm.addEventListener('submit', (e) => this.handleSettingsSubmit(e));
         }
 
         // Log controls
@@ -85,52 +85,6 @@ class Dashboard {
         }
     }
 
-    async controlBot(action) {
-        try {
-            const response = await fetch(`/api/bot/${action}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin'
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to ${action} bot`);
-            }
-
-            const result = await response.json();
-            if (result.success) {
-                this.updateBotStatus(action === 'start');
-            } else {
-                this.showError(`Failed to ${action} bot: ${result.message}`);
-            }
-        } catch (error) {
-            console.error(`Error ${action}ing bot:`, error);
-            this.showError(`Failed to ${action} bot`);
-        }
-    }
-
-    updateBotStatus(isRunning) {
-        const startButton = document.getElementById('startBot');
-        const stopButton = document.getElementById('stopBot');
-        const statusDot = document.querySelector('#botStatus .status-dot');
-        const statusText = document.querySelector('#botStatus .status-text');
-
-        if (startButton) {
-            startButton.disabled = isRunning;
-        }
-        if (stopButton) {
-            stopButton.disabled = !isRunning;
-        }
-        if (statusDot) {
-            statusDot.classList.toggle('active', isRunning);
-        }
-        if (statusText) {
-            statusText.textContent = isRunning ? 'Running' : 'Stopped';
-        }
-    }
-
     async handleSettingsSubmit(event) {
         event.preventDefault();
         const formData = new FormData(event.target);
@@ -146,7 +100,7 @@ class Dashboard {
                 current = current[parts[i]];
             }
             
-            // Convert string numbers to actual numbers
+            // Convert string numbers to actual numbers where appropriate
             const numValue = Number(value);
             current[parts[parts.length - 1]] = isNaN(numValue) ? value : numValue;
         });
@@ -222,6 +176,44 @@ class Dashboard {
         }, {});
     }
 
+    async controlBot(action) {
+        try {
+            const response = await fetch(`/api/bot/${action}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to ${action} bot`);
+            }
+
+            const result = await response.json();
+            if (result.success) {
+                this.updateBotStatus(action === 'start');
+            } else {
+                this.showError(`Failed to ${action} bot: ${result.message}`);
+            }
+        } catch (error) {
+            console.error(`Error ${action}ing bot:`, error);
+            this.showError(`Failed to ${action} bot`);
+        }
+    }
+
+    updateBotStatus(isRunning) {
+        const startButton = document.getElementById('startBot');
+        const stopButton = document.getElementById('stopBot');
+        const statusDot = document.querySelector('#botStatus .status-dot');
+        const statusText = document.querySelector('#botStatus .status-text');
+
+        if (startButton) startButton.disabled = isRunning;
+        if (stopButton) stopButton.disabled = !isRunning;
+        if (statusDot) statusDot.classList.toggle('active', isRunning);
+        if (statusText) statusText.textContent = isRunning ? 'Running' : 'Stopped';
+    }
+
     initializeSocketListeners() {
         this.socket.on('connect', () => {
             this.updateConnectionStatus(true);
@@ -239,14 +231,13 @@ class Dashboard {
             if (data.stats) {
                 this.updateStats(data.stats);
             }
+            if (data.balances) {
+                this.updateBalances(data.balances);
+            }
         });
 
         this.socket.on('log', (log) => {
             this.addLogEntry(log);
-        });
-
-        this.socket.on('walletBalances', (balances) => {
-            this.displayWalletBalances(balances);
         });
 
         this.socket.on('newTrade', (trade) => {
@@ -257,26 +248,91 @@ class Dashboard {
             this.removeActiveTrade(trade.id);
             this.addTradeHistory(trade);
         });
+
+        this.socket.on('tradeUpdate', (update) => {
+            this.updateActiveTrade(update);
+        });
     }
 
     updateConnectionStatus(connected) {
         const statusDot = document.querySelector('#connectionStatus .status-dot');
         const statusText = document.querySelector('#connectionStatus .status-text');
 
-        if (statusDot) {
-            statusDot.classList.toggle('active', connected);
+        if (statusDot) statusDot.classList.toggle('active', connected);
+        if (statusText) statusText.textContent = connected ? 'Connected' : 'Disconnected';
+    }
+
+    addLogEntry(log) {
+        const logOutput = document.getElementById('logOutput');
+        if (!logOutput) return;
+
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${log.level}`;
+        
+        const timestamp = new Date(log.timestamp).toLocaleTimeString();
+        entry.innerHTML = `[${timestamp}] [${log.level.toUpperCase()}] [${log.module}] ${log.message}`;
+        
+        if (log.meta && Object.keys(log.meta).length > 0) {
+            entry.innerHTML += `\n${JSON.stringify(log.meta, null, 2)}`;
         }
-        if (statusText) {
-            statusText.textContent = connected ? 'Connected' : 'Disconnected';
+        
+        logOutput.appendChild(entry);
+        logOutput.scrollTop = logOutput.scrollHeight;
+
+        // Limit the number of log entries
+        while (logOutput.children.length > 1000) {
+            logOutput.removeChild(logOutput.firstChild);
         }
+    }
+
+    filterLogs(level) {
+        const logOutput = document.getElementById('logOutput');
+        if (!logOutput) return;
+
+        const entries = logOutput.getElementsByClassName('log-entry');
+        Array.from(entries).forEach(entry => {
+            if (level === 'all' || entry.classList.contains(level)) {
+                entry.style.display = '';
+            } else {
+                entry.style.display = 'none';
+            }
+        });
+    }
+
+    clearLogs() {
+        const logOutput = document.getElementById('logOutput');
+        if (logOutput) {
+            logOutput.innerHTML = '';
+        }
+    }
+
+    exportLogs() {
+        const logOutput = document.getElementById('logOutput');
+        if (!logOutput) return;
+
+        const logs = Array.from(logOutput.getElementsByClassName('log-entry'))
+            .map(entry => entry.textContent)
+            .join('\n');
+
+        const blob = new Blob([logs], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bot-logs-${new Date().toISOString()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
     }
 
     showSuccess(message) {
-        alert(message); // Replace with better UI notification
+        // Implement your preferred success notification
+        alert(message);
     }
 
     showError(message) {
-        alert(message); // Replace with better UI notification
+        // Implement your preferred error notification
+        alert(message);
     }
 
     async checkAuthStatus() {
@@ -292,90 +348,15 @@ class Dashboard {
             }
 
             this.isAuthenticated = true;
-            this.updateBotStatus(false);
-            await this.updateWalletBalances();
+            this.initialized = true;
         } catch (error) {
             console.error('Error checking auth status:', error);
             this.showError('Failed to check authentication status');
         }
     }
 
-    async updateWalletBalances() {
-        try {
-            const response = await fetch('/api/wallets', {
-                credentials: 'same-origin'
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch wallet balances');
-            }
-            const balances = await response.json();
-            this.displayWalletBalances(balances);
-        } catch (error) {
-            console.error('Error updating wallet balances:', error);
-            if (this.initialized) {
-                this.showError('Failed to update wallet balances');
-            }
-        }
-    }
-
-    displayWalletBalances(balances) {
-        const walletList = document.getElementById('walletBalances');
-        if (!walletList) return;
-
-        walletList.innerHTML = '';
-        Object.entries(balances).forEach(([chain, balance]) => {
-            const li = document.createElement('li');
-            li.className = 'mb-2';
-            li.innerHTML = `
-                <span class="font-bold">${chain}:</span>
-                <span class="ml-2">${balance}</span>
-            `;
-            walletList.appendChild(li);
-        });
-    }
-
-    filterLogs(level) {
-        const logContainer = document.getElementById('logOutput');
-        if (!logContainer) return;
-
-        const entries = logContainer.getElementsByClassName('log-entry');
-        Array.from(entries).forEach(entry => {
-            if (level === 'all' || entry.classList.contains(level)) {
-                entry.style.display = '';
-            } else {
-                entry.style.display = 'none';
-            }
-        });
-    }
-
-    clearLogs() {
-        const logContainer = document.getElementById('logOutput');
-        if (logContainer) {
-            logContainer.innerHTML = '';
-        }
-    }
-
-    exportLogs() {
-        const logContainer = document.getElementById('logOutput');
-        if (!logContainer) return;
-
-        const logs = Array.from(logContainer.getElementsByClassName('log-entry'))
-            .map(entry => entry.textContent)
-            .join('\n');
-
-        const blob = new Blob([logs], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `bot-logs-${new Date().toISOString()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-    }
-
     refreshLogs() {
-        // Implement log refresh logic here
+        // Additional log refresh logic if needed
     }
 }
 

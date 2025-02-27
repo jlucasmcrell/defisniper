@@ -712,3 +712,210 @@
 {"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:56:53.279Z"}
 {"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:56:53.279Z"}
 {"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:56:53.280Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:57:03.294Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T15:57:03.295Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:57:03.295Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:57:03.296Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:57:13.310Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:57:13.311Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:57:13.311Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T15:57:23.200Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T15:57:23.201Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:57:23.325Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:57:23.326Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:57:23.326Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:57:33.325Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:57:33.326Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:57:33.326Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:57:43.328Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:57:43.328Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:57:43.328Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T15:57:53.200Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T15:57:53.201Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:57:53.341Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:57:53.342Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:57:53.342Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:58:03.345Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T15:58:03.345Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:58:03.345Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:58:03.346Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:58:13.357Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:58:13.358Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:58:13.358Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T15:58:23.216Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T15:58:23.216Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:58:23.372Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:58:23.373Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:58:23.373Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:58:33.377Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:58:33.378Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:58:33.378Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:58:43.388Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:58:43.388Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:58:43.388Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T15:58:53.221Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T15:58:53.222Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:58:53.392Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:58:53.392Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:58:53.393Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:59:03.406Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T15:59:03.406Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:59:03.407Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:59:03.407Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:59:13.411Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:59:13.412Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:59:13.412Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T15:59:23.228Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T15:59:23.228Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:59:23.415Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:59:23.416Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:59:23.416Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:59:33.419Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:59:33.420Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:59:33.420Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:59:43.435Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:59:43.435Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:59:43.436Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T15:59:53.232Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T15:59:53.233Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T15:59:53.436Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T15:59:53.436Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T15:59:53.437Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:00:03.439Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T16:00:03.439Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:00:03.439Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:00:03.440Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:00:13.447Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:00:13.447Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:00:13.448Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:00:23.245Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:00:23.246Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:00:23.450Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:00:23.450Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:00:23.450Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:00:33.451Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:00:33.451Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:00:33.451Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:00:43.450Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:00:43.451Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:00:43.451Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:00:53.249Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:00:53.249Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:00:53.452Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:00:53.453Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:00:53.453Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:01:03.456Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T16:01:03.457Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:01:03.457Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:01:03.457Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:01:13.466Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:01:13.467Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:01:13.467Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:01:23.250Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:01:23.251Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:01:23.467Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:01:23.467Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:01:23.468Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:01:33.482Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:01:33.482Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:01:33.482Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:01:43.483Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:01:43.484Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:01:43.484Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:01:53.263Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:01:53.263Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:01:53.498Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:01:53.498Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:01:53.498Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:02:03.510Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T16:02:03.510Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:02:03.511Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:02:03.511Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:02:13.514Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:02:13.515Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:02:13.515Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:02:23.268Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:02:23.269Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:02:23.515Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:02:23.515Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:02:23.516Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:02:33.528Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:02:33.529Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:02:33.529Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:02:43.533Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:02:43.534Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:02:43.534Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:02:53.276Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:02:53.277Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:02:53.535Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:02:53.535Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:02:53.535Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:03:03.543Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T16:03:03.543Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:03:03.544Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:03:03.544Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:03:13.556Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:03:13.557Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:03:13.557Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:03:23.288Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:03:23.289Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:03:23.564Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:03:23.565Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:03:23.565Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:03:33.573Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:03:33.574Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:03:33.574Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:03:43.583Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:03:43.584Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:03:43.584Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:03:53.295Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:03:53.296Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:03:53.591Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:03:53.591Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:03:53.592Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:04:03.595Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T16:04:03.595Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:04:03.596Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:04:03.596Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:04:13.608Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:04:13.608Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:04:13.609Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:04:23.308Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:04:23.309Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:04:23.617Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:04:23.617Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:04:23.617Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:04:33.623Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:04:33.623Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:04:33.624Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:04:43.623Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:04:43.624Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:04:43.624Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:04:53.322Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:04:53.323Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:04:53.632Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:04:53.632Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:04:53.632Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:05:03.634Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T16:05:03.634Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:05:03.634Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:05:03.634Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:05:13.640Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:05:13.640Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:05:13.641Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:05:23.326Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:05:23.327Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:05:23.652Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:05:23.652Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:05:23.653Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:05:33.653Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:05:33.653Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:05:33.654Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:05:43.655Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:05:43.655Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:05:43.655Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:05:53.337Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:05:53.338Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:05:53.665Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:05:53.665Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:05:53.666Z"}
