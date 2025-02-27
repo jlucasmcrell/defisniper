@@ -28,7 +28,15 @@ class ConfigManager {
       
       if (fs.existsSync(configPath)) {
         const configData = fs.readFileSync(configPath, 'utf8');
-        return JSON.parse(configData);
+        const parsedConfig = JSON.parse(configData);
+        
+        // Decrypt sensitive information
+        try {
+          return this.securityManager.decryptConfig(parsedConfig);
+        } catch (decryptError) {
+          this.logger.error('Error decrypting config', decryptError);
+          return parsedConfig; // Return the encrypted config if decryption fails
+        }
       }
     } catch (error) {
       this.logger.error('Error loading config', error);
@@ -93,8 +101,9 @@ class ConfigManager {
   
   /**
    * Save configuration to file
+   * Accepts config object as parameter to support setup process
    */
-  saveConfig() {
+  saveConfig(newConfig = null) {
     try {
       const configDir = path.join(process.cwd(), 'secure-config');
       
@@ -104,12 +113,56 @@ class ConfigManager {
       
       const configPath = path.join(configDir, 'config.json');
       
+      // Update config if provided
+      if (newConfig) {
+        this.config = newConfig;
+      }
+      
       // Mark as configured
       this.config.configured = true;
       
+      // Encrypt sensitive data before saving
+      const configToSave = { ...this.config };
+      
+      // Encrypt private keys and API secrets
+      if (configToSave.ethereum && configToSave.ethereum.privateKey) {
+        configToSave.ethereum.privateKey = this.securityManager.encrypt(configToSave.ethereum.privateKey);
+      }
+      
+      if (configToSave.bnbChain && configToSave.bnbChain.privateKey) {
+        configToSave.bnbChain.privateKey = this.securityManager.encrypt(configToSave.bnbChain.privateKey);
+      }
+      
+      if (configToSave.ethereum && configToSave.ethereum.alchemyKey) {
+        configToSave.ethereum.alchemyKey = this.securityManager.encrypt(configToSave.ethereum.alchemyKey);
+      }
+      
+      if (configToSave.ethereum && configToSave.ethereum.infuraId) {
+        configToSave.ethereum.infuraId = this.securityManager.encrypt(configToSave.ethereum.infuraId);
+      }
+      
+      // Encrypt exchange API keys and secrets
+      if (configToSave.exchanges) {
+        if (configToSave.exchanges.binanceUS && configToSave.exchanges.binanceUS.apiKey) {
+          configToSave.exchanges.binanceUS.apiKey = this.securityManager.encrypt(configToSave.exchanges.binanceUS.apiKey);
+        }
+        
+        if (configToSave.exchanges.binanceUS && configToSave.exchanges.binanceUS.apiSecret) {
+          configToSave.exchanges.binanceUS.apiSecret = this.securityManager.encrypt(configToSave.exchanges.binanceUS.apiSecret);
+        }
+        
+        if (configToSave.exchanges.cryptoCom && configToSave.exchanges.cryptoCom.apiKey) {
+          configToSave.exchanges.cryptoCom.apiKey = this.securityManager.encrypt(configToSave.exchanges.cryptoCom.apiKey);
+        }
+        
+        if (configToSave.exchanges.cryptoCom && configToSave.exchanges.cryptoCom.apiSecret) {
+          configToSave.exchanges.cryptoCom.apiSecret = this.securityManager.encrypt(configToSave.exchanges.cryptoCom.apiSecret);
+        }
+      }
+      
       fs.writeFileSync(
         configPath,
-        JSON.stringify(this.config, null, 2)
+        JSON.stringify(configToSave, null, 2)
       );
       
       return true;

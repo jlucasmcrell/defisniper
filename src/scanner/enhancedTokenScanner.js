@@ -164,7 +164,253 @@ class EnhancedTokenScanner extends TokenScanner {
         }
     }
 
-    // Rest of the code remains the same...
+    /**
+     * Start scanning for new tokens
+     * Overrides the parent class method to fix the scanInterval access issue
+     */
+    async start() {
+        try {
+            if (this.isRunning) {
+                this.logger.warn('Token scanner is already running');
+                return true;
+            }
+
+            this.isRunning = true;
+            
+            // Make sure we have a valid scanInterval config
+            // Fix for "Cannot read properties of undefined (reading 'scanInterval')"
+            const scanIntervalMs = this.directConfig && this.directConfig.trading && 
+                                  this.directConfig.trading.scanInterval ? 
+                                  this.directConfig.trading.scanInterval : 30000; // Default to 30 seconds
+            
+            this.logger.info(`Starting token scanner with scan interval: ${scanIntervalMs}ms`);
+            
+            this.scanInterval = setInterval(
+                () => this.scan(),
+                scanIntervalMs
+            );
+
+            this.logger.info('Token scanner started');
+            this.emit('scannerStarted');
+            
+            // Run initial scan immediately
+            setTimeout(() => this.scan(), 1000);
+            
+            return true;
+        } catch (error) {
+            this.logger.error('Failed to start token scanner', error);
+            this.isRunning = false;
+            return false;
+        }
+    }
+
+    /**
+     * Stop scanning for new tokens
+     */
+    async stop() {
+        try {
+            if (!this.isRunning) {
+                this.logger.warn('Token scanner is not running');
+                return true;
+            }
+
+            this.isRunning = false;
+            if (this.scanInterval) {
+                clearInterval(this.scanInterval);
+                this.scanInterval = null;
+            }
+
+            this.logger.info('Token scanner stopped');
+            this.emit('scannerStopped');
+            return true;
+        } catch (error) {
+            this.logger.error('Failed to stop token scanner', error);
+            return false;
+        }
+    }
+
+    /**
+     * Scan for new tokens
+     */
+    async scan() {
+        if (!this.isRunning) return;
+        
+        try {
+            const scanStartTime = Date.now();
+            this.logger.info('Starting token scan...');
+            
+            // Check if we have providers and factories
+            if (!this.providers || this.providers.size === 0 || !this.factories || this.factories.size === 0) {
+                this.logger.warn('No providers or factories available for scanning');
+                return;
+            }
+            
+            // Use super.scan() if available, otherwise implement our own scan logic
+            if (typeof super.scan === 'function') {
+                await super.scan();
+            } else {
+                // Custom scan implementation
+                await this.customScan();
+            }
+            
+            const scanDuration = (Date.now() - scanStartTime) / 1000;
+            this.logger.info(`Scan completed in ${scanDuration.toFixed(1)}s`);
+        } catch (error) {
+            this.logger.error('Error during token scan', error);
+            this.emit('scanError', error);
+        }
+    }
+    
+    /**
+     * Custom scan implementation if parent's scan is not available
+     */
+    async customScan() {
+        this.logger.info('Running custom token scan');
+        
+        // Scan for well-known tokens as a fallback
+        const wellKnownTokens = {
+            ethereum: [
+                {address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', symbol: 'UNI', name: 'Uniswap'},
+                {address: '0x6B175474E89094C44Da98b954EedeAC495271d0F', symbol: 'DAI', name: 'Dai Stablecoin'},
+                {address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', symbol: 'WETH', name: 'Wrapped Ether'}
+            ],
+            bnbChain: [
+                {address: '0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82', symbol: 'CAKE', name: 'PancakeSwap Token'},
+                {address: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', symbol: 'BUSD', name: 'Binance USD'},
+                {address: '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c', symbol: 'WBNB', name: 'Wrapped BNB'}
+            ]
+        };
+        
+        // Emit some tokens for testing
+        for (const [network, tokens] of Object.entries(wellKnownTokens)) {
+            for (const token of tokens) {
+                if (!this.knownTokens.has(token.address)) {
+                    const tokenInfo = {
+                        ...token,
+                        network,
+                        timestamp: Date.now()
+                    };
+                    
+                    this.knownTokens.set(token.address, tokenInfo);
+                    this.emit('newToken', tokenInfo);
+                    this.logger.info(`Found token: ${token.symbol} (${token.address})`);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Check if a token is blacklisted
+     */
+    isBlacklisted(address) {
+        if (!address) return false;
+        return this.blacklistedTokens.has(address.toLowerCase());
+    }
+    
+    /**
+     * Check if a token is whitelisted
+     */
+    isWhitelisted(address) {
+        if (!address) return false;
+        return this.whitelistedTokens.has(address.toLowerCase());
+    }
+    
+    /**
+     * Analyze token health and security
+     */
+    async analyzeTokenHealth(tokenInfo) {
+        try {
+            this.logger.info(`Analyzing health for token: ${tokenInfo.symbol}`);
+            
+            // Basic health score starting at 50
+            let healthScore = 50;
+            
+            // Automatically higher score for whitelisted tokens
+            if (this.isWhitelisted(tokenInfo.address)) {
+                this.logger.info(`Token ${tokenInfo.symbol} is whitelisted, higher health score`);
+                healthScore += 40;
+                return healthScore;
+            }
+            
+            // Automatically lowest score for blacklisted tokens
+            if (this.isBlacklisted(tokenInfo.address)) {
+                this.logger.info(`Token ${tokenInfo.symbol} is blacklisted, lowest health score`);
+                return 0;
+            }
+            
+            // Higher score for known networks
+            if (tokenInfo.network === 'ethereum') {
+                healthScore += 10;
+            } else if (tokenInfo.network === 'bnbChain') {
+                healthScore += 5;
+            }
+            
+            // Basic checks on token name and symbol
+            if (!tokenInfo.symbol || !tokenInfo.name) {
+                healthScore -= 10;
+            }
+            
+            // Check for scam indicators in name
+            const scamWords = ['test', 'scam', 'fake', 'honeypot', 'airdrop'];
+            const nameAndSymbol = (tokenInfo.name + ' ' + tokenInfo.symbol).toLowerCase();
+            
+            for (const word of scamWords) {
+                if (nameAndSymbol.includes(word)) {
+                    this.logger.warn(`Token ${tokenInfo.symbol} contains suspicious word: ${word}`);
+                    healthScore -= 20;
+                }
+            }
+            
+            this.logger.info(`Health analysis for ${tokenInfo.symbol}: ${healthScore}/100`);
+            return healthScore;
+        } catch (error) {
+            this.logger.error(`Error analyzing token health: ${tokenInfo.symbol}`, error);
+            return null;
+        }
+    }
+    
+    /**
+     * Get token by address
+     */
+    getToken(address) {
+        return this.knownTokens.get(address);
+    }
+    
+    /**
+     * Get all known tokens
+     */
+    getAllTokens() {
+        return Array.from(this.knownTokens.values());
+    }
+    
+    /**
+     * Get tokens filtered by criteria
+     */
+    getFilteredTokens(options = {}) {
+        const { network, minScore, maxCount } = options;
+        
+        let tokens = Array.from(this.knownTokens.values());
+        
+        if (network) {
+            tokens = tokens.filter(t => t.network === network);
+        }
+        
+        if (minScore !== undefined) {
+            tokens = tokens.filter(t => {
+                const score = this.tokenScores.get(t.address.toLowerCase());
+                return score !== undefined && score >= minScore;
+            });
+        }
+        
+        // Sort by timestamp (newest first)
+        tokens.sort((a, b) => b.timestamp - a.timestamp);
+        
+        if (maxCount) {
+            tokens = tokens.slice(0, maxCount);
+        }
+        
+        return tokens;
+    }
 }
 
 module.exports = { EnhancedTokenScanner };
