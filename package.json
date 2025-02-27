@@ -2,5 +2,8 @@
   "scripts": {
     "start": "electron .",
     "start-server": "node src/server.js"
+  },
+  "dependencies": {
+    "electron": "^34.3.0"
   }
 }
