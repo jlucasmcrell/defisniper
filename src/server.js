@@ -104,6 +104,15 @@ app.get('/auth/status', (req, res) => {
   });
 });
 
+// Add login route
+app.get('/login', (req, res) => {
+    if (req.session.authenticated) {
+        res.redirect('/');
+    } else {
+        res.sendFile(path.join(__dirname, '../public/login.html'));
+    }
+});
+
 // Check if the bot is configured
 app.get('/api/status', (req, res) => {
   res.json({
@@ -113,9 +122,13 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-// Serve main page
+// Update main route to check authentication
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../public/index.html'));
+    if (req.session.authenticated) {
+        res.sendFile(path.join(__dirname, '../public/index.html'));
+    } else {
+        res.redirect('/login');
+    }
 });
 
 // Socket.io connection

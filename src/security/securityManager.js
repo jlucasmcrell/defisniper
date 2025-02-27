@@ -9,6 +9,50 @@ class SecurityManager {
         this.algorithm = 'aes-256-gcm';
         this.initKey();
         this.initSessionSecret();
+        this.setDefaultPassword(); // Add this line
+    }
+
+    async setPassword(password) {
+        try {
+            const salt = crypto.randomBytes(16).toString('hex');
+            const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+            const passwordData = `${salt}:${hash}`;
+            
+            const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
+            fs.writeFileSync(passwordPath, passwordData);
+            return true;
+        } catch (error) {
+            this.logger.error('Failed to set password', error);
+            return false;
+        }
+    }
+
+    verifyPassword(password) {
+        try {
+            const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
+            
+            if (!fs.existsSync(passwordPath)) {
+                // For development, if no password file exists, accept any non-empty password
+                return Boolean(password && password.length > 0);
+            }
+
+            const passwordData = fs.readFileSync(passwordPath, 'utf8');
+            const [salt, storedHash] = passwordData.split(':');
+            
+            const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+            return storedHash === hash;
+        } catch (error) {
+            this.logger.error('Password verification failed', error);
+            return false;
+        }
+    }
+
+    async setDefaultPassword() {
+        const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
+        if (!fs.existsSync(passwordPath)) {
+            await this.setPassword('admin');
+            this.logger.warn('Using default password: "admin" - please change this immediately!');
+        }
     }
 
     initKey() {
@@ -53,17 +97,6 @@ class SecurityManager {
 
     getEncryptionKey() {
         return this.key;
-    }
-
-    verifyPassword(password) {
-        try {
-            // TODO: Implement proper password verification
-            // For development, accept any non-empty password
-            return Boolean(password && password.length > 0);
-        } catch (error) {
-            this.logger.error('Password verification failed', error);
-            return false;
-        }
     }
 
     encrypt(data) {
