@@ -11,12 +11,12 @@ const { Logger } = require('../utils/logger');
 const { TokenSniperStrategy } = require('../strategies/tokenSniper');
 const { ScalpingStrategy } = require('../strategies/scalping');
 const { TrendTradingStrategy } = require('../strategies/trendTrading');
-const EnhancedTrendTradingStrategy = require('../strategies/enhancedTrendTrading');
 const { EthereumConnector } = require('../blockchain/ethereumConnector');
 const { BnbConnector } = require('../blockchain/bnbConnector');
 const { BinanceExchange } = require('../exchanges/binance');
 const { CryptocomExchange } = require('../exchanges/cryptocom');
-const EnhancedTokenScanner = require('../scanner/enhancedTokenScanner');
+const { EnhancedTrendTradingStrategy } = require('../strategies/enhancedTrendTrading');
+const { EnhancedTokenScanner } = require('../scanner/enhancedTokenScanner');
 
 class TradingEngine {
   constructor(configManager, securityManager, socketIo) {

@@ -499,4 +499,4 @@ function mapRange(value, fromLow, fromHigh, toLow, toHigh) {
   return toLow + (((value - fromLow) / (fromHigh - fromLow)) * (toHigh - toLow));
 }
 
-module.exports = EnhancedTrendTradingStrategy;
+module.exports = { EnhancedTrendTradingStrategy };
