@@ -435,13 +435,7 @@ class EnhancedTokenScanner extends TokenScanner {
         this.logger.error(`Error analyzing token health: ${tokenInfo.symbol}`, error);
         return null;
     }
-}}
-
-    /**
-     * Get token by address
-     * @param {string} address The token address to look up
-     * @returns {Object|undefined} The token information if found
-     */
+}
         /**
      * Get token by address
      * @param {string} address Token address
