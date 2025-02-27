@@ -213,25 +213,52 @@
 
                                 <div class="mb-3">
                                     <h6>Network Settings</h6>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" name="ethereum.enabled">
-                                                <label class="form-check-label">Enable Ethereum</label>
-                                            </div>
-                                            <div class="mt-2">
-                                                <label class="form-label">Infura Project ID</label>
-                                                <input type="text" class="form-control" name="ethereum.infuraId">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" name="bnbChain.enabled">
-                                                <label class="form-check-label">Enable BNB Chain</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    <div class="mb-3">
+    <h6>Network Settings</h6>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" name="ethereum.enabled" id="ethereumEnabled">
+                        <label class="form-check-label">Enable Ethereum</label>
+                    </div>
+                    <div class="network-settings ethereum-settings">
+                        <div class="mb-3">
+                            <label class="form-label">Private Key</label>
+                            <input type="password" class="form-control" name="ethereum.privateKey">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Infura Project ID</label>
+                            <input type="text" class="form-control" name="ethereum.infuraId">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Alchemy Key (Optional)</label>
+                            <input type="text" class="form-control" name="ethereum.alchemyKey">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" name="bnbChain.enabled" id="bnbChainEnabled">
+                        <label class="form-check-label">Enable BNB Chain</label>
+                    </div>
+                    <div class="network-settings bnb-settings">
+                        <div class="mb-3">
+                            <label class="form-label">Private Key</label>
+                            <input type="password" class="form-control" name="bnbChain.privateKey">
+                            <small class="form-text text-muted">Leave empty to use Ethereum private key</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                                 <div class="mb-3">
                                     <h6>Exchange Settings</h6>
