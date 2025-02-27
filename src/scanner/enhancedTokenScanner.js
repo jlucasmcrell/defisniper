@@ -486,4 +486,4 @@ class EnhancedTokenScanner extends TokenScanner {
 }
 
 // Export the class
-module.exports = EnhancedTokenScanner;
+module.exports = { EnhancedTokenScanner };

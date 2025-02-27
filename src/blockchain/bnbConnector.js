@@ -23,10 +23,10 @@ class BnbConnector {
         try {
             this.logger.info('Initializing BNB Chain connector');
 
-            // Get private key from config
+            // Get private key from config with type checking
             const privateKey = this.config.bnbChain?.privateKey || this.config.ethereum?.privateKey;
-            if (!privateKey) {
-                throw new Error('No private key configured for BNB Chain');
+            if (!privateKey || typeof privateKey !== 'string') {
+                throw new Error('Invalid or missing private key for BNB Chain');
             }
 
             // Ensure private key has 0x prefix
@@ -59,7 +59,11 @@ class BnbConnector {
             }
 
             // Set up wallet
-            this.wallet = new ethers.Wallet(formattedPrivateKey, this.provider);
+            try {
+                this.wallet = new ethers.Wallet(formattedPrivateKey, this.provider);
+            } catch (walletError) {
+                throw new Error(`Failed to initialize BNB Chain wallet: ${walletError.message}`);
+            }
 
             // Set up PancakeSwap contracts
             this.pancakeRouter = new ethers.Contract(
@@ -111,6 +115,10 @@ class BnbConnector {
 
     async getBalances() {
         try {
+            if (!this.provider || !this.wallet) {
+                throw new Error('BNB Chain connector not properly initialized');
+            }
+
             const bnbBalance = await this.provider.getBalance(this.wallet.address);
             const balances = {
                 BNB: ethers.utils.formatEther(bnbBalance)
@@ -120,6 +128,11 @@ class BnbConnector {
             if (this.config.tokens) {
                 for (const token of this.config.tokens) {
                     try {
+                        if (!token.address || typeof token.address !== 'string') {
+                            this.logger.warn(`Invalid token address for ${token.symbol}`);
+                            continue;
+                        }
+
                         const tokenContract = new ethers.Contract(
                             token.address,
                             ERC20_ABI,

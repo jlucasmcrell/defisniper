@@ -23,16 +23,16 @@ class EthereumConnector {
         try {
             this.logger.info('Initializing Ethereum connector');
 
-            // Get private key from config
+            // Get private key from config with type checking
             const privateKey = this.config.ethereum?.privateKey;
-            if (!privateKey) {
-                throw new Error('No private key configured for Ethereum');
+            if (!privateKey || typeof privateKey !== 'string') {
+                throw new Error('Invalid or missing private key for Ethereum');
             }
 
-            // Get provider API key
+            // Get provider API key with type checking
             const apiKey = this.config.ethereum?.infuraId || this.config.ethereum?.alchemyKey;
-            if (!apiKey) {
-                throw new Error('No API key configured for Ethereum provider');
+            if (!apiKey || typeof apiKey !== 'string') {
+                throw new Error('Invalid or missing API key for Ethereum provider');
             }
 
             // Set up provider
@@ -48,7 +48,11 @@ class EthereumConnector {
             const formattedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
 
             // Set up wallet
-            this.wallet = new ethers.Wallet(formattedPrivateKey, this.provider);
+            try {
+                this.wallet = new ethers.Wallet(formattedPrivateKey, this.provider);
+            } catch (walletError) {
+                throw new Error(`Failed to initialize Ethereum wallet: ${walletError.message}`);
+            }
 
             // Set up Uniswap contracts
             this.uniswapRouter = new ethers.Contract(
@@ -97,6 +101,10 @@ class EthereumConnector {
 
     async getBalances() {
         try {
+            if (!this.provider || !this.wallet) {
+                throw new Error('Ethereum connector not properly initialized');
+            }
+
             const ethBalance = await this.provider.getBalance(this.wallet.address);
             const balances = {
                 ETH: ethers.utils.formatEther(ethBalance)
@@ -106,6 +114,11 @@ class EthereumConnector {
             if (this.config.tokens) {
                 for (const token of this.config.tokens) {
                     try {
+                        if (!token.address || typeof token.address !== 'string') {
+                            this.logger.warn(`Invalid token address for ${token.symbol}`);
+                            continue;
+                        }
+
                         const tokenContract = new ethers.Contract(
                             token.address,
                             ERC20_ABI,
