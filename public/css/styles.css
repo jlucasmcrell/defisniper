@@ -1,4 +1,8 @@
 /* General Styles */
+body {
+    background-color: #f8f9fa;
+}
+
 .hidden {
     display: none !important;
 }
@@ -7,6 +11,7 @@
 .status-indicator {
     display: flex;
     align-items: center;
+    color: #fff;
 }
 
 .status-dot {
@@ -30,6 +35,22 @@
     display: block;
 }
 
+/* Navigation */
+.nav-pills .nav-link {
+    color: #495057;
+    border-radius: 0;
+    padding: 0.75rem 1rem;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.nav-pills .nav-link.active {
+    color: #fff;
+    background-color: #0d6efd;
+}
+
 /* Log Container */
 .log-container {
     height: 500px;
@@ -40,6 +61,7 @@
     font-family: monospace;
     font-size: 0.875rem;
     line-height: 1.5;
+    border-radius: 4px;
 }
 
 .log-entry {
@@ -63,6 +85,12 @@
 /* Cards and Tables */
 .card {
     margin-bottom: 1rem;
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-body {
+    padding: 1.5rem;
 }
 
 .table {
@@ -83,4 +111,26 @@
 .wallet-balance .address {
     font-family: monospace;
     word-break: break-all;
+}
+
+/* Dashboard Stats */
+#dashboard .card {
+    transition: transform 0.2s;
+}
+
+#dashboard .card:hover {
+    transform: translateY(-2px);
+}
+
+#dashboard .card-title {
+    color: #6c757d;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#dashboard h2 {
+    margin: 0;
+    color: #212529;
+    font-size: 1.75rem;
 }

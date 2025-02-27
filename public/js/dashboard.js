@@ -6,6 +6,9 @@ class Dashboard {
         this.setupEventListeners();
         this.initializeSocketListeners();
         this.checkAuthStatus();
+        
+        // Set initial active tab
+        this.currentTab = 'dashboard';
     }
 
     setupEventListeners() {
@@ -13,7 +16,10 @@ class Dashboard {
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                this.switchTab(e.target.getAttribute('data-tab'));
+                const targetTab = e.target.getAttribute('data-tab');
+                if (targetTab) {
+                    this.switchTab(targetTab);
+                }
             });
         });
 
@@ -53,7 +59,7 @@ class Dashboard {
     switchTab(tabId) {
         // Hide all tab contents
         document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.add('hidden');
+            tab.classList.remove('active');
         });
 
         // Remove active class from all nav links
@@ -65,11 +71,17 @@ class Dashboard {
         const selectedTab = document.getElementById(tabId);
         const selectedLink = document.querySelector(`[data-tab="${tabId}"]`);
 
-        if (selectedTab) {
-            selectedTab.classList.remove('hidden');
-        }
-        if (selectedLink) {
+        if (selectedTab && selectedLink) {
+            selectedTab.classList.add('active');
             selectedLink.classList.add('active');
+            this.currentTab = tabId;
+
+            // Special handling for different tabs
+            if (tabId === 'logs') {
+                this.refreshLogs();
+            } else if (tabId === 'settings') {
+                this.loadSettings();
+            }
         }
     }
 
@@ -79,7 +91,8 @@ class Dashboard {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                credentials: 'same-origin'
             });
 
             if (!response.ok) {
@@ -144,6 +157,7 @@ class Dashboard {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: 'same-origin',
                 body: JSON.stringify(settings)
             });
 
@@ -161,6 +175,51 @@ class Dashboard {
             console.error('Error saving settings:', error);
             this.showError('Failed to save settings');
         }
+    }
+
+    async loadSettings() {
+        try {
+            const response = await fetch('/api/settings', {
+                method: 'GET',
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to load settings');
+            }
+
+            const settings = await response.json();
+            
+            // Populate form fields
+            const form = document.getElementById('settingsForm');
+            if (form) {
+                Object.entries(this.flattenObject(settings)).forEach(([key, value]) => {
+                    const input = form.querySelector(`[name="${key}"]`);
+                    if (input) {
+                        if (input.type === 'checkbox') {
+                            input.checked = value;
+                        } else {
+                            input.value = value;
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error loading settings:', error);
+            this.showError('Failed to load settings');
+        }
+    }
+
+    flattenObject(obj, prefix = '') {
+        return Object.keys(obj).reduce((acc, k) => {
+            const pre = prefix.length ? prefix + '.' : '';
+            if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
+                Object.assign(acc, this.flattenObject(obj[k], pre + k));
+            } else {
+                acc[pre + k] = obj[k];
+            }
+            return acc;
+        }, {});
     }
 
     initializeSocketListeners() {
@@ -213,66 +272,114 @@ class Dashboard {
     }
 
     showSuccess(message) {
-        // Implement success notification
         alert(message); // Replace with better UI notification
     }
 
     showError(message) {
-        // Implement error notification
         alert(message); // Replace with better UI notification
     }
 
     async checkAuthStatus() {
-    try {
-        const response = await fetch('/auth/status');
-        const data = await response.json();
+        try {
+            const response = await fetch('/auth/status', {
+                credentials: 'same-origin'
+            });
+            const data = await response.json();
 
-        if (!data.authenticated) {
-            window.location.href = '/login';
-            return;
+            if (!data.authenticated) {
+                window.location.href = '/login';
+                return;
+            }
+
+            this.isAuthenticated = true;
+            this.updateBotStatus(false);
+            await this.updateWalletBalances();
+        } catch (error) {
+            console.error('Error checking auth status:', error);
+            this.showError('Failed to check authentication status');
         }
+    }
 
-        // Initialize dashboard only if authenticated
-        this.isAuthenticated = true;
-        this.updateBotStatus(false); // Set initial bot status
-        await this.updateWalletBalances(); // Get initial wallet balances
-        
-    } catch (error) {
-        console.error('Error checking auth status:', error);
-        this.showError('Failed to check authentication status');
+    async updateWalletBalances() {
+        try {
+            const response = await fetch('/api/wallets', {
+                credentials: 'same-origin'
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch wallet balances');
+            }
+            const balances = await response.json();
+            this.displayWalletBalances(balances);
+        } catch (error) {
+            console.error('Error updating wallet balances:', error);
+            if (this.initialized) {
+                this.showError('Failed to update wallet balances');
+            }
+        }
+    }
+
+    displayWalletBalances(balances) {
+        const walletList = document.getElementById('walletBalances');
+        if (!walletList) return;
+
+        walletList.innerHTML = '';
+        Object.entries(balances).forEach(([chain, balance]) => {
+            const li = document.createElement('li');
+            li.className = 'mb-2';
+            li.innerHTML = `
+                <span class="font-bold">${chain}:</span>
+                <span class="ml-2">${balance}</span>
+            `;
+            walletList.appendChild(li);
+        });
+    }
+
+    filterLogs(level) {
+        const logContainer = document.getElementById('logOutput');
+        if (!logContainer) return;
+
+        const entries = logContainer.getElementsByClassName('log-entry');
+        Array.from(entries).forEach(entry => {
+            if (level === 'all' || entry.classList.contains(level)) {
+                entry.style.display = '';
+            } else {
+                entry.style.display = 'none';
+            }
+        });
+    }
+
+    clearLogs() {
+        const logContainer = document.getElementById('logOutput');
+        if (logContainer) {
+            logContainer.innerHTML = '';
+        }
+    }
+
+    exportLogs() {
+        const logContainer = document.getElementById('logOutput');
+        if (!logContainer) return;
+
+        const logs = Array.from(logContainer.getElementsByClassName('log-entry'))
+            .map(entry => entry.textContent)
+            .join('\n');
+
+        const blob = new Blob([logs], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `bot-logs-${new Date().toISOString()}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
+
+    refreshLogs() {
+        // Implement log refresh logic here
     }
 }
 
-// Update the updateWalletBalances method
-async updateWalletBalances() {
-    try {
-        const response = await fetch('/api/wallets');
-        if (!response.ok) {
-            throw new Error('Failed to fetch wallet balances');
-        }
-        const balances = await response.json();
-        this.displayWalletBalances(balances);
-    } catch (error) {
-        console.error('Error updating wallet balances:', error);
-        // Don't show error message during initialization
-        if (this.initialized) {
-            this.showError('Failed to update wallet balances');
-        }
-    }
-}
-
-displayWalletBalances(balances) {
-    const walletList = document.getElementById('walletBalances');
-    if (!walletList) return;
-
-    walletList.innerHTML = '';
-    Object.entries(balances).forEach(([chain, balance]) => {
-        const li = document.createElement('li');
-        li.className = 'mb-2';
-        li.innerHTML = `
-            <span class="font-bold">${chain}:</span>
-            <span class="ml-2">${balance}</span>
-        `;
-        walletList.appendChild(li);
-    });
-}
+// Initialize dashboard when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.dashboard = new Dashboard();
+});
