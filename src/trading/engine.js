@@ -75,7 +75,7 @@ class TradingEngine {
       
       // Initialize exchange connectors
       if (decryptedConfig.exchanges) {
-        if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exances.binanceUS.enabled) {
+        if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) {
           this.exchanges.binanceUS = new BinanceExchange(
             decryptedConfig.exchanges.binanceUS.apiKey,
             decryptedConfig.exchanges.binanceUS.apiSecret,
@@ -95,7 +95,7 @@ class TradingEngine {
       }
       
       // Initialize trading strategies
-      if (decryptedConfig.strategies.tokenSniper.enabled) {
+      if (decryptedConfig.strategies && decryptedConfig.strategies.tokenSniper && decryptedConfig.strategies.tokenSniper.enabled) {
         this.strategies.tokenSniper = new TokenSniperStrategy(
           this.blockchain,
           this.exchanges,
@@ -104,7 +104,7 @@ class TradingEngine {
         );
       }
       
-      if (decryptedConfig.strategies.scalping.enabled) {
+      if (decryptedConfig.strategies && decryptedConfig.strategies.scalping && decryptedConfig.strategies.scalping.enabled) {
         this.strategies.scalping = new ScalpingStrategy(
           this.blockchain,
           this.exchanges,
@@ -113,7 +113,7 @@ class TradingEngine {
         );
       }
       
-      if (decryptedConfig.strategies.trendTrading.enabled) {
+      if (decryptedConfig.strategies && decryptedConfig.strategies.trendTrading && decryptedConfig.strategies.trendTrading.enabled) {
         this.strategies.trendTrading = new TrendTradingStrategy(
           this.blockchain,
           this.exchanges,
@@ -135,8 +135,7 @@ class TradingEngine {
       throw error;
     }
   }
-  
-  /**
+    /**
    * Start the trading engine
    */
   async start() {
@@ -303,8 +302,7 @@ class TradingEngine {
     
     return opportunities.slice(0, availableTradeSlots);
   }
-  
-  /**
+    /**
    * Execute a trade based on opportunity
    */
   async executeTrade(opportunity) {
@@ -426,7 +424,8 @@ class TradingEngine {
       }
       
       // Calculate trade size based on wallet percentage
-      const walletPercentage = this.config.trading.walletBuyPercentage / 100;
+      const walletPercentage = this.config.trading && this.config.trading.walletBuyPercentage ? 
+        this.config.trading.walletBuyPercentage / 100 : 0.1; // Default to 10% if not specified
       const wallet = await blockchain.getWallet();
       
       // Execute the trade
@@ -440,8 +439,7 @@ class TradingEngine {
       throw error;
     }
   }
-  
-  /**
+    /**
    * Execute a trade on a CEX (Binance.US/Crypto.com)
    */
   async executeCEXTrade(opportunity) {
@@ -488,22 +486,34 @@ class TradingEngine {
         
         const priceChange = ((currentPrice - entryPrice) / entryPrice) * 100;
         
+        // Default values if config is missing
+        const takeProfitThreshold = 
+          (this.config.trading && this.config.trading.takeProfit) ? 
+          this.config.trading.takeProfit : 5; // Default 5%
+          
+        const stopLossThreshold = 
+          (this.config.trading && this.config.trading.stopLoss) ? 
+          this.config.trading.stopLoss : 2; // Default 2%
+        
         // Check for take-profit
-        if (trade.action === 'buy' && priceChange >= this.config.trading.takeProfit) {
+        if (trade.action === 'buy' && priceChange >= takeProfitThreshold) {
           this.logger.info(`Take profit triggered for ${tradeId}: ${priceChange.toFixed(2)}%`);
           await this.closeTrade(tradeId, 'take_profit', currentPrice);
           continue;
         }
         
         // Check for stop-loss
-        if (trade.action === 'buy' && priceChange <= -this.config.trading.stopLoss) {
+        if (trade.action === 'buy' && priceChange <= -stopLossThreshold) {
           this.logger.info(`Stop loss triggered for ${tradeId}: ${priceChange.toFixed(2)}%`);
           await this.closeTrade(tradeId, 'stop_loss', currentPrice);
           continue;
         }
         
         // Check for trade timeout
-        const maxTradeTime = this.config.trading.maxTradeTime || 24 * 60 * 60 * 1000; // 24 hours default
+        const maxTradeTime = 
+          (this.config.trading && this.config.trading.maxTradeTime) ? 
+          this.config.trading.maxTradeTime : 24 * 60 * 60 * 1000; // 24 hours default
+          
         if (Date.now() - trade.timestamp > maxTradeTime) {
           this.logger.info(`Trade timeout for ${tradeId}`);
           await this.closeTrade(tradeId, 'timeout', currentPrice);
