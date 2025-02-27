@@ -32,8 +32,31 @@ class BnbConnector {
             // Ensure private key has 0x prefix
             const formattedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
 
-            // Set up provider
-            this.provider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed1.binance.org');
+            // Set up provider with multiple RPC endpoints for redundancy
+            const rpcUrls = [
+                'https://bsc-dataseed1.binance.org',
+                'https://bsc-dataseed2.binance.org',
+                'https://bsc-dataseed3.binance.org',
+                'https://bsc-dataseed4.binance.org'
+            ];
+
+            // Try each RPC endpoint until one works
+            let connected = false;
+            for (const rpcUrl of rpcUrls) {
+                try {
+                    this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+                    await this.provider.getBlockNumber();
+                    connected = true;
+                    break;
+                } catch (error) {
+                    this.logger.warn(`Failed to connect to RPC ${rpcUrl}, trying next...`);
+                    continue;
+                }
+            }
+
+            if (!connected) {
+                throw new Error('Failed to connect to any BSC RPC endpoint');
+            }
 
             // Set up wallet
             this.wallet = new ethers.Wallet(formattedPrivateKey, this.provider);
@@ -51,12 +74,15 @@ class BnbConnector {
                 this.wallet
             );
 
-            // Verify connection
-            await this.provider.getBlockNumber();
-            const factoryPairCount = await this.pancakeFactory.allPairsLength();
+            // Verify connection and contracts
+            const [blockNumber, factoryPairCount] = await Promise.all([
+                this.provider.getBlockNumber(),
+                this.pancakeFactory.allPairsLength()
+            ]);
             
             this.logger.info('BNB Chain connector initialized successfully', {
                 address: this.wallet.address,
+                blockNumber,
                 pairCount: factoryPairCount.toString()
             });
 
