@@ -5,330 +5,447 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryptoSniperBot Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/css/styles.css" rel="stylesheet">
 </head>
-<body>
-    <div class="container-fluid">
-        <nav class="navbar navbar-dark bg-dark">
-            <div class="container-fluid">
-                <span class="navbar-brand mb-0 h1">CryptoSniperBot</span>
-                <div class="d-flex align-items-center">
-                    <div id="connectionStatus" class="status-indicator me-3">
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">CryptoSniperBot</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-tab="dashboard" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-tab="trades" href="#">Trades</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-tab="logs" href="#">Logs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-tab="settings" href="#">Settings</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center text-light">
+                    <div id="connectionStatus" class="me-3">
                         <span class="status-dot"></span>
-                        <span class="status-text">Disconnected</span>
+                        <span class="status-text">Connecting...</span>
                     </div>
-                    <div id="botStatus" class="status-indicator me-3">
+                    <div id="botStatus">
                         <span class="status-dot"></span>
                         <span class="status-text">Stopped</span>
                     </div>
+                    <button class="btn btn-outline-light ms-3" onclick="logout()">Logout</button>
                 </div>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <div class="row mt-3">
-            <div class="col-md-2">
-                <div class="nav flex-column nav-pills">
-                    <a class="nav-link active" data-tab="dashboard" href="#">Dashboard</a>
-                    <a class="nav-link" data-tab="monitoring" href="#">Monitoring</a>
-                    <a class="nav-link" data-tab="trades" href="#">Trades</a>
-                    <a class="nav-link" data-tab="settings" href="#">Settings</a>
-                    <a class="nav-link" data-tab="logs" href="#">Logs</a>
-                </div>
-                <div class="mt-3">
-                    <button id="startBot" class="btn btn-success w-100 mb-2">Start Bot</button>
-                    <button id="stopBot" class="btn btn-danger w-100" disabled>Stop Bot</button>
-                </div>
-            </div>
-
-            <div class="col-md-10">
-                <!-- Dashboard Tab -->
-                <div id="dashboard" class="tab-content active">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Active Trades</h5>
-                                    <h2 id="activeTrades">0</h2>
-                                </div>
-                            </div>
+    <div class="container-fluid mt-4">
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-content active">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5>Bot Control</h5>
                         </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Trades</h5>
-                                    <h2 id="totalTrades">0</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Success Rate</h5>
-                                    <h2 id="successRate">0%</h2>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Total Profit</h5>
-                                    <h2 id="totalProfit">$0.00</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Wallet Balances Section -->
-                    <div id="walletBalances" class="row mt-4">
-                        <!-- Wallet balance cards will be inserted here -->
-                    </div>
-
-                    <!-- Token Monitor Section -->
-                    <div id="tokenMonitor" class="row mt-4">
-                        <!-- Token monitoring content will be inserted here -->
-                    </div>
-
-                    <!-- Scan Progress Section -->
-                    <div id="scanProgress" class="row mt-4">
-                        <!-- Scan progress will be inserted here -->
-                    </div>
-
-                    <!-- New Tokens Section -->
-                    <div id="newTokens" class="row mt-4">
-                        <!-- New token notifications will be inserted here -->
-                    </div>
-
-                    <!-- Active Trades Section -->
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Active Trades</h5>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Token</th>
-                                                    <th>Exchange</th>
-                                                    <th>Entry Price</th>
-                                                    <th>Current Price</th>
-                                                    <th>P/L</th>
-                                                    <th>Duration</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="activeTradesBody">
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Monitoring Tab -->
-                <div id="monitoring" class="tab-content">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Token Scanner Status</h5>
-                                    <div id="scannerStatus">
-                                        <!-- Scanner status will be inserted here -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row mt-4">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h5 class="card-title">Monitored Tokens</h5>
-                                    <div id="monitoredTokensTable">
-                                        <!-- Monitored tokens table will be inserted here -->
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Trades Tab -->
-                <div id="trades" class="tab-content">
-                    <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Trade History</h5>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Token</th>
-                                            <th>Exchange</th>
-                                            <th>Entry Price</th>
-                                            <th>Exit Price</th>
-                                            <th>P/L</th>
-                                            <th>Duration</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="historyBody">
-                                    </tbody>
-                                </table>
-                            </div>
+                            <button id="startBot" class="btn btn-success me-2">Start Bot</button>
+                            <button id="stopBot" class="btn btn-danger" disabled>Stop Bot</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5>Balances</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="balances">Loading...</div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Settings Tab -->
-                <div id="settings" class="tab-content">
-                    <div class="card">
+                
+                <div class="col-md-6">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5>Trading Stats</h5>
+                        </div>
                         <div class="card-body">
-                            <h5 class="card-title">Bot Settings</h5>
-                            <form id="settingsForm">
-                                <div class="mb-3">
-                                    <h6>Trading Settings</h6>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Wallet Buy Percentage</label>
-                                            <input type="number" class="form-control" name="trading.walletBuyPercentage" min="1" max="100">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Stop Loss (%)</label>
-                                            <input type="number" class="form-control" name="trading.stopLoss" min="0">
-                                        </div>
-                                    </div>
-                                    <div class="row mt-2">
-                                        <div class="col-md-6">
-                                            <label class="form-label">Take Profit (%)</label>
-                                            <input type="number" class="form-control" name="trading.takeProfit" min="0">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label">Max Concurrent Trades</label>
-                                            <input type="number" class="form-control" name="trading.maxConcurrentTrades" min="1">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <h6>Network Settings</h6>
-                                    <div class="mb-3">
-    <h6>Network Settings</h6>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" name="ethereum.enabled" id="ethereumEnabled">
-                        <label class="form-check-label">Enable Ethereum</label>
+                            <div id="tradingStats">Loading...</div>
+                        </div>
                     </div>
-                    <div class="network-settings ethereum-settings">
-                        <div class="mb-3">
-                            <label class="form-label">Private Key</label>
-                            <input type="password" class="form-control" name="ethereum.privateKey">
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5>Active Trades</h5>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Infura Project ID</label>
-                            <input type="text" class="form-control" name="ethereum.infuraId">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Alchemy Key (Optional)</label>
-                            <input type="text" class="form-control" name="ethereum.alchemyKey">
+                        <div class="card-body">
+                            <div id="activeTrades">No active trades</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card mb-3">
+
+        <!-- Trades Tab -->
+        <div id="trades" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Trade History</h5>
+                </div>
                 <div class="card-body">
-                    <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" name="bnbChain.enabled" id="bnbChainEnabled">
-                        <label class="form-check-label">Enable BNB Chain</label>
-                    </div>
-                    <div class="network-settings bnb-settings">
-                        <div class="mb-3">
-                            <label class="form-label">Private Key</label>
-                            <input type="password" class="form-control" name="bnbChain.privateKey">
-                            <small class="form-text text-muted">Leave empty to use Ethereum private key</small>
-                        </div>
-                    </div>
+                    <div id="tradeHistory">Loading trade history...</div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 
-                                <div class="mb-3">
-                                    <h6>Exchange Settings</h6>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" name="exchanges.binanceUS.enabled">
-                                                <label class="form-check-label">Enable Binance.US</label>
-                                            </div>
-                                            <div class="mt-2">
-                                                <label class="form-label">API Key</label>
-                                                <input type="password" class="form-control" name="exchanges.binanceUS.apiKey">
-                                            </div>
-                                            <div class="mt-2">
-                                                <label class="form-label">API Secret</label>
-                                                <input type="password" class="form-control" name="exchanges.binanceUS.apiSecret">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox" name="exchanges.cryptoCom.enabled">
-                                                <label class="form-check-label">Enable Crypto.com</label>
-                                            </div>
-                                            <div class="mt-2">
-                                                <label class="form-label">API Key</label>
-                                                <input type="password" class="form-control" name="exchanges.cryptoCom.apiKey">
-                                            </div>
-                                            <div class="mt-2">
-                                                <label class="form-label">API Secret</label>
-                                                <input type="password" class="form-control" name="exchanges.cryptoCom.apiSecret">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <button type="submit" class="btn btn-primary">Save Settings</button>
-                            </form>
-                        </div>
+        <!-- Logs Tab -->
+        <div id="logs" class="tab-content">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5>Bot Logs</h5>
+                    <div class="d-flex">
+                        <select id="logLevel" class="form-select form-select-sm me-2">
+                            <option value="all">All Levels</option>
+                            <option value="error">Errors Only</option>
+                            <option value="warn">Warnings & Errors</option>
+                            <option value="info">Info & Above</option>
+                            <option value="debug">Debug & Above</option>
+                        </select>
+                        <button id="clearLogs" class="btn btn-sm btn-warning me-2">Clear</button>
+                        <button id="exportLogs" class="btn btn-sm btn-primary">Export</button>
                     </div>
                 </div>
-
-                <!-- Logs Tab -->
-                <div id="logs" class="tab-content">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="card-title">Bot Logs</h5>
-                                <div>
-                                    <select id="logLevel" class="form-select form-select-sm d-inline-block w-auto">
-                                        <option value="all">All Levels</option>
-                                        <option value="info">Info</option>
-                                        <option value="warn">Warning</option>
-                                        <option value="error">Error</option>
-                                    </select>
-                                    <button id="clearLogs" class="btn btn-sm btn-warning ms-2">Clear</button>
-                                    <button id="exportLogs" class="btn btn-sm btn-secondary ms-2">Export</button>
-                                </div>
-                            </div>
-                            <div id="logOutput" class="log-container">
-                            </div>
-                        </div>
-                    </div>
+                <div class="card-body">
+                    <div id="logOutput" class="log-container"></div>
                 </div>
             </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <form id="settingsForm" class="settings-form">
+                <!-- Network Settings -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>Network Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Ethereum Settings -->
+                        <div class="ethereum-settings">
+                            <h6>Ethereum Settings</h6>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" id="ethereumEnabled" name="ethereum.enabled">
+                                <label class="form-check-label" for="ethereumEnabled">Enable Ethereum</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Private Key</label>
+                                <input type="password" class="form-control" name="ethereum.privateKey">
+                                <small class="form-text text-muted">Your wallet's private key</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Infura Project ID</label>
+                                <input type="password" class="form-control" name="ethereum.infuraId">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Alchemy Key (Optional)</label>
+                                <input type="password" class="form-control" name="ethereum.alchemyKey">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Uniswap Factory Address</label>
+                                <input type="text" class="form-control" name="ethereum.uniswapFactoryAddress" value="0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Uniswap Router Address</label>
+                                <input type="text" class="form-control" name="ethereum.uniswapRouterAddress" value="0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D">
+                            </div>
+                        </div>
+
+                        <!-- BNB Chain Settings -->
+                        <div class="bnb-settings mt-4">
+                            <h6>BNB Chain Settings</h6>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" id="bnbChainEnabled" name="bnbChain.enabled">
+                                <label class="form-check-label" for="bnbChainEnabled">Enable BNB Chain</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Private Key</label>
+                                <input type="password" class="form-control" name="bnbChain.privateKey">
+                                <small class="form-text text-muted">Leave empty to use Ethereum private key</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">PancakeSwap Factory Address</label>
+                                <input type="text" class="form-control" name="bnbChain.pancakeFactoryAddress" value="0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">PancakeSwap Router Address</label>
+                                <input type="text" class="form-control" name="bnbChain.pancakeRouterAddress" value="0x10ED43C718714eb63d5aA57B78B54704E256024E">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exchange Settings -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>Exchange Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Binance.US Settings -->
+                        <div class="binance-settings">
+                            <h6>Binance.US Settings</h6>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" id="binanceEnabled" name="exchanges.binanceUS.enabled">
+                                <label class="form-check-label" for="binanceEnabled">Enable Binance.US</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">API Key</label>
+                                <input type="password" class="form-control" name="exchanges.binanceUS.apiKey">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">API Secret</label>
+                                <input type="password" class="form-control" name="exchanges.binanceUS.apiSecret">
+                            </div>
+                        </div>
+
+                        <!-- Crypto.com Settings -->
+                        <div class="crypto-settings mt-4">
+                            <h6>Crypto.com Settings</h6>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" id="cryptoComEnabled" name="exchanges.cryptoCom.enabled">
+                                <label class="form-check-label" for="cryptoComEnabled">Enable Crypto.com</label>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">API Key</label>
+                                <input type="password" class="form-control" name="exchanges.cryptoCom.apiKey">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">API Secret</label>
+                                <input type="password" class="form-control" name="exchanges.cryptoCom.apiSecret">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trading Settings -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>Trading Settings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Wallet Buy Percentage</label>
+                            <input type="number" class="form-control" name="trading.walletBuyPercentage" min="1" max="100" step="0.1">
+                            <small class="form-text text-muted">Percentage of wallet to use per trade (1-100)</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Stop Loss (%)</label>
+                            <input type="number" class="form-control" name="trading.stopLoss" min="0.1" step="0.1">
+                            <small class="form-text text-muted">Percentage drop to trigger stop loss</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Take Profit (%)</label>
+                            <input type="number" class="form-control" name="trading.takeProfit" min="0.1" step="0.1">
+                            <small class="form-text text-muted">Percentage gain to take profit</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Max Concurrent Trades</label>
+                            <input type="number" class="form-control" name="trading.maxConcurrentTrades" min="1">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Max Trades Per Hour</label>
+                            <input type="number" class="form-control" name="trading.maxTradesPerHour" min="1">
+                        </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="closeTradesOnStop" name="trading.closeTradesOnStop">
+                            <label class="form-check-label" for="closeTradesOnStop">Close trades when stopping bot</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="autoStart" name="trading.autoStart">
+                            <label class="form-check-label" for="autoStart">Auto-start bot on launch</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Management Settings -->
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5>Risk Management</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Max Trade Size (in base currency)</label>
+                            <input type="number" class="form-control" name="riskManagement.maxTradeSize" min="0" step="0.01">
+                            <small class="form-text text-muted">0 for no limit</small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Daily Loss Limit (in base currency)</label>
+                            <input type="number" class="form-control" name="riskManagement.dailyLossLimit" min="0" step="0.01">
+                            <small class="form-text text-muted">0 for no limit</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/socket.io/client-dist/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@
+	    <!-- Continuing from the previous part -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/components/tokenMonitor.js"></script>
-    <script src="js/dashboard.js"></script>
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="/js/dashboard.js"></script>
+    
+    <script>
+        function logout() {
+            fetch('/auth/logout', {
+                method: 'POST',
+                credentials: 'same-origin'
+            }).then(() => {
+                window.location.href = '/login';
+            }).catch(error => {
+                console.error('Logout failed:', error);
+            });
+        }
+
+        // Handle tab switching
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Remove active class from all nav links
+                document.querySelectorAll('.nav-link').forEach(el => {
+                    el.classList.remove('active');
+                });
+                // Add active class to clicked link
+                e.target.classList.add('active');
+            });
+        });
+    </script>
+
+    <style>
+        .status-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #dc3545;
+            margin-right: 5px;
+        }
+        
+        .status-dot.active {
+            background-color: #198754;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .log-container {
+            height: 500px;
+            overflow-y: auto;
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: monospace;
+            padding: 10px;
+        }
+        
+        .log-entry {
+            margin-bottom: 5px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .log-entry.error {
+            color: #dc3545;
+        }
+        
+        .log-entry.warn {
+            color: #ffc107;
+        }
+        
+        .log-entry.info {
+            color: #0dcaf0;
+        }
+        
+        .log-entry.debug {
+            color: #6c757d;
+        }
+        
+        .settings-form .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .settings-form .form-text {
+            font-size: 0.875em;
+        }
+
+        #balances, #tradingStats {
+            font-family: monospace;
+        }
+
+        .trade-card {
+            margin-bottom: 1rem;
+        }
+
+        .trade-card .card-header {
+            padding: 0.5rem 1rem;
+        }
+
+        .trade-card .card-body {
+            padding: 0.75rem;
+        }
+
+        .profit {
+            color: #198754;
+        }
+
+        .loss {
+            color: #dc3545;
+        }
+
+        /* Add tooltip styles */
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: #6c757d;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        /* Add responsive styles */
+        @media (max-width: 768px) {
+            .card-header {
+                flex-direction: column;
+            }
+            
+            .card-header .d-flex {
+                margin-top: 10px;
+            }
+            
+            .status-container {
+                margin-top: 10px;
+                text-align: center;
+            }
+        }
+    </style>
 </body>
 </html>
