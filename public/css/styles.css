@@ -1,15 +1,12 @@
-/* Dashboard Styles */
-
-/* General */
-body {
-    background-color: #f8f9fa;
+/* General Styles */
+.hidden {
+    display: none !important;
 }
 
 /* Status Indicators */
 .status-indicator {
     display: flex;
     align-items: center;
-    color: #fff;
 }
 
 .status-dot {
@@ -20,67 +17,8 @@ body {
     margin-right: 8px;
 }
 
-.status-dot.connected {
+.status-dot.active {
     background-color: #28a745;
-}
-
-/* Cards */
-.card {
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    margin-bottom: 1rem;
-}
-
-.card-title {
-    margin-bottom: 1rem;
-    color: #495057;
-}
-
-/* Tables */
-.table {
-    margin-bottom: 0;
-}
-
-.table th {
-    border-top: none;
-    background-color: #f8f9fa;
-}
-
-/* Profit/Loss Colors */
-.profit {
-    color: #28a745;
-}
-
-.loss {
-    color: #dc3545;
-}
-
-/* Log Container */
-.log-container {
-    height: 500px;
-    overflow-y: auto;
-    background-color: #1e1e1e;
-    color: #fff;
-    padding: 1rem;
-    font-family: monospace;
-    font-size: 0.9rem;
-}
-
-.log-entry {
-    margin-bottom: 0.5rem;
-    padding: 0.25rem;
-    border-radius: 3px;
-}
-
-.log-info {
-    color: #17a2b8;
-}
-
-.log-warn {
-    color: #ffc107;
-}
-
-.log-error {
-    color: #dc3545;
 }
 
 /* Tab Content */
@@ -92,36 +30,57 @@ body {
     display: block;
 }
 
-/* Form Controls */
-.form-control, .form-select {
-    font-size: 0.9rem;
+/* Log Container */
+.log-container {
+    height: 500px;
+    overflow-y: auto;
+    background-color: #1a1a1a;
+    color: #fff;
+    padding: 1rem;
+    font-family: monospace;
+    font-size: 0.875rem;
+    line-height: 1.5;
 }
 
-/* Navigation */
-.nav-pills .nav-link {
-    color: #495057;
+.log-entry {
+    margin-bottom: 0.5rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px solid #333;
 }
 
-.nav-pills .nav-link.active {
-    background-color: #007bff;
+.log-entry.info {
     color: #fff;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .container-fluid {
-        padding: 0.5rem;
-    }
-    
-    .card {
-        margin-bottom: 0.5rem;
-    }
-    
-    .table {
-        font-size: 0.8rem;
-    }
-    
-    .btn {
-        font-size: 0.8rem;
-    }
+.log-entry.warn {
+    color: #ffc107;
+}
+
+.log-entry.error {
+    color: #dc3545;
+}
+
+/* Cards and Tables */
+.card {
+    margin-bottom: 1rem;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+/* Form Controls */
+.form-control:disabled {
+    background-color: #e9ecef;
+    opacity: 0.65;
+}
+
+/* Wallet Balance Cards */
+.wallet-balance {
+    font-size: 0.875rem;
+}
+
+.wallet-balance .address {
+    font-family: monospace;
+    word-break: break-all;
 }

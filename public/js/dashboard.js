@@ -1,142 +1,263 @@
-// Add these methods to the existing Dashboard class
-
 class Dashboard {
-    // ... (existing constructor and methods)
-
-    async updateWalletBalances() {
-        try {
-            const response = await fetch('/api/wallets/balances');
-            if (!response.ok) throw new Error('Failed to fetch wallet balances');
-            
-            const balances = await response.json();
-            this.displayWalletBalances(balances);
-        } catch (error) {
-            console.error('Error updating wallet balances:', error);
-            this.showError('Failed to update wallet balances');
-        }
+    constructor() {
+        this.socket = io();
+        this.isAuthenticated = false;
+        this.initialized = false;
+        this.setupEventListeners();
+        this.initializeSocketListeners();
+        this.checkAuthStatus();
     }
 
-    displayWalletBalances(balances) {
-        const container = document.getElementById('walletBalances');
-        if (!container) return;
-
-        let html = '<div class="row">';
-        
-        // CEX Wallets
-        if (balances.exchanges) {
-            Object.entries(balances.exchanges).forEach(([exchange, balance]) => {
-                html += `
-                    <div class="col-md-6 col-lg-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">${exchange}</h5>
-                                <div class="wallet-balance">
-                                    ${Object.entries(balance).map(([asset, amount]) => `
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span>${asset}:</span>
-                                            <span>${Number(amount).toFixed(8)}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+    setupEventListeners() {
+        // Tab switching
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.switchTab(e.target.getAttribute('data-tab'));
             });
-        }
-
-        // DEX Wallets
-        if (balances.dex) {
-            Object.entries(balances.dex).forEach(([network, wallet]) => {
-                html += `
-                    <div class="col-md-6 col-lg-4 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">${network} Wallet</h5>
-                                <div class="wallet-balance">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <span>Address:</span>
-                                        <span class="text-truncate" style="max-width: 150px;" title="${wallet.address}">
-                                            ${wallet.address}
-                                        </span>
-                                    </div>
-                                    ${Object.entries(wallet.balances).map(([token, balance]) => `
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span>${token}:</span>
-                                            <span>${Number(balance).toFixed(8)}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        html += '</div>';
-        container.innerHTML = html;
-    }
-
-    // Add to initializeSocketListeners()
-    initializeSocketListeners() {
-        // ... existing socket listeners ...
-
-        this.socket.on('scanProgress', (progress) => {
-            this.updateScanProgress(progress);
         });
 
-        this.socket.on('newToken', (token) => {
-            this.addNewTokenNotification(token);
+        // Bot control buttons
+        const startButton = document.getElementById('startBot');
+        const stopButton = document.getElementById('stopBot');
+
+        if (startButton) {
+            startButton.addEventListener('click', () => this.controlBot('start'));
+        }
+        if (stopButton) {
+            stopButton.addEventListener('click', () => this.controlBot('stop'));
+        }
+
+        // Settings form
+        const settingsForm = document.getElementById('settingsForm');
+        if (settingsForm) {
+            settingsForm.addEventListener('submit', (e) => this.handleSettingsSubmit(e));
+        }
+
+        // Log controls
+        const logLevel = document.getElementById('logLevel');
+        const clearLogs = document.getElementById('clearLogs');
+        const exportLogs = document.getElementById('exportLogs');
+
+        if (logLevel) {
+            logLevel.addEventListener('change', (e) => this.filterLogs(e.target.value));
+        }
+        if (clearLogs) {
+            clearLogs.addEventListener('click', () => this.clearLogs());
+        }
+        if (exportLogs) {
+            exportLogs.addEventListener('click', () => this.exportLogs());
+        }
+    }
+
+    switchTab(tabId) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.add('hidden');
+        });
+
+        // Remove active class from all nav links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.classList.remove('active');
+        });
+
+        // Show selected tab content and set nav link as active
+        const selectedTab = document.getElementById(tabId);
+        const selectedLink = document.querySelector(`[data-tab="${tabId}"]`);
+
+        if (selectedTab) {
+            selectedTab.classList.remove('hidden');
+        }
+        if (selectedLink) {
+            selectedLink.classList.add('active');
+        }
+    }
+
+    async controlBot(action) {
+        try {
+            const response = await fetch(`/api/bot/${action}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to ${action} bot`);
+            }
+
+            const result = await response.json();
+            if (result.success) {
+                this.updateBotStatus(action === 'start');
+            } else {
+                this.showError(`Failed to ${action} bot: ${result.message}`);
+            }
+        } catch (error) {
+            console.error(`Error ${action}ing bot:`, error);
+            this.showError(`Failed to ${action} bot`);
+        }
+    }
+
+    updateBotStatus(isRunning) {
+        const startButton = document.getElementById('startBot');
+        const stopButton = document.getElementById('stopBot');
+        const statusDot = document.querySelector('#botStatus .status-dot');
+        const statusText = document.querySelector('#botStatus .status-text');
+
+        if (startButton) {
+            startButton.disabled = isRunning;
+        }
+        if (stopButton) {
+            stopButton.disabled = !isRunning;
+        }
+        if (statusDot) {
+            statusDot.classList.toggle('active', isRunning);
+        }
+        if (statusText) {
+            statusText.textContent = isRunning ? 'Running' : 'Stopped';
+        }
+    }
+
+    async handleSettingsSubmit(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        const settings = {};
+
+        formData.forEach((value, key) => {
+            // Handle nested object paths (e.g., "trading.walletBuyPercentage")
+            const parts = key.split('.');
+            let current = settings;
+            
+            for (let i = 0; i < parts.length - 1; i++) {
+                current[parts[i]] = current[parts[i]] || {};
+                current = current[parts[i]];
+            }
+            
+            // Convert string numbers to actual numbers
+            const numValue = Number(value);
+            current[parts[parts.length - 1]] = isNaN(numValue) ? value : numValue;
+        });
+
+        try {
+            const response = await fetch('/api/settings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(settings)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save settings');
+            }
+
+            const result = await response.json();
+            if (result.success) {
+                this.showSuccess('Settings saved successfully');
+            } else {
+                this.showError(`Failed to save settings: ${result.message}`);
+            }
+        } catch (error) {
+            console.error('Error saving settings:', error);
+            this.showError('Failed to save settings');
+        }
+    }
+
+    initializeSocketListeners() {
+        this.socket.on('connect', () => {
+            this.updateConnectionStatus(true);
+        });
+
+        this.socket.on('disconnect', () => {
+            this.updateConnectionStatus(false);
+        });
+
+        this.socket.on('botStatus', (data) => {
+            this.updateBotStatus(data.running);
+            if (data.activeTrades) {
+                this.updateActiveTrades(data.activeTrades);
+            }
+            if (data.stats) {
+                this.updateStats(data.stats);
+            }
+        });
+
+        this.socket.on('log', (log) => {
+            this.addLogEntry(log);
         });
 
         this.socket.on('walletBalances', (balances) => {
             this.displayWalletBalances(balances);
         });
+
+        this.socket.on('newTrade', (trade) => {
+            this.addActiveTrade(trade);
+        });
+
+        this.socket.on('tradeClosed', (trade) => {
+            this.removeActiveTrade(trade.id);
+            this.addTradeHistory(trade);
+        });
+    }
+
+    updateConnectionStatus(connected) {
+        const statusDot = document.querySelector('#connectionStatus .status-dot');
+        const statusText = document.querySelector('#connectionStatus .status-text');
+
+        if (statusDot) {
+            statusDot.classList.toggle('active', connected);
+        }
+        if (statusText) {
+            statusText.textContent = connected ? 'Connected' : 'Disconnected';
+        }
+    }
+
+    showSuccess(message) {
+        // Implement success notification
+        alert(message); // Replace with better UI notification
+    }
+
+    showError(message) {
+        // Implement error notification
+        alert(message); // Replace with better UI notification
+    }
+
+    async checkAuthStatus() {
+        try {
+            const response = await fetch('/auth/status');
+            const data = await response.json();
+
+            if (data.authenticated) {
+                this.isAuthenticated = true;
+                this.initializeDashboard();
+            } else {
+                window.location.href = '/login';
+            }
+        } catch (error) {
+            console.error('Error checking auth status:', error);
+            this.showError('Failed to check authentication status');
+        }
+    }
+
+    // Include the methods from your existing dashboard.js
+    async updateWalletBalances() {
+        // ... (keep existing implementation)
+    }
+
+    displayWalletBalances(balances) {
+        // ... (keep existing implementation)
     }
 
     updateScanProgress(progress) {
-        const progressElement = document.getElementById('scanProgress');
-        if (!progressElement) return;
-
-        progressElement.innerHTML = `
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">Scanning Progress - ${progress.network}</h5>
-                    <div class="progress mb-2">
-                        <div class="progress-bar" role="progressbar" 
-                             style="width: ${(progress.current / progress.total * 100).toFixed(2)}%">
-                            ${(progress.current / progress.total * 100).toFixed(2)}%
-                        </div>
-                    </div>
-                    <div class="scan-stats">
-                        <small>Pairs Scanned: ${progress.current}/${progress.total}</small>
-                        <small>New Tokens: ${progress.newTokens}</small>
-                    </div>
-                </div>
-            </div>
-        `;
+        // ... (keep existing implementation)
     }
 
     addNewTokenNotification(token) {
-        const container = document.getElementById('newTokens');
-        if (!container) return;
-
-        const notification = document.createElement('div');
-        notification.className = 'alert alert-info alert-dismissible fade show';
-        notification.innerHTML = `
-            <strong>New Token Found!</strong><br>
-            Symbol: ${token.symbol}<br>
-            Network: ${token.network}<br>
-            Address: ${token.address}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-
-        container.insertBefore(notification, container.firstChild);
-
-        // Remove old notifications if there are too many
-        while (container.children.length > 10) {
-            container.removeChild(container.lastChild);
-        }
+        // ... (keep existing implementation)
     }
 }
+
+// Initialize dashboard when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    window.dashboard = new Dashboard();
+});
