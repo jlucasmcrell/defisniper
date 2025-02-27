@@ -81,4 +81,4 @@ class ExchangeAdapter {
     }
 }
 
-module.exports = ExchangeAdapter;
+module.exports = { ExchangeAdapter };

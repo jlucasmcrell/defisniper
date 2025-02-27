@@ -207,4 +207,4 @@ class TokenUtils {
     }
 }
 
-module.exports = TokenUtils;
+module.exports = { TokenUtils };

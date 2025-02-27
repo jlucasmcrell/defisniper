@@ -128,4 +128,4 @@ class EthereumConnector {
     }
 }
 
-module.exports = EthereumConnector;
+module.exports = { EthereumConnector };

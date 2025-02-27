@@ -142,4 +142,4 @@ class BnbConnector {
     }
 }
 
-module.exports = BnbConnector;
+module.exports = { BnbConnector };
