@@ -967,3 +967,38 @@
 {"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-27T16:13:28.409Z"}
 {"level":"info","message":"Client connected: 4UCOD7-Ua72a2bfjAAAB","module":"Server","timestamp":"2025-02-27T16:13:56.206Z"}
 {"level":"info","message":"Settings updated via API","module":"API","timestamp":"2025-02-27T16:16:31.379Z"}
+{"level":"info","message":"Starting trading engine","module":"TradingEngine","timestamp":"2025-02-27T16:17:17.217Z"}
+{"level":"info","message":"Bot started via API request","module":"API","timestamp":"2025-02-27T16:17:17.219Z"}
+{"level":"info","message":"Starting token scanner","module":"TradingEngine","timestamp":"2025-02-27T16:17:17.218Z"}
+{"level":"info","message":"Starting token scanner with scan interval: 30000ms","module":"TradingEngine","timestamp":"2025-02-27T16:17:17.218Z"}
+{"level":"info","message":"Token scanner started","module":"TradingEngine","timestamp":"2025-02-27T16:17:17.218Z"}
+{"level":"info","message":"Trading engine started successfully","module":"TradingEngine","timestamp":"2025-02-27T16:17:17.218Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:17:18.233Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:17:18.233Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:17:27.225Z"}
+{"level":"info","message":"Updating wallet and exchange balances","module":"TradingEngine","timestamp":"2025-02-27T16:17:27.225Z"}
+{"error":"connector.getBalances is not a function","level":"error","message":"Error fetching bnbChain balances","module":"TradingEngine","stack":"TypeError: connector.getBalances is not a function\n    at TradingEngine.updateBalances (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:1327:53)\n    at TradingEngine.mainLoop (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:794:20)\n    at Timeout._onTimeout (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:715:54)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)","timestamp":"2025-02-27T16:17:27.226Z"}
+{"level":"info","message":"Updated binanceUS balances","module":"TradingEngine","timestamp":"2025-02-27T16:17:27.740Z","tokens":5}
+{"error":"cryptocom {\"code\":40101,\"message\":\"Authentication failure\"}","level":"error","message":"Error getting balances","module":"TradingEngine","stack":"AuthenticationError: cryptocom {\"code\":40101,\"message\":\"Authentication failure\"}\n    at cryptocom.throwExactlyMatchedException (C:\\Users\\Test\\node_modules\\ccxt\\dist\\cjs\\src\\base\\Exchange.js:4674:19)\n    at cryptocom.handleErrors (C:\\Users\\Test\\node_modules\\ccxt\\dist\\cjs\\src\\cryptocom.js:3279:18)\n    at C:\\Users\\Test\\node_modules\\ccxt\\dist\\cjs\\src\\base\\Exchange.js:737:51\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async cryptocom.fetch2 (C:\\Users\\Test\\node_modules\\ccxt\\dist\\cjs\\src\\base\\Exchange.js:4206:24)\n    at async cryptocom.request (C:\\Users\\Test\\node_modules\\ccxt\\dist\\cjs\\src\\base\\Exchange.js:4228:16)\n    at async cryptocom.fetchBalance (C:\\Users\\Test\\node_modules\\ccxt\\dist\\cjs\\src\\cryptocom.js:1061:26)\n    at async CryptocomExchange.getBalances (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\exchanges\\cryptocom.js:85:27)\n    at async TradingEngine.updateBalances (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:1370:35)\n    at async TradingEngine.mainLoop (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:794:9)","timestamp":"2025-02-27T16:17:28.027Z"}
+{"level":"info","message":"Updated cryptoCom balances","module":"TradingEngine","timestamp":"2025-02-27T16:17:28.028Z","tokens":0}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:17:28.028Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:17:28.028Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:17:37.231Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:17:37.231Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:17:37.232Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:17:47.234Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:17:47.234Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:17:47.234Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:17:47.235Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:17:47.235Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:17:57.246Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:17:57.246Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:17:57.246Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:18:07.259Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:18:07.260Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:18:07.260Z"}
+{"level":"info","message":"Starting token scan...","module":"TradingEngine","timestamp":"2025-02-27T16:18:17.236Z"}
+{"level":"warn","message":"No providers or factories available for scanning","module":"TradingEngine","timestamp":"2025-02-27T16:18:17.237Z"}
+{"level":"debug","message":"Running main trading loop","module":"TradingEngine","timestamp":"2025-02-27T16:18:17.268Z"}
+{"level":"info","message":"Checking for trading opportunities across all strategies","module":"TradingEngine","timestamp":"2025-02-27T16:18:17.268Z"}
+{"level":"info","message":"No trading opportunities found in this scan","module":"TradingEngine","timestamp":"2025-02-27T16:18:17.269Z"}
