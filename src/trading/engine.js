@@ -241,10 +241,9 @@ class TradingEngine {
           }
           
           this.blockchain.ethereum = new EthereumConnector(
-            decryptedConfig.ethereum.privateKey,
-            apiKey,
-            this.logger
-          );
+  decryptedConfig,  // Pass the entire config
+  this.logger
+);
           
           const success = await this.blockchain.ethereum.initialize();
           
@@ -293,9 +292,9 @@ class TradingEngine {
           }
           
           this.blockchain.bnbChain = new BnbConnector(
-            privateKey,
-            this.logger
-          );
+  decryptedConfig,  // Pass the entire config
+  this.logger
+);
           
           const success = await this.blockchain.bnbChain.initialize();
           
