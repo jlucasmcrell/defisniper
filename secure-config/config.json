@@ -1,0 +1,117 @@
+{
+  "trading": {
+    "scanInterval": 30000,
+    "maxConcurrentTrades": 50,
+    "walletBuyPercentage": 20,
+    "stopLoss": 5,
+    "takeProfit": 25,
+    "autoStart": true
+  },
+  "ethereum": {
+    "enabled": true,
+    "infuraId": {
+      "iv": "c1f66ada2a41f1750ecaea0f346461ca",
+      "encryptedData": "30bddb54d229363bd4bafea70955cef0045a0a24a9f4b3e5349ed2434a82df23d20133e2dc9b1e79e9fd6afda43f8bf8"
+    },
+    "walletAddress": "0xC20A0f131527743f815711097eCC8Fe68185dD8D",
+    "privateKey": {
+      "iv": "d97171a47da53c42e62bf847ff7130fd",
+      "encryptedData": "e7afa8eb2fb55a6b679ebd5b1f94b52a2995f58cd95433287094c3fa9fc4b3f9bb8b3689402bc9fd8233ea645b36e1f6bdfdfac8fd78aa36357a5290ac34513e368b79c33be1516305033755d89ff719"
+    },
+    "uniswapFactoryAddress": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
+    "baseAssets": [
+      "ETH",
+      "USDT",
+      "USDC"
+    ],
+    "minBalance": {
+      "ETH": "0.1",
+      "USDT": "100",
+      "USDC": "100"
+    },
+    "maxAllocation": {
+      "ETH": "50",
+      "USDT": "50",
+      "USDC": "50"
+    }
+  },
+  "bnbChain": {
+    "enabled": true,
+    "walletAddress": "0xC20A0f131527743f815711097eCC8Fe68185dD8D",
+    "privateKey": {
+      "iv": "87b509a51a60438ec04ce40a7067d32d",
+      "encryptedData": "48906f73737fc08147ab0f535d2b3f50278e874d0288cf468f245ea85846ce9a76f1d73df9d49d2339fbb1bda8414a3ee7355a033a20c7ea4c91afc19c65fb3e98f6e62feb47bddabc8ac488c461a159"
+    },
+    "pancakeFactoryAddress": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
+    "baseAssets": [
+      "BNB",
+      "BUSD",
+      "USDT"
+    ],
+    "minBalance": {
+      "BNB": "0.5",
+      "BUSD": "100",
+      "USDT": "100"
+    },
+    "maxAllocation": {
+      "BNB": "50",
+      "BUSD": "50",
+      "USDT": "50"
+    }
+  },
+  "exchanges": {
+    "binanceUS": {
+      "enabled": true,
+      "apiKey": {
+        "iv": "14b7ad0923c4dd8b8e80fdc67ecbfcab",
+        "encryptedData": "cc140f0e812b749fbf5722ba949116e68621c0673e1f28cd5034d82515a140a81b333de0083554b78e668e510a504b9195989c9418d5bcd7798461e7703ae8a087bd35e6e79a31bdc3dd6acec9a16bf9"
+      },
+      "apiSecret": {
+        "iv": "21415c6944e6bbb5054e93e4e68fab18",
+        "encryptedData": "e422dcb7b056079a3319191136f1020e5fa1ab0b0fb914147c5c27f72013bd7e03e7bcda11f5a827895f0da0d6bb24534375cb8ab2a38c925e2f67e012c87274884a0dc0b7a941dbca1b01116e021c28"
+      },
+      "baseAssets": [
+        "USDT",
+        "BUSD",
+        "USD"
+      ],
+      "minBalance": {
+        "USDT": "100",
+        "BUSD": "100",
+        "USD": "100"
+      },
+      "maxAllocation": {
+        "USDT": "33",
+        "BUSD": "33",
+        "USD": "34"
+      }
+    },
+    "cryptoCom": {
+      "enabled": true,
+      "apiKey": {
+        "iv": "98e0ae6443fbbb197588e11131dcdaf0",
+        "encryptedData": "efcf0d76651caca5d0f5e5b62057dc02c38ed8b3299bbbe8a3a8fcae69379b71"
+      },
+      "apiSecret": {
+        "iv": "69c06a9a806ff2ab2dc5ff09f1ef614a",
+        "encryptedData": "e218e9b305ca2775fd6d7d19563eb7dbdd59f30b5e004cf281e94ea25ac3b93d"
+      },
+      "baseAssets": [
+        "USDT",
+        "CRO",
+        "USD"
+      ],
+      "minBalance": {
+        "USDT": "100",
+        "CRO": "100",
+        "USD": "100"
+      },
+      "maxAllocation": {
+        "USDT": "33",
+        "CRO": "33",
+        "USD": "34"
+      }
+    }
+  },
+  "configured": true
+}

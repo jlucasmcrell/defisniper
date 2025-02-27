@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFi Sniper Setup</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Initial Setup</h2>
+        <form id="setupForm" class="needs-validation" novalidate>
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Ethereum Settings</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="ethPrivateKey" class="form-label">Private Key</label>
+                        <input type="password" class="form-control" id="ethPrivateKey" name="ethereum.privateKey">
+                    </div>
+                    <div class="mb-3">
+                        <label for="ethInfuraId" class="form-label">Infura Project ID</label>
+                        <input type="text" class="form-control" id="ethInfuraId" name="ethereum.infuraId">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>BNB Chain Settings</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="bnbPrivateKey" class="form-label">Private Key</label>
+                        <input type="password" class="form-control" id="bnbPrivateKey" name="bnbChain.privateKey">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Trading Settings</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="scanInterval" class="form-label">Scan Interval (ms)</label>
+                        <input type="number" class="form-control" id="scanInterval" name="trading.scanInterval" value="30000">
+                    </div>
+                    <div class="mb-3">
+                        <label for="maxConcurrentTrades" class="form-label">Max Concurrent Trades</label>
+                        <input type="number" class="form-control" id="maxConcurrentTrades" name="trading.maxConcurrentTrades" value="3">
+                    </div>
+                    <div class="mb-3">
+                        <label for="stopLoss" class="form-label">Stop Loss %</label>
+                        <input type="number" class="form-control" id="stopLoss" name="trading.stopLoss" value="5">
+                    </div>
+                    <div class="mb-3">
+                        <label for="takeProfit" class="form-label">Take Profit %</label>
+                        <input type="number" class="form-control" id="takeProfit" name="trading.takeProfit" value="10">
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Configuration</button>
+        </form>
+    </div>
+
+    <script src="js/setup.js"></script>
+</body>
+</html>
