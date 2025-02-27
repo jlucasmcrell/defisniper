@@ -12,6 +12,10 @@
     "lint": "eslint src/**/*.js"
   },
   "dependencies": {
+    "@uniswap/sdk": "^3.0.3",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v2-periphery": "^1.1.0-beta.0",
+    "@pancakeswap-libs/sdk": "^1.0.1",
     "express": "^4.17.1",
     "socket.io": "^4.4.1",
     "cors": "^2.8.5",
