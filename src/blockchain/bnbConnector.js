@@ -1,38 +1,59 @@
-const ethers = require('ethers');
+const { ethers } = require('ethers');
 const ERC20_ABI = require('./abis/erc20.json');
 const PANCAKESWAP_FACTORY_ABI = require('./abis/pancakeswapFactory.json');
-const PANCAKESWAP_PAIR_ABI = require('./abis/pancakeswapPair.json');
+const PANCAKESWAP_ROUTER_ABI = require('./abis/pancakeswapRouter.json');
 
 class BnbConnector {
-    constructor(privateKey, logger) {
-        this.privateKey = privateKey;
+    constructor(config, logger) {
+        this.config = config;
         this.logger = logger;
+        
+        // Contract addresses
+        this.pancakeRouterAddress = config.bnbChain?.pancakeRouterAddress || '0x10ED43C718714eb63d5aA57B78B54704E256024E';
+        this.pancakeFactoryAddress = config.bnbChain?.pancakeFactoryAddress || '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73';
+        this.wbnbAddress = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
+        
         this.provider = null;
         this.wallet = null;
-        this.factory = null;
+        this.pancakeRouter = null;
+        this.pancakeFactory = null;
     }
 
     async initialize() {
         try {
             this.logger.info('Initializing BNB Chain connector');
 
-            // BSC MainNet RPC
+            // Get private key from config
+            const privateKey = this.config.bnbChain?.privateKey || this.config.ethereum?.privateKey;
+            if (!privateKey) {
+                throw new Error('No private key configured for BNB Chain');
+            }
+
+            // Ensure private key has 0x prefix
+            const formattedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
+
+            // Set up provider
             this.provider = new ethers.providers.JsonRpcProvider('https://bsc-dataseed1.binance.org');
 
             // Set up wallet
-            this.wallet = new ethers.Wallet(this.privateKey, this.provider);
+            this.wallet = new ethers.Wallet(formattedPrivateKey, this.provider);
 
-            // Set up PancakeSwap factory
-            const PANCAKESWAP_FACTORY_ADDRESS = '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73';
-            this.factory = new ethers.Contract(
-                PANCAKESWAP_FACTORY_ADDRESS,
+            // Set up PancakeSwap contracts
+            this.pancakeRouter = new ethers.Contract(
+                this.pancakeRouterAddress,
+                PANCAKESWAP_ROUTER_ABI,
+                this.wallet
+            );
+
+            this.pancakeFactory = new ethers.Contract(
+                this.pancakeFactoryAddress,
                 PANCAKESWAP_FACTORY_ABI,
                 this.wallet
             );
 
             // Verify connection
             await this.provider.getBlockNumber();
-            const factoryPairCount = await this.factory.allPairsLength();
+            const factoryPairCount = await this.pancakeFactory.allPairsLength();
             
             this.logger.info('BNB Chain connector initialized successfully', {
                 address: this.wallet.address,
@@ -50,34 +71,49 @@ class BnbConnector {
         return this.wallet ? this.wallet.address : null;
     }
 
-    getFactory() {
-        return this.factory;
+    getProvider() {
+        return this.provider;
     }
 
-    async getTokenInfo(address) {
-        try {
-            const token = new ethers.Contract(address, ERC20_ABI, this.provider);
-            const [name, symbol, decimals, totalSupply] = await Promise.all([
-                token.name(),
-                token.symbol(),
-                token.decimals(),
-                token.totalSupply()
-            ]);
+    getFactory() {
+        return this.pancakeFactory;
+    }
 
-            return {
-                address,
-                name,
-                symbol,
-                decimals,
-                totalSupply: totalSupply.toString()
+    getRouter() {
+        return this.pancakeRouter;
+    }
+
+    async getBalances() {
+        try {
+            const bnbBalance = await this.provider.getBalance(this.wallet.address);
+            const balances = {
+                BNB: ethers.utils.formatEther(bnbBalance)
             };
+
+            // Get token balances if configured
+            if (this.config.tokens) {
+                for (const token of this.config.tokens) {
+                    try {
+                        const tokenContract = new ethers.Contract(
+                            token.address,
+                            ERC20_ABI,
+                            this.provider
+                        );
+                        const balance = await tokenContract.balanceOf(this.wallet.address);
+                        const decimals = await tokenContract.decimals();
+                        balances[token.symbol] = ethers.utils.formatUnits(balance, decimals);
+                    } catch (tokenError) {
+                        this.logger.error(`Error getting balance for token ${token.symbol}`, tokenError);
+                    }
+                }
+            }
+
+            return balances;
         } catch (error) {
-            this.logger.error(`Error getting token info for ${address}`, error);
-            return null;
+            this.logger.error('Error getting BNB Chain balances', error);
+            return {};
         }
     }
-
-    // Add other required methods...
 }
 
-module.exports = { BnbConnector };
+module.exports = BnbConnector;

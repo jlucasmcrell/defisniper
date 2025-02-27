@@ -1,9 +1,3 @@
-/**
- * Configuration Manager
- * 
- * Handles loading, saving, and managing bot configuration.
- */
-
 const fs = require('fs');
 const path = require('path');
 const { Logger } = require('../utils/logger');
@@ -16,13 +10,9 @@ class ConfigManager {
         
         this.securityManager = securityManager;
         this.logger = new Logger('ConfigManager');
-        this.config = null; // Initialize as null
-        this.loadConfig(); // Load config in constructor
+        this.config = this.loadConfig();
     }
     
-    /**
-     * Load configuration from file
-     */
     loadConfig() {
         try {
             const configPath = path.join(process.cwd(), 'secure-config', 'config.json');
@@ -33,27 +23,20 @@ class ConfigManager {
                 
                 // Decrypt sensitive information
                 try {
-                    this.config = this.securityManager.decryptConfig(parsedConfig);
+                    return this.securityManager.decryptConfig(parsedConfig);
                 } catch (decryptError) {
                     this.logger.error('Error decrypting config', decryptError);
-                    this.config = parsedConfig; // Return the encrypted config if decryption fails
+                    return parsedConfig;
                 }
-            } else {
-                // Set default config if not found
-                this.config = this.getDefaultConfig();
             }
-
-            return this.config;
+            
+            return this.getDefaultConfig();
         } catch (error) {
             this.logger.error('Error loading config', error);
-            this.config = this.getDefaultConfig();
-            return this.config;
+            return this.getDefaultConfig();
         }
     }
 
-    /**
-     * Get default configuration
-     */
     getDefaultConfig() {
         return {
             version: '1.0.0',
@@ -85,28 +68,7 @@ class ConfigManager {
                     apiSecret: ''
                 }
             },
-            strategies: {
-                tokenSniper: {
-                    enabled: false,
-                    minLiquidity: 10000,
-                    maxBuyTax: 10,
-                    maxSellTax: 10,
-                    requireAudit: false
-                },
-                scalping: {
-                    enabled: false,
-                    minPriceChange: 0.5,
-                    maxTradeTime: 300
-                },
-                trendTrading: {
-                    enabled: false,
-                    rsiLow: 30,
-                    rsiHigh: 70,
-                    macdFast: 12,
-                    macdSlow: 26,
-                    macdSignal: 9
-                }
-            },
+            tokens: [],
             trading: {
                 walletBuyPercentage: 5,
                 stopLoss: 2.5,
@@ -114,34 +76,19 @@ class ConfigManager {
                 maxConcurrentTrades: 5,
                 maxTradesPerHour: 10,
                 closeTradesOnStop: true,
-                autoStart: false
-            },
-            riskManagement: {
-                maxTradeSize: 0,
-                dailyLossLimit: 0
+                autoStart: false,
+                slippageTolerance: 0.05
             }
         };
     }
     
-    /**
-     * Get the current configuration
-     */
     getConfig() {
-        if (!this.config) {
-            this.loadConfig();
-        }
         return this.config;
     }
     
-    /**
-     * Update configuration with new values
-     */
     updateConfig(newConfig) {
         try {
-            // Deep merge the new config with the existing one
             this.config = this.deepMerge(this.config || this.getDefaultConfig(), newConfig);
-            
-            // Save the updated config
             return this.saveConfig();
         } catch (error) {
             this.logger.error('Error updating config', error);
@@ -149,9 +96,6 @@ class ConfigManager {
         }
     }
     
-    /**
-     * Save configuration to file
-     */
     saveConfig() {
         try {
             const configDir = path.join(process.cwd(), 'secure-config');
@@ -165,14 +109,10 @@ class ConfigManager {
             // Mark as configured
             this.config.configured = true;
             
-            // Encrypt sensitive data before saving
+            // Encrypt sensitive data
             const configToSave = this.securityManager.encryptConfig({ ...this.config });
             
-            fs.writeFileSync(
-                configPath,
-                JSON.stringify(configToSave, null, 2)
-            );
-            
+            fs.writeFileSync(configPath, JSON.stringify(configToSave, null, 2));
             return true;
         } catch (error) {
             this.logger.error('Error saving config', error);
@@ -180,9 +120,6 @@ class ConfigManager {
         }
     }
     
-    /**
-     * Deep merge two objects
-     */
     deepMerge(target, source) {
         const output = { ...target };
         
@@ -201,59 +138,8 @@ class ConfigManager {
         return output;
     }
     
-    /**
-     * Check if the bot is configured
-     */
     isConfigured() {
         return this.config && this.config.configured === true;
-    }
-    
-    /**
-     * Get a specific configuration value
-     */
-    getValue(key, defaultValue = null) {
-        try {
-            const keys = key.split('.');
-            let value = this.getConfig();
-            
-            for (const k of keys) {
-                if (value[k] === undefined) {
-                    return defaultValue;
-                }
-                value = value[k];
-            }
-            
-            return value;
-        } catch (error) {
-            this.logger.error(`Error getting value for ${key}`, error);
-            return defaultValue;
-        }
-    }
-    
-    /**
-     * Set a specific configuration value
-     */
-    setValue(key, value) {
-        try {
-            const keys = key.split('.');
-            let target = this.config || this.getDefaultConfig();
-            
-            for (let i = 0; i < keys.length - 1; i++) {
-                const k = keys[i];
-                if (target[k] === undefined) {
-                    target[k] = {};
-                }
-                target = target[k];
-            }
-            
-            target[keys[keys.length - 1]] = value;
-            this.config = target;
-            
-            return this.saveConfig();
-        } catch (error) {
-            this.logger.error(`Error setting value for ${key}`, error);
-            return false;
-        }
     }
 }
 
