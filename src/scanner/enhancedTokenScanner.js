@@ -5,6 +5,9 @@
 const TokenScanner = require('../trading/tokenScanner');
 const { ethers } = require('ethers');
 const { Logger } = require('../utils/logger');
+const IERC20 = require('../contracts/IERC20.json');
+const IUniswapV2Factory = require('../contracts/IUniswapV2Factory.json');
+const IPancakeFactory = require('../contracts/IPancakeFactory.json');
 
 class EnhancedTokenScanner extends TokenScanner {
     constructor(blockchain, exchanges, config, logger) {
@@ -90,37 +93,105 @@ class EnhancedTokenScanner extends TokenScanner {
         try {
             this.logger.info('Initializing enhanced token scanner');
             
-            try {
-                // Call parent initialization with error handling
-                await super.initialize();
-            } catch (parentInitError) {
-                this.logger.error('Error in parent scanner initialization', parentInitError);
-                
-                // Continue with our own initialization even if parent fails
-                this.logger.info('Continuing with enhanced scanner initialization');
-                
-                // Set up providers and factories if not already done
-                if (!this.providers) this.providers = new Map();
-                if (!this.factories) this.factories = new Map();
-                if (!this.knownTokens) this.knownTokens = new Map();
-                if (!this.scanStats) {
-                    this.scanStats = {
-                        totalScanned: 0,
-                        newTokensFound: 0,
-                        lastScanTime: null,
-                        networkStats: new Map()
-                    };
-                }
-                
-                // Initialize network stats
-                for (const network of Object.keys(this.blockchain)) {
-                    this.scanStats.networkStats.set(network, {
+            // Initialize our providers and factories maps if not already done
+            if (!this.providers) this.providers = new Map();
+            if (!this.factories) this.factories = new Map();
+            if (!this.knownTokens) this.knownTokens = new Map();
+            if (!this.scanStats) {
+                this.scanStats = {
+                    totalScanned: 0,
+                    newTokensFound: 0,
+                    lastScanTime: null,
+                    networkStats: new Map()
+                };
+            }
+
+            // Setup providers and factories based on blockchain connectors
+            if (this.blockchain.ethereum) {
+                this.logger.info('Setting up Ethereum provider and Uniswap factory');
+                const ethProvider = this.blockchain.ethereum.getProvider();
+                if (ethProvider) {
+                    this.providers.set('ethereum', ethProvider);
+                    
+                    // Get Uniswap factory address from config
+                    const uniswapFactoryAddress = this.directConfig.ethereum && 
+                                              this.directConfig.ethereum.uniswapFactoryAddress;
+                    
+                    if (uniswapFactoryAddress) {
+                        // Initialize Uniswap factory
+                        const uniswapFactory = new ethers.Contract(
+                            uniswapFactoryAddress,
+                            IUniswapV2Factory.abi,
+                            ethProvider
+                        );
+                        this.factories.set('uniswap', uniswapFactory);
+                        
+                        this.logger.info(`Initialized Uniswap factory at ${uniswapFactoryAddress}`);
+                    } else {
+                        this.logger.warn('Missing Uniswap factory address in config, cannot initialize factory');
+                    }
+                    
+                    // Setup network stats
+                    this.scanStats.networkStats.set('ethereum', {
                         pairsScanned: 0,
                         newTokens: 0,
                         lastBlock: 0
                     });
+                } else {
+                    this.logger.warn('Could not get Ethereum provider from blockchain connector');
                 }
             }
+            
+            if (this.blockchain.bnbChain) {
+                this.logger.info('Setting up BNB Chain provider and PancakeSwap factory');
+                const bscProvider = this.blockchain.bnbChain.getProvider();
+                if (bscProvider) {
+                    this.providers.set('bsc', bscProvider);
+                    
+                    // Get PancakeSwap factory address from config
+                    const pancakeFactoryAddress = this.directConfig.bnbChain && 
+                                             this.directConfig.bnbChain.pancakeFactoryAddress;
+                                             
+                    if (pancakeFactoryAddress) {
+                        // Initialize PancakeSwap factory
+                        const pancakeFactory = new ethers.Contract(
+                            pancakeFactoryAddress,
+                            IPancakeFactory.abi,
+                            bscProvider
+                        );
+                        this.factories.set('pancakeswap', pancakeFactory);
+                        
+                        this.logger.info(`Initialized PancakeSwap factory at ${pancakeFactoryAddress}`);
+                    } else {
+                        this.logger.warn('Missing PancakeSwap factory address in config, cannot initialize factory');
+                    }
+                    
+                    // Setup network stats
+                    this.scanStats.networkStats.set('bsc', {
+                        pairsScanned: 0,
+                        newTokens: 0,
+                        lastBlock: 0
+                    });
+                } else {
+                    this.logger.warn('Could not get BSC provider from blockchain connector');
+                }
+            }
+            
+            // Fallback to parent initialization if needed, but don't let it fail us
+            try {
+                // Check if we have any providers or factories from our initialization
+                if (this.providers.size === 0 || this.factories.size === 0) {
+                    this.logger.info('No providers or factories initialized, trying parent initialization');
+                    await super.initialize();
+                }
+            } catch (parentInitError) {
+                this.logger.error('Error in parent scanner initialization', parentInitError);
+                // Continue with our own initialization even if parent fails
+            }
+            
+            // Log provider and factory status
+            this.logger.info(`Providers initialized: ${this.providers.size} (${Array.from(this.providers.keys()).join(', ')})`);
+            this.logger.info(`Factories initialized: ${this.factories.size} (${Array.from(this.factories.keys()).join(', ')})`);
             
             // Load blacklisted tokens
             if (this.directConfig.trading && this.directConfig.trading.blacklistedTokens) {
@@ -153,7 +224,7 @@ class EnhancedTokenScanner extends TokenScanner {
             
             this.logger.info('Enhanced token scanner initialized successfully');
             this.emit('scannerInitialized', {
-                networks: Object.keys(this.blockchain),
+                networks: Array.from(this.providers.keys()),
                 exchanges: Object.keys(this.exchanges)
             });
             
@@ -320,47 +391,40 @@ class EnhancedTokenScanner extends TokenScanner {
      */
     async analyzeTokenHealth(tokenInfo) {
         try {
-            this.logger.info(`Analyzing health for token: ${tokenInfo.symbol}`);
-            
-            // Basic health score starting at 50
-            let healthScore = 50;
-            
-            // Automatically higher score for whitelisted tokens
-            if (this.isWhitelisted(tokenInfo.address)) {
-                this.logger.info(`Token ${tokenInfo.symbol} is whitelisted, higher health score`);
+            this.logger.info(`Token ${tokenInfo.symbol} is whitelisted, higher health score`);
                 healthScore += 40;
                 return healthScore;
             }
-            
+
             // Automatically lowest score for blacklisted tokens
             if (this.isBlacklisted(tokenInfo.address)) {
                 this.logger.info(`Token ${tokenInfo.symbol} is blacklisted, lowest health score`);
                 return 0;
             }
-            
+
             // Higher score for known networks
             if (tokenInfo.network === 'ethereum') {
                 healthScore += 10;
             } else if (tokenInfo.network === 'bnbChain') {
                 healthScore += 5;
             }
-            
+
             // Basic checks on token name and symbol
             if (!tokenInfo.symbol || !tokenInfo.name) {
                 healthScore -= 10;
             }
-            
+
             // Check for scam indicators in name
             const scamWords = ['test', 'scam', 'fake', 'honeypot', 'airdrop'];
             const nameAndSymbol = (tokenInfo.name + ' ' + tokenInfo.symbol).toLowerCase();
-            
+
             for (const word of scamWords) {
                 if (nameAndSymbol.includes(word)) {
                     this.logger.warn(`Token ${tokenInfo.symbol} contains suspicious word: ${word}`);
                     healthScore -= 20;
                 }
             }
-            
+
             this.logger.info(`Health analysis for ${tokenInfo.symbol}: ${healthScore}/100`);
             return healthScore;
         } catch (error) {
@@ -368,47 +432,47 @@ class EnhancedTokenScanner extends TokenScanner {
             return null;
         }
     }
-    
+
     /**
      * Get token by address
      */
     getToken(address) {
         return this.knownTokens.get(address);
     }
-    
+
     /**
      * Get all known tokens
      */
     getAllTokens() {
         return Array.from(this.knownTokens.values());
     }
-    
+
     /**
      * Get tokens filtered by criteria
      */
     getFilteredTokens(options = {}) {
         const { network, minScore, maxCount } = options;
-        
+
         let tokens = Array.from(this.knownTokens.values());
-        
+
         if (network) {
             tokens = tokens.filter(t => t.network === network);
         }
-        
+
         if (minScore !== undefined) {
             tokens = tokens.filter(t => {
                 const score = this.tokenScores.get(t.address.toLowerCase());
                 return score !== undefined && score >= minScore;
             });
         }
-        
+
         // Sort by timestamp (newest first)
         tokens.sort((a, b) => b.timestamp - a.timestamp);
-        
+
         if (maxCount) {
             tokens = tokens.slice(0, maxCount);
         }
-        
+
         return tokens;
     }
 }
