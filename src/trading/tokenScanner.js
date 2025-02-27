@@ -96,9 +96,15 @@ class TokenScanner extends EventEmitter {
 
             this.isRunning = true;
             const config = this.configManager.getConfig();
+            
+            // Check if config.trading exists before accessing scanInterval
+            // This is the fix - adding a fallback value if config.trading is undefined
+            const scanIntervalMs = config.trading && config.trading.scanInterval ? 
+                config.trading.scanInterval : 30000; // Default to 30 seconds if not specified
+            
             this.scanInterval = setInterval(
                 () => this.scan(),
-                config.trading.scanInterval || 30000
+                scanIntervalMs
             );
 
             this.logger.info('Token scanner started');
