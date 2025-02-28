@@ -1,5 +1,6 @@
 /**
  * Trading Engine
+ * Core component for managing trading operations
  */
 const ethers = require('ethers');
 const { v4: uuidv4 } = require('uuid');
@@ -20,8 +21,16 @@ class TradingEngine {
         this.configManager = configManager;
         this.securityManager = securityManager;
         this.socketIo = socketIo;
+        
+        // Create logger instance
         this.logger = new Logger('TradingEngine');
-        this.config = configManager.getConfig();
+        
+        // Get configuration
+        if (this.configManager && typeof this.configManager.getConfig === 'function') {
+            this.config = this.configManager.getConfig();
+        } else {
+            throw new Error('Invalid configuration manager provided');
+        }
 
         // Initialize state variables
         this.running = false;
@@ -45,28 +54,23 @@ class TradingEngine {
         this.monitoringInterval = null;
         this.lastBalanceUpdate = 0;
 
-        // Bind methods to maintain context
-        this.emitLog = this.emitLog.bind(this);
-        this.start = this.start.bind(this);
-        this.stop = this.stop.bind(this);
-        this.mainLoop = this.mainLoop.bind(this);
-        this.monitor = this.monitor.bind(this);
-    }
-
-    emitLog(level, message, meta = {}) {
-        if (!this.socketIo) return;
-        
-        try {
-            this.socketIo.emit('log', {
-                level,
-                message,
-                timestamp: new Date().toISOString(),
-                module: 'TradingEngine',
-                meta
-            });
-        } catch (error) {
-            console.error('Error emitting log to UI:', error);
-        }
+        // Define methods that need to be bound
+        this.mainLoop = () => this._mainLoop();
+        this.monitor = () => this._monitor();
+        this.emitLog = (level, message, meta = {}) => {
+            if (!this.socketIo) return;
+            try {
+                this.socketIo.emit('log', {
+                    level,
+                    message,
+                    timestamp: new Date().toISOString(),
+                    module: 'TradingEngine',
+                    meta
+                });
+            } catch (error) {
+                console.error('Error emitting log to UI:', error);
+            }
+        };
     }
 
     async initialize() {
@@ -196,17 +200,19 @@ class TradingEngine {
             
             await this.tokenScanner.initialize();
             
-            this.tokenScanner.on('newToken', (token) => {
-                try {
-                    this.handleNewToken(token);
-                } catch (error) {
-                    this.logger.error('Error handling new token', error);
-                }
-            });
-            
-            this.tokenScanner.on('error', (error) => {
-                this.logger.error('Token scanner error', error);
-            });
+            if (this.tokenScanner.on) {
+                this.tokenScanner.on('newToken', (token) => {
+                    try {
+                        this.handleNewToken(token);
+                    } catch (error) {
+                        this.logger.error('Error handling new token', error);
+                    }
+                });
+                
+                this.tokenScanner.on('error', (error) => {
+                    this.logger.error('Token scanner error', error);
+                });
+            }
         } catch (error) {
             this.logger.error('Failed to initialize token scanner', error);
             throw error;
@@ -233,13 +239,10 @@ class TradingEngine {
             }
         } catch (error) {
             this.logger.error('Failed to load trade history', error);
-            // Continue without history rather than throwing
             this.tradeHistory = [];
         }
     }
-    /**
-     * Start the trading engine
-     */
+
     async start() {
         if (this.running) {
             this.logger.warn('Trading engine is already running');
@@ -257,18 +260,20 @@ class TradingEngine {
             }
 
             // Start main trading loop
-            this.mainLoopInterval = setInterval(() => this.mainLoop(), 1000);
+            this.mainLoopInterval = setInterval(this.mainLoop, 1000);
 
             // Start monitoring loop
-            this.monitoringInterval = setInterval(() => this.monitor(), 5000);
+            this.monitoringInterval = setInterval(this.monitor, 5000);
 
             this.logger.info('Trading engine started successfully');
             
             // Emit started event
-            this.socketIo.emit('botStarted', {
-                timestamp: new Date().toISOString(),
-                stats: this.stats
-            });
+            if (this.socketIo) {
+                this.socketIo.emit('botStarted', {
+                    timestamp: new Date().toISOString(),
+                    stats: this.stats
+                });
+            }
 
             return true;
         } catch (error) {
@@ -278,9 +283,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Stop the trading engine
-     */
     async stop() {
         if (!this.running) {
             this.logger.warn('Trading engine is not running');
@@ -309,10 +311,12 @@ class TradingEngine {
             this.running = false;
             
             // Emit stopped event
-            this.socketIo.emit('botStopped', {
-                timestamp: new Date().toISOString(),
-                stats: this.stats
-            });
+            if (this.socketIo) {
+                this.socketIo.emit('botStopped', {
+                    timestamp: new Date().toISOString(),
+                    stats: this.stats
+                });
+            }
 
             this.logger.info('Trading engine stopped successfully');
             return true;
@@ -322,10 +326,7 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Main trading loop
-     */
-    async mainLoop() {
+    async _mainLoop() {
         if (!this.running) return;
 
         try {
@@ -354,9 +355,17 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Monitor active trades and update statuses
-     */
+    async _monitor() {
+        if (!this.running) return;
+
+        try {
+            await this.updateBalances();
+            await this.updateStats();
+        } catch (error) {
+            this.logger.error('Error in monitor loop', error);
+        }
+    }
+
     async monitorTrades() {
         try {
             for (const [tradeId, trade] of Object.entries(this.activeTrades)) {
@@ -368,24 +377,26 @@ class TradingEngine {
                         this.tradeHistory.push(updatedTrade);
                         await this.updateStats();
                         
-                        // Emit trade completion event
-                        this.socketIo.emit('tradeCompleted', {
-                            tradeId,
-                            status: updatedTrade.status,
-                            profitLoss: updatedTrade.profitLoss,
-                            timestamp: new Date().toISOString()
-                        });
+                        if (this.socketIo) {
+                            this.socketIo.emit('tradeCompleted', {
+                                tradeId,
+                                status: updatedTrade.status,
+                                profitLoss: updatedTrade.profitLoss,
+                                timestamp: new Date().toISOString()
+                            });
+                        }
                     } else {
                         this.activeTrades[tradeId] = updatedTrade;
                         
-                        // Emit trade update event
-                        this.socketIo.emit('tradeUpdated', {
-                            tradeId,
-                            status: updatedTrade.status,
-                            currentPrice: updatedTrade.currentPrice,
-                            profitLoss: updatedTrade.unrealizedProfitLoss,
-                            timestamp: new Date().toISOString()
-                        });
+                        if (this.socketIo) {
+                            this.socketIo.emit('tradeUpdated', {
+                                tradeId,
+                                status: updatedTrade.status,
+                                currentPrice: updatedTrade.currentPrice,
+                                profitLoss: updatedTrade.unrealizedProfitLoss,
+                                timestamp: new Date().toISOString()
+                            });
+                        }
                     }
                 } catch (tradeError) {
                     this.logger.error(`Error monitoring trade ${tradeId}`, tradeError);
@@ -396,9 +407,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Update trade status and calculate current positions
-     */
     async updateTradeStatus(trade) {
         try {
             const updatedTrade = { ...trade };
@@ -432,9 +440,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Get current price for a trade
-     */
     async getPriceForTrade(trade) {
         try {
             if (trade.exchange === 'dex') {
@@ -457,9 +462,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Calculate unrealized profit/loss for a trade
-     */
     calculateUnrealizedProfitLoss(trade, currentPrice) {
         try {
             if (!currentPrice || !trade.entryPrice || !trade.quantity) {
@@ -477,9 +479,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Check if stop loss should be triggered
-     */
     shouldTriggerStopLoss(trade, currentPrice) {
         try {
             if (!trade.stopLoss || !currentPrice) {
@@ -497,9 +496,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Check if take profit should be triggered
-     */
     shouldTriggerTakeProfit(trade, currentPrice) {
         try {
             if (!trade.takeProfit || !currentPrice) {
@@ -517,19 +513,14 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Close a trade with the specified reason
-     */
     async closeTrade(trade, reason) {
         try {
             if (trade.exchange === 'dex') {
-                // Close position on DEX
                 const connector = this.blockchain[trade.network];
                 if (connector) {
                     await connector.closePosition(trade);
                 }
             } else {
-                // Close position on CEX
                 const exchange = this.exchanges[trade.exchange];
                 if (exchange) {
                     await exchange.closePosition(trade);
@@ -540,26 +531,24 @@ class TradingEngine {
             trade.closeReason = reason;
             trade.closedAt = new Date().toISOString();
             
-            // Calculate final profit/loss
             trade.profitLoss = this.calculateUnrealizedProfitLoss(
                 trade,
                 trade.closePrice || trade.currentPrice
             );
             
-            // Update trade history
             this.tradeHistory.push(trade);
             delete this.activeTrades[trade.id];
             
-            // Update stats
             await this.updateStats();
             
-            // Emit trade closed event
-            this.socketIo.emit('tradeClosed', {
-                tradeId: trade.id,
-                reason,
-                profitLoss: trade.profitLoss,
-                timestamp: new Date().toISOString()
-            });
+            if (this.socketIo) {
+                this.socketIo.emit('tradeClosed', {
+                    tradeId: trade.id,
+                    reason,
+                    profitLoss: trade.profitLoss,
+                    timestamp: new Date().toISOString()
+                });
+            }
             
             return true;
         } catch (error) {
@@ -568,9 +557,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Update trading statistics
-     */
     async updateStats() {
         try {
             const stats = {
@@ -588,8 +574,9 @@ class TradingEngine {
             
             this.stats = stats;
             
-            // Emit updated stats
-            this.socketIo.emit('statsUpdate', stats);
+            if (this.socketIo) {
+                this.socketIo.emit('statsUpdate', stats);
+            }
             
             return stats;
         } catch (error) {
@@ -598,9 +585,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Calculate total profit/loss
-     */
     calculateTotalProfitLoss() {
         try {
             return this.tradeHistory.reduce((total, trade) => {
@@ -615,9 +599,6 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Update wallet balances
-     */
     async updateBalances() {
         try {
             const balances = {
@@ -626,7 +607,6 @@ class TradingEngine {
                 exchanges: {}
             };
 
-            // Update blockchain wallet balances
             if (this.blockchain.ethereum) {
                 balances.ethereum = await this.blockchain.ethereum.getBalances();
             }
@@ -635,7 +615,6 @@ class TradingEngine {
                 balances.bnbChain = await this.blockchain.bnbChain.getBalances();
             }
 
-            // Update exchange balances
             for (const [exchange, connector] of Object.entries(this.exchanges)) {
                 if (connector && typeof connector.getBalances === 'function') {
                     balances.exchanges[exchange] = await connector.getBalances();
@@ -644,11 +623,12 @@ class TradingEngine {
 
             this.balances = balances;
 
-            // Emit balance update
-            this.socketIo.emit('balanceUpdate', {
-                balances,
-                timestamp: new Date().toISOString()
-            });
+            if (this.socketIo) {
+                this.socketIo.emit('balanceUpdate', {
+                    balances,
+                    timestamp: new Date().toISOString()
+                });
+            }
 
             return balances;
         } catch (error) {
@@ -657,37 +637,35 @@ class TradingEngine {
         }
     }
 
-    /**
-     * Get active trades
-     */
+    async handleNewToken(token) {
+        try {
+            for (const [name, strategy] of Object.entries(this.strategies)) {
+                if (strategy && typeof strategy.onNewToken === 'function') {
+                    await strategy.onNewToken(token);
+                }
+            }
+        } catch (error) {
+            this.logger.error('Error handling new token', error);
+        }
+    }
+
+    // Getter methods
     getActiveTrades() {
         return this.activeTrades;
     }
 
-    /**
-     * Get trade history
-     */
     getTradeHistory() {
         return this.tradeHistory;
     }
 
-    /**
-     * Get current balances
-     */
     getBalances() {
         return this.balances;
     }
 
-    /**
-     * Get trading statistics
-     */
     getStats() {
         return this.stats;
     }
 
-    /**
-     * Check if the trading engine is running
-     */
     isRunning() {
         return this.running;
     }
