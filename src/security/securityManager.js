@@ -1,36 +1,94 @@
 const crypto = require('crypto');
-const { Logger } = require('../utils/logger');
+const fs = require('fs').promises;
 const path = require('path');
-const fs = require('fs');
+const { Logger } = require('../utils/logger');
 
 class SecurityManager {
     constructor() {
         this.logger = new Logger('SecurityManager');
         this.algorithm = 'aes-256-gcm';
-        this.initKey();
-        this.initSessionSecret();
-        this.setDefaultPassword();
+        this.key = null;
+        this.sessionSecret = null;
     }
 
-    // Add the initialize method right after constructor
     async initialize() {
         try {
-            // Verify the encryption key exists and is valid
-            if (!this.key || this.key.length !== 64) {
-                this.initKey();
-            }
-
-            // Verify the session secret exists
-            if (!this.sessionSecret) {
-                this.initSessionSecret();
-            }
-
-            // Ensure password file exists
-            await this.setDefaultPassword();
-
+            await this.initKey();
+            await this.initSessionSecret();
+            await this.initializePassword();
             return true;
         } catch (error) {
             this.logger.error('Failed to initialize security manager', error);
+            throw error;
+        }
+    }
+
+    async initKey() {
+        try {
+            const keyPath = path.join(process.cwd(), 'secure-config', 'encryption.key');
+            
+            try {
+                this.key = await fs.readFile(keyPath, 'utf8');
+                this.key = this.key.trim();
+            } catch (error) {
+                if (error.code === 'ENOENT') {
+                    // Generate new key if file doesn't exist
+                    this.key = crypto.randomBytes(32).toString('hex');
+                    await fs.writeFile(keyPath, this.key, 'utf8');
+                } else {
+                    throw error;
+                }
+            }
+
+            // Validate key
+            if (!this.key || this.key.length !== 64) {
+                throw new Error('Invalid encryption key');
+            }
+        } catch (error) {
+            this.logger.error('Failed to initialize encryption key', error);
+            throw error;
+        }
+    }
+
+    async initSessionSecret() {
+        try {
+            const secretPath = path.join(process.cwd(), 'secure-config', 'session.key');
+            
+            try {
+                this.sessionSecret = await fs.readFile(secretPath, 'utf8');
+                this.sessionSecret = this.sessionSecret.trim();
+            } catch (error) {
+                if (error.code === 'ENOENT') {
+                    // Generate new session secret if file doesn't exist
+                    this.sessionSecret = crypto.randomBytes(32).toString('base64');
+                    await fs.writeFile(secretPath, this.sessionSecret, 'utf8');
+                } else {
+                    throw error;
+                }
+            }
+        } catch (error) {
+            this.logger.error('Failed to initialize session secret', error);
+            throw error;
+        }
+    }
+
+    async initializePassword() {
+        try {
+            const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
+            
+            try {
+                await fs.access(passwordPath);
+            } catch (error) {
+                if (error.code === 'ENOENT') {
+                    // Set default password only if no password file exists
+                    await this.setPassword('admin');
+                    this.logger.warn('Default password set to "admin" - please change immediately!');
+                } else {
+                    throw error;
+                }
+            }
+        } catch (error) {
+            this.logger.error('Failed to initialize password', error);
             throw error;
         }
     }
@@ -42,24 +100,18 @@ class SecurityManager {
             const passwordData = `${salt}:${hash}`;
             
             const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
-            fs.writeFileSync(passwordPath, passwordData);
+            await fs.writeFile(passwordPath, passwordData, 'utf8');
             return true;
         } catch (error) {
             this.logger.error('Failed to set password', error);
-            return false;
+            throw error;
         }
     }
 
     verifyPassword(password) {
         try {
             const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
-            
-            if (!fs.existsSync(passwordPath)) {
-                // For development, if no password file exists, accept any non-empty password
-                return Boolean(password && password.length > 0);
-            }
-
-            const passwordData = fs.readFileSync(passwordPath, 'utf8');
+            const passwordData = require('fs').readFileSync(passwordPath, 'utf8');
             const [salt, storedHash] = passwordData.split(':');
             
             const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
@@ -70,59 +122,17 @@ class SecurityManager {
         }
     }
 
-    async setDefaultPassword() {
-        try {
-            const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
-            if (!fs.existsSync(passwordPath)) {
-                await this.setPassword('admin');
-                this.logger.warn('Using default password: "admin" - please change this immediately!');
-            }
-        } catch (error) {
-            this.logger.error('Failed to set default password', error);
-        }
-    }
-
-    initKey() {
-        try {
-            const keyPath = path.join(process.cwd(), 'secure-config', 'encryption.key');
-            
-            if (fs.existsSync(keyPath)) {
-                this.key = fs.readFileSync(keyPath, 'utf8').trim();
-            } else {
-                this.key = crypto.randomBytes(32).toString('hex');
-                const keyDir = path.dirname(keyPath);
-                if (!fs.existsSync(keyDir)) {
-                    fs.mkdirSync(keyDir, { recursive: true });
-                }
-                fs.writeFileSync(keyPath, this.key);
-            }
-        } catch (error) {
-            this.logger.error('Failed to initialize encryption key', error);
-            throw error;
-        }
-    }
-
-    initSessionSecret() {
-        try {
-            const secretPath = path.join(process.cwd(), 'secure-config', 'session.key');
-            
-            if (fs.existsSync(secretPath)) {
-                this.sessionSecret = fs.readFileSync(secretPath, 'utf8').trim();
-            } else {
-                this.sessionSecret = crypto.randomBytes(32).toString('base64');
-                fs.writeFileSync(secretPath, this.sessionSecret);
-            }
-        } catch (error) {
-            this.logger.error('Failed to initialize session secret', error);
-            throw error;
-        }
-    }
-
     getSessionSecret() {
+        if (!this.sessionSecret) {
+            throw new Error('Session secret not initialized');
+        }
         return this.sessionSecret;
     }
 
     getEncryptionKey() {
+        if (!this.key) {
+            throw new Error('Encryption key not initialized');
+        }
         return this.key;
     }
 
@@ -130,7 +140,6 @@ class SecurityManager {
         try {
             if (!data) return '';
             
-            // If data is not a string, convert it to one
             const stringData = typeof data === 'string' ? data : JSON.stringify(data);
             
             const iv = crypto.randomBytes(12);
@@ -154,12 +163,10 @@ class SecurityManager {
 
     decrypt(encryptedData) {
         try {
-            // Return original data if not encrypted
             if (!encryptedData || typeof encryptedData !== 'string') {
                 return encryptedData;
             }
 
-            // Check if the data is in the encrypted format
             if (!encryptedData.includes(':')) {
                 return encryptedData;
             }
@@ -185,7 +192,6 @@ class SecurityManager {
             let decrypted = decipher.update(encrypted, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
             
-            // Try to parse JSON if the decrypted data is in JSON format
             try {
                 return JSON.parse(decrypted);
             } catch {
@@ -202,8 +208,8 @@ class SecurityManager {
             if (!config) return config;
 
             const encryptedConfig = { ...config };
-
-            // Encrypt sensitive fields only if they exist and aren't already encrypted
+            
+            // Encrypt Ethereum credentials
             if (encryptedConfig.ethereum) {
                 if (encryptedConfig.ethereum.privateKey) {
                     encryptedConfig.ethereum.privateKey = this.encrypt(encryptedConfig.ethereum.privateKey);
@@ -216,26 +222,38 @@ class SecurityManager {
                 }
             }
 
-            if (encryptedConfig.bnbChain && encryptedConfig.bnbChain.privateKey) {
-                encryptedConfig.bnbChain.privateKey = this.encrypt(encryptedConfig.bnbChain.privateKey);
+            // Encrypt BNB Chain credentials
+            if (encryptedConfig.bnbChain) {
+                if (encryptedConfig.bnbChain.privateKey) {
+                    encryptedConfig.bnbChain.privateKey = this.encrypt(encryptedConfig.bnbChain.privateKey);
+                }
             }
 
+            // Encrypt exchange credentials
             if (encryptedConfig.exchanges) {
                 if (encryptedConfig.exchanges.binanceUS) {
                     if (encryptedConfig.exchanges.binanceUS.apiKey) {
-                        encryptedConfig.exchanges.binanceUS.apiKey = this.encrypt(encryptedConfig.exchanges.binanceUS.apiKey);
+                        encryptedConfig.exchanges.binanceUS.apiKey = this.encrypt(
+                            encryptedConfig.exchanges.binanceUS.apiKey
+                        );
                     }
                     if (encryptedConfig.exchanges.binanceUS.apiSecret) {
-                        encryptedConfig.exchanges.binanceUS.apiSecret = this.encrypt(encryptedConfig.exchanges.binanceUS.apiSecret);
+                        encryptedConfig.exchanges.binanceUS.apiSecret = this.encrypt(
+                            encryptedConfig.exchanges.binanceUS.apiSecret
+                        );
                     }
                 }
 
                 if (encryptedConfig.exchanges.cryptoCom) {
                     if (encryptedConfig.exchanges.cryptoCom.apiKey) {
-                        encryptedConfig.exchanges.cryptoCom.apiKey = this.encrypt(encryptedConfig.exchanges.cryptoCom.apiKey);
+                        encryptedConfig.exchanges.cryptoCom.apiKey = this.encrypt(
+                            encryptedConfig.exchanges.cryptoCom.apiKey
+                        );
                     }
                     if (encryptedConfig.exchanges.cryptoCom.apiSecret) {
-                        encryptedConfig.exchanges.cryptoCom.apiSecret = this.encrypt(encryptedConfig.exchanges.cryptoCom.apiSecret);
+                        encryptedConfig.exchanges.cryptoCom.apiSecret = this.encrypt(
+                            encryptedConfig.exchanges.cryptoCom.apiSecret
+                        );
                     }
                 }
             }
@@ -243,7 +261,7 @@ class SecurityManager {
             return encryptedConfig;
         } catch (error) {
             this.logger.error('Failed to encrypt config', error);
-            return config;
+            throw error;
         }
     }
 
@@ -252,8 +270,8 @@ class SecurityManager {
             if (!config) return config;
 
             const decryptedConfig = { ...config };
-
-            // Decrypt sensitive fields only if they exist
+            
+            // Decrypt Ethereum credentials
             if (decryptedConfig.ethereum) {
                 if (decryptedConfig.ethereum.privateKey) {
                     decryptedConfig.ethereum.privateKey = this.decrypt(decryptedConfig.ethereum.privateKey);
@@ -266,26 +284,38 @@ class SecurityManager {
                 }
             }
 
-            if (decryptedConfig.bnbChain && decryptedConfig.bnbChain.privateKey) {
-                decryptedConfig.bnbChain.privateKey = this.decrypt(decryptedConfig.bnbChain.privateKey);
+            // Decrypt BNB Chain credentials
+            if (decryptedConfig.bnbChain) {
+                if (decryptedConfig.bnbChain.privateKey) {
+                    decryptedConfig.bnbChain.privateKey = this.decrypt(decryptedConfig.bnbChain.privateKey);
+                }
             }
 
+            // Decrypt exchange credentials
             if (decryptedConfig.exchanges) {
                 if (decryptedConfig.exchanges.binanceUS) {
                     if (decryptedConfig.exchanges.binanceUS.apiKey) {
-                        decryptedConfig.exchanges.binanceUS.apiKey = this.decrypt(decryptedConfig.exchanges.binanceUS.apiKey);
+                        decryptedConfig.exchanges.binanceUS.apiKey = this.decrypt(
+                            decryptedConfig.exchanges.binanceUS.apiKey
+                        );
                     }
                     if (decryptedConfig.exchanges.binanceUS.apiSecret) {
-                        decryptedConfig.exchanges.binanceUS.apiSecret = this.decrypt(decryptedConfig.exchanges.binanceUS.apiSecret);
+                        decryptedConfig.exchanges.binanceUS.apiSecret = this.decrypt(
+                            decryptedConfig.exchanges.binanceUS.apiSecret
+                        );
                     }
                 }
 
                 if (decryptedConfig.exchanges.cryptoCom) {
                     if (decryptedConfig.exchanges.cryptoCom.apiKey) {
-                        decryptedConfig.exchanges.cryptoCom.apiKey = this.decrypt(decryptedConfig.exchanges.cryptoCom.apiKey);
+                        decryptedConfig.exchanges.cryptoCom.apiKey = this.decrypt(
+                            decryptedConfig.exchanges.cryptoCom.apiKey
+                        );
                     }
                     if (decryptedConfig.exchanges.cryptoCom.apiSecret) {
-                        decryptedConfig.exchanges.cryptoCom.apiSecret = this.decrypt(decryptedConfig.exchanges.cryptoCom.apiSecret);
+                        decryptedConfig.exchanges.cryptoCom.apiSecret = this.decrypt(
+                            decryptedConfig.exchanges.cryptoCom.apiSecret
+                        );
                     }
                 }
             }
@@ -293,7 +323,7 @@ class SecurityManager {
             return decryptedConfig;
         } catch (error) {
             this.logger.error('Failed to decrypt config', error);
-            return config;
+            throw error;
         }
     }
 }
