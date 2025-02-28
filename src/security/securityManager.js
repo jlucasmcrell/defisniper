@@ -1,3 +1,7 @@
+/**
+ * Security Manager
+ * Handles encryption, decryption, and security-related operations
+ */
 const crypto = require('crypto');
 const fs = require('fs').promises;
 const path = require('path');
@@ -5,141 +9,186 @@ const { Logger } = require('../utils/logger');
 
 class SecurityManager {
     constructor() {
-        this.logger = new Logger('SecurityManager');
-        this.keyPath = path.join(process.cwd(), 'secure-config', 'encryption.key');
-        this.passwordPath = path.join(process.cwd(), 'secure-config', 'password.hash');
         this.encryptionKey = null;
-        this.passwordHash = null;
+        this.sessionSecret = null;
+        this.logger = new Logger('SecurityManager');
+        this.configPath = path.join(process.cwd(), 'secure-config');
+        this.algorithm = 'aes-256-gcm';
     }
 
     async initialize() {
         try {
-            await this.loadEncryptionKey();
-            await this.loadPasswordHash();
+            this.logger.info('Initializing security manager');
+            
+            // Ensure secure-config directory exists
+            try {
+                await fs.mkdir(this.configPath, { recursive: true });
+            } catch (error) {
+                if (error.code !== 'EEXIST') {
+                    this.logger.error('Failed to create secure-config directory', error);
+                }
+            }
+
+            // Try to load encryption key
+            const keyPath = path.join(this.configPath, 'encryption.key');
+            try {
+                const keyExists = await this.fileExists(keyPath);
+                if (keyExists) {
+                    this.encryptionKey = await fs.readFile(keyPath, 'utf8');
+                    this.logger.info('Loaded existing encryption key');
+                } else {
+                    // Generate new key if not exists
+                    this.encryptionKey = crypto.randomBytes(32).toString('hex');
+                    await fs.writeFile(keyPath, this.encryptionKey, 'utf8');
+                    this.logger.info('Generated new encryption key');
+                }
+            } catch (error) {
+                this.logger.error('Error loading/generating encryption key', error);
+                // Generate a temporary key that will be lost on restart
+                this.encryptionKey = crypto.randomBytes(32).toString('hex');
+                this.logger.warn('Using temporary encryption key');
+            }
+
+            // Generate session secret
+            this.sessionSecret = crypto.randomBytes(32).toString('hex');
+            this.logger.info('Security manager initialized');
+            
             return true;
         } catch (error) {
             this.logger.error('Failed to initialize security manager', error);
-            throw error;
+            return false;
         }
     }
 
-    async generateKey() {
+    async fileExists(filePath) {
         try {
-            try {
-                await fs.access(this.keyPath);
-                return false;
-            } catch (error) {
-                const key = crypto.randomBytes(32);
-                await fs.writeFile(this.keyPath, key);
-                this.encryptionKey = key;
-                return true;
-            }
-        } catch (error) {
-            this.logger.error('Failed to generate encryption key', error);
-            throw error;
+            await fs.access(filePath, fs.constants.F_OK);
+            return true;
+        } catch {
+            return false;
         }
     }
 
-    async loadEncryptionKey() {
-        try {
-            this.encryptionKey = await fs.readFile(this.keyPath);
-        } catch (error) {
-            if (error.code === 'ENOENT') {
-                await this.generateKey();
-            } else {
-                throw error;
-            }
-        }
+    isEncryptionKeySet() {
+        return !!this.encryptionKey;
     }
 
-    async loadPasswordHash() {
-        try {
-            this.passwordHash = await fs.readFile(this.passwordPath, 'utf8');
-        } catch (error) {
-            if (error.code === 'ENOENT') {
-                const defaultPassword = 'admin';
-                await this.setPassword(defaultPassword);
-                this.logger.warn('Default password set to "admin" - please change immediately!');
-            } else {
-                throw error;
-            }
+    getSessionSecret() {
+        if (!this.sessionSecret) {
+            // Generate a temporary session secret if not already set
+            this.sessionSecret = crypto.randomBytes(32).toString('hex');
         }
+        return this.sessionSecret;
     }
 
     async setPassword(password) {
         try {
-            const salt = crypto.randomBytes(16).toString('hex');
-            const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
-            const hashData = `${salt}:${hash}`;
-            
-            await fs.writeFile(this.passwordPath, hashData);
-            this.passwordHash = hashData;
-            
+            const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+            await fs.writeFile(path.join(this.configPath, 'password.hash'), hashedPassword, 'utf8');
             return true;
         } catch (error) {
             this.logger.error('Failed to set password', error);
-            return false;
+            throw error;
         }
     }
 
     verifyPassword(password) {
         try {
-            const [salt, storedHash] = this.passwordHash.split(':');
-            const hash = crypto.pbkdf2Sync(password, salt, 100000, 64, 'sha512').toString('hex');
-            return storedHash === hash;
+            const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+            const storedHash = fs.readFileSync(path.join(this.configPath, 'password.hash'), 'utf8');
+            return hashedPassword === storedHash;
         } catch (error) {
-            this.logger.error('Failed to verify password', error);
+            this.logger.error('Password verification error', error);
+            // If no password file exists, any password is valid (initial setup)
+            if (error.code === 'ENOENT') {
+                return true;
+            }
             return false;
         }
     }
 
-    encryptConfig(config) {
+    async encryptConfig(config) {
         try {
-            if (!config) {
-                throw new Error('Config is required for encryption');
+            if (!this.encryptionKey) {
+                this.logger.error('Cannot encrypt config - encryption key not set');
+                throw new Error('Encryption key not set');
             }
-
-            const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
-            const iv = crypto.randomBytes(16);
-            const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
             
-            const jsonStr = JSON.stringify(config);
-            let encrypted = cipher.update(jsonStr, 'utf8', 'hex');
+            const configString = JSON.stringify(config);
+            const iv = crypto.randomBytes(16);
+            const cipher = crypto.createCipheriv(this.algorithm, Buffer.from(this.encryptionKey, 'hex'), iv);
+            
+            let encrypted = cipher.update(configString, 'utf8', 'hex');
             encrypted += cipher.final('hex');
             
-            return {
+            const authTag = cipher.getAuthTag().toString('hex');
+            
+            const result = {
                 iv: iv.toString('hex'),
-                data: encrypted
+                encryptedData: encrypted,
+                authTag,
+                algorithm: this.algorithm
             };
+            
+            return result;
         } catch (error) {
             this.logger.error('Failed to encrypt config', error);
             throw error;
         }
     }
 
-    decryptConfig(encryptedConfig) {
+    async decryptConfig(encryptedConfig) {
         try {
-            if (!encryptedConfig || !encryptedConfig.iv || !encryptedConfig.data) {
-                this.logger.error('Invalid encrypted config format');
-                return null;
+            if (!this.encryptionKey) {
+                this.logger.error('Cannot decrypt config - encryption key not set');
+                throw new Error('Encryption key not set');
             }
 
-            const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
-            const iv = Buffer.from(encryptedConfig.iv, 'hex');
-            const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+            // If the config is not encrypted or doesn't have the expected format
+            if (!encryptedConfig || !encryptedConfig.iv || !encryptedConfig.encryptedData || !encryptedConfig.authTag) {
+                this.logger.error('Invalid encrypted config format');
+                return {
+                    ethereum: { enabled: false },
+                    bnbChain: { enabled: false },
+                    exchanges: { 
+                        binanceUS: { enabled: false },
+                        cryptoCom: { enabled: false } 
+                    },
+                    strategies: { 
+                        tokenSniper: { enabled: false },
+                        trendTrading: { enabled: false }
+                    }
+                };
+            }
             
-            let decrypted = decipher.update(encryptedConfig.data, 'hex', 'utf8');
+            const decipher = crypto.createDecipheriv(
+                encryptedConfig.algorithm || this.algorithm,
+                Buffer.from(this.encryptionKey, 'hex'),
+                Buffer.from(encryptedConfig.iv, 'hex')
+            );
+            
+            decipher.setAuthTag(Buffer.from(encryptedConfig.authTag, 'hex'));
+            
+            let decrypted = decipher.update(encryptedConfig.encryptedData, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
             
             return JSON.parse(decrypted);
         } catch (error) {
             this.logger.error('Failed to decrypt config', error);
-            throw error;
+            // Return default empty config if decryption fails
+            return {
+                ethereum: { enabled: false },
+                bnbChain: { enabled: false },
+                exchanges: { 
+                    binanceUS: { enabled: false },
+                    cryptoCom: { enabled: false } 
+                },
+                strategies: { 
+                    tokenSniper: { enabled: false },
+                    trendTrading: { enabled: false }
+                }
+            };
         }
-    }
-
-    getSessionSecret() {
-        return crypto.randomBytes(32).toString('hex');
     }
 }
 

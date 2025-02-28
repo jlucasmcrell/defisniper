@@ -77,8 +77,32 @@ class TradingEngine {
         try {
             this.logger.info('Initializing trading engine');
             
-            // Decrypt configuration
-            const decryptedConfig = await this.securityManager.decryptConfig(this.config);
+            // Create default configuration in case decryption fails
+            const defaultConfig = {
+                ethereum: { enabled: false },
+                bnbChain: { enabled: false },
+                exchanges: { 
+                    binanceUS: { enabled: false },
+                    cryptoCom: { enabled: false } 
+                },
+                strategies: { 
+                    tokenSniper: { enabled: false },
+                    trendTrading: { enabled: false }
+                }
+            };
+            
+            // Try to decrypt configuration
+            let decryptedConfig = defaultConfig;
+            try {
+                const result = await this.securityManager.decryptConfig(this.config);
+                if (result && typeof result === 'object') {
+                    decryptedConfig = result;
+                } else {
+                    this.logger.warn('Decrypted config is invalid, using default configuration');
+                }
+            } catch (error) {
+                this.logger.error('Failed to decrypt configuration, using default configuration', error);
+            }
             
             // Initialize blockchain connectors
             await this.initializeBlockchainConnectors(decryptedConfig);
@@ -102,13 +126,19 @@ class TradingEngine {
             return true;
         } catch (error) {
             this.logger.error('Failed to initialize trading engine', error);
-            throw error;
+            return false; // Return false instead of throwing to allow server to continue
         }
     }
 
     async initializeBlockchainConnectors(decryptedConfig) {
         try {
-            if (decryptedConfig.ethereum?.enabled) {
+            // Ensure decryptedConfig and its properties exist
+            if (!decryptedConfig) {
+                this.logger.warn('No configuration provided for blockchain connectors');
+                return;
+            }
+
+            if (decryptedConfig.ethereum && decryptedConfig.ethereum.enabled) {
                 const ethereumLogger = new Logger('EthereumConnector');
                 if (!ethereumLogger.error || !ethereumLogger.info || !ethereumLogger.warn) {
                     throw new Error('Logger not properly initialized');
@@ -121,7 +151,7 @@ class TradingEngine {
                 await this.blockchain.ethereum.initialize();
             }
             
-            if (decryptedConfig.bnbChain?.enabled) {
+            if (decryptedConfig.bnbChain && decryptedConfig.bnbChain.enabled) {
                 const bnbLogger = new Logger('BnbConnector');
                 if (!bnbLogger.error || !bnbLogger.info || !bnbLogger.warn) {
                     throw new Error('Logger not properly initialized');
@@ -139,14 +169,21 @@ class TradingEngine {
             } else {
                 console.error('Failed to initialize blockchain connectors:', error);
             }
-            throw error;
+            // Don't throw to allow application to continue without blockchain support
+            this.logger.warn('Continuing without blockchain connector support');
         }
     }
 
     async initializeExchangeConnectors(decryptedConfig) {
         try {
+            // Ensure decryptedConfig and its exchanges property exist
+            if (!decryptedConfig || !decryptedConfig.exchanges) {
+                this.logger.warn('No exchange configuration provided');
+                return;
+            }
+            
             // Initialize Binance.US connector if enabled and properly configured
-            if (decryptedConfig.exchanges?.binanceUS?.enabled && 
+            if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled && 
                 decryptedConfig.exchanges.binanceUS.apiKey && 
                 decryptedConfig.exchanges.binanceUS.apiSecret) {
                 const binanceLogger = new Logger('BinanceExchange');
@@ -161,12 +198,12 @@ class TradingEngine {
                 } catch (error) {
                     this.logger.warn('Failed to initialize Binance.US connector:', error.message);
                 }
-            } else if (decryptedConfig.exchanges?.binanceUS?.enabled) {
+            } else if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) {
                 this.logger.warn('Binance.US is enabled but API credentials are missing');
             }
             
             // Initialize Crypto.com connector if enabled and properly configured
-            if (decryptedConfig.exchanges?.cryptoCom?.enabled && 
+            if (decryptedConfig.exchanges.cryptoCom && decryptedConfig.exchanges.cryptoCom.enabled && 
                 decryptedConfig.exchanges.cryptoCom.apiKey && 
                 decryptedConfig.exchanges.cryptoCom.apiSecret) {
                 const cryptoLogger = new Logger('CryptocomExchange');
@@ -182,14 +219,13 @@ class TradingEngine {
                     this.logger.warn('Failed to initialize Crypto.com connector:', error.message);
                     delete this.exchanges.cryptoCom;
                 }
-            } else if (decryptedConfig.exchanges?.cryptoCom?.enabled) {
+            } else if (decryptedConfig.exchanges.cryptoCom && decryptedConfig.exchanges.cryptoCom.enabled) {
                 this.logger.warn('Crypto.com is enabled but API credentials are missing');
             }
-
-            // If no exchanges were initialized but some were enabled, log a warning
+			            // If no exchanges were initialized but some were enabled, log a warning
             if (Object.keys(this.exchanges).length === 0 && 
-                (decryptedConfig.exchanges?.binanceUS?.enabled || 
-                 decryptedConfig.exchanges?.cryptoCom?.enabled)) {
+                ((decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) || 
+                (decryptedConfig.exchanges.cryptoCom && decryptedConfig.exchanges.cryptoCom.enabled))) {
                 this.logger.warn('No exchange connectors were initialized despite having enabled exchanges');
             }
 
@@ -202,7 +238,13 @@ class TradingEngine {
 
     async initializeStrategies(decryptedConfig) {
         try {
-            if (decryptedConfig.strategies?.tokenSniper?.enabled) {
+            // Ensure decryptedConfig and its strategies property exist
+            if (!decryptedConfig || !decryptedConfig.strategies) {
+                this.logger.warn('No strategy configuration provided');
+                return;
+            }
+            
+            if (decryptedConfig.strategies.tokenSniper && decryptedConfig.strategies.tokenSniper.enabled) {
                 const sniperLogger = new Logger('TokenSniperStrategy');
                 this.strategies.tokenSniper = new TokenSniperStrategy(
                     this.blockchain,
@@ -213,7 +255,7 @@ class TradingEngine {
                 await this.strategies.tokenSniper.initialize();
             }
 
-            if (decryptedConfig.strategies?.trendTrading?.enabled) {
+            if (decryptedConfig.strategies.trendTrading && decryptedConfig.strategies.trendTrading.enabled) {
                 const trendLogger = new Logger('TrendTradingStrategy');
                 this.strategies.trendTrading = new TrendTradingStrategy(
                     this.blockchain,
@@ -225,12 +267,17 @@ class TradingEngine {
             }
         } catch (error) {
             this.logger.error('Failed to initialize strategies', error);
-            throw error;
+            this.logger.warn('Continuing without trading strategy support');
         }
     }
 
     async initializeTokenScanner(decryptedConfig) {
         try {
+            if (!decryptedConfig) {
+                this.logger.warn('No configuration provided for token scanner');
+                return;
+            }
+            
             const scannerLogger = new Logger('TokenScanner');
             this.tokenScanner = new EnhancedTokenScanner(
                 this.blockchain,
@@ -256,7 +303,7 @@ class TradingEngine {
             }
         } catch (error) {
             this.logger.error('Failed to initialize token scanner', error);
-            throw error;
+            this.logger.warn('Continuing without token scanner support');
         }
     }
 
@@ -447,7 +494,8 @@ class TradingEngine {
             this.logger.error('Error monitoring trades', error);
         }
     }
-	async updateTradeStatus(trade) {
+    
+    async updateTradeStatus(trade) {
         try {
             const updatedTrade = { ...trade };
             
@@ -639,7 +687,7 @@ class TradingEngine {
         }
     }
 
-    async updateBalances() {
+        async updateBalances() {
         try {
             const balances = {
                 ethereum: {},

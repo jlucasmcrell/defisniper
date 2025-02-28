@@ -2028,3 +2028,20 @@
 {"level":"info","message":"Client connected: XmhGkcBdZW0DlIPoAAAB","module":"Server","timestamp":"2025-02-28T12:37:48.560Z"}
 {"level":"info","message":"Settings updated via API","module":"API","timestamp":"2025-02-28T12:38:37.535Z"}
 {"level":"info","message":"Configuration updated successfully","module":"ConfigManager","timestamp":"2025-02-28T12:38:37.536Z"}
+{"level":"info","message":"Required directories created","module":"Server","timestamp":"2025-02-28T12:57:14.601Z"}
+{"level":"info","message":"Security manager initialized","module":"Server","timestamp":"2025-02-28T12:57:14.607Z"}
+{"level":"info","message":"Configuration manager initialized","module":"Server","timestamp":"2025-02-28T12:57:14.670Z"}
+{"error":null,"level":"error","message":"Invalid encrypted config format","module":"SecurityManager","timestamp":"2025-02-28T12:57:14.673Z"}
+{"error":"Cannot read properties of null (reading 'ethereum')","level":"error","message":"Failed to initialize trading engine","module":"Server","stack":"TypeError: Cannot read properties of null (reading 'ethereum')\n    at TradingEngine.initializeBlockchainConnectors (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:111:33)\n    at TradingEngine.initialize (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:84:24)\n    at async initialize (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\server.js:189:17)","timestamp":"2025-02-28T12:57:14.674Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-28T12:57:14.677Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-28T12:57:14.673Z"}
+{"error":"Cannot read properties of null (reading 'ethereum')","level":"error","message":"Failed to initialize blockchain connectors","module":"TradingEngine","stack":"TypeError: Cannot read properties of null (reading 'ethereum')\n    at TradingEngine.initializeBlockchainConnectors (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:111:33)\n    at TradingEngine.initialize (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:84:24)\n    at async initialize (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\server.js:189:17)","timestamp":"2025-02-28T12:57:14.674Z"}
+{"error":"Cannot read properties of null (reading 'ethereum')","level":"error","message":"Failed to initialize trading engine","module":"TradingEngine","stack":"TypeError: Cannot read properties of null (reading 'ethereum')\n    at TradingEngine.initializeBlockchainConnectors (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:111:33)\n    at TradingEngine.initialize (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:84:24)\n    at async initialize (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\server.js:189:17)","timestamp":"2025-02-28T12:57:14.674Z"}
+{"level":"info","message":"Required directories created","module":"Server","timestamp":"2025-02-28T13:36:41.132Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T13:36:41.137Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T13:36:41.139Z"}
+{"level":"info","message":"Security manager initialized","module":"Server","timestamp":"2025-02-28T13:36:41.140Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T13:36:41.139Z"}
+{"error":null,"level":"error","message":"Invalid encrypted config format","module":"SecurityManager","timestamp":"2025-02-28T13:36:41.142Z"}
+{"level":"info","message":"Configuration manager initialized","module":"Server","timestamp":"2025-02-28T13:36:41.142Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-28T13:36:41.145Z"}
