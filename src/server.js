@@ -161,13 +161,21 @@ async function initialize() {
 
         // Initialize trading engine if configured
         if (configManager.isConfigured()) {
-            const config = configManager.getConfig();
-            global.tradingEngine = new TradingEngine(configManager, securityManager, io);
-            await global.tradingEngine.initialize();
-            
-            if (config.trading?.autoStart) {
-                await global.tradingEngine.start();
-                logger.info('Trading engine auto-started');
+            try {
+                const config = configManager.getConfig();
+                global.tradingEngine = new TradingEngine(configManager, securityManager, io);
+                await global.tradingEngine.initialize().catch(error => {
+                    logger.error('Failed to initialize trading engine', error);
+                    // Don't throw - allow server to start without trading functionality
+                });
+                
+                if (global.tradingEngine && config.trading?.autoStart) {
+                    await global.tradingEngine.start().catch(error => {
+                        logger.error('Failed to auto-start trading engine', error);
+                    });
+                }
+            } catch (error) {
+                logger.error('Error setting up trading engine. Continuing without trading functionality', error);
             }
         }
 
@@ -203,23 +211,4 @@ async function initialize() {
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-    logger.info('Shutting down server...');
-    
-    if (global.tradingEngine?.isRunning()) {
-        logger.info('Stopping trading engine...');
-        await global.tradingEngine.stop();
-    }
-    
-    server.close(() => {
-        logger.info('Server stopped');
-        process.exit(0);
-    });
-});
-
-// Start the server
-initialize().catch(error => {
-    logger.error('Failed to start server', error);
-    process.exit(1);
-});
-
-module.exports = { app, server, io };
+    logger.info('Shutting down server..

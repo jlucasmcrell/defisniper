@@ -11,6 +11,8 @@ class SecurityManager {
         this.encryptionKey = null;
         this.passwordHash = null;
         this.algorithm = 'aes-256-gcm';
+        this.keyLength = 32; // 256 bits
+        this.ivLength = 16;  // 128 bits
     }
 
     async initialize() {
@@ -32,7 +34,7 @@ class SecurityManager {
                 return false; // Key already exists
             } catch (error) {
                 // Key doesn't exist, generate new one
-                this.encryptionKey = crypto.randomBytes(32);
+                this.encryptionKey = crypto.randomBytes(this.keyLength);
                 await fs.writeFile(this.keyPath, this.encryptionKey);
                 return true;
             }
@@ -45,6 +47,11 @@ class SecurityManager {
     async loadEncryptionKey() {
         try {
             this.encryptionKey = await fs.readFile(this.keyPath);
+            // Ensure key is the correct length
+            if (this.encryptionKey.length !== this.keyLength) {
+                this.logger.warn('Invalid key length detected, generating new key');
+                await this.generateKey();
+            }
         } catch (error) {
             if (error.code === 'ENOENT') {
                 await this.generateKey();
@@ -98,20 +105,26 @@ class SecurityManager {
 
     encryptConfig(config) {
         try {
-            const iv = crypto.randomBytes(12);
-            const cipher = crypto.createCipheriv(this.algorithm, this.encryptionKey, iv);
+            // Generate a random IV
+            const iv = crypto.randomBytes(this.ivLength);
             
+            // Create cipher with key and IV
+            const cipher = crypto.createCipheriv(this.algorithm, Buffer.from(this.encryptionKey), iv);
+            
+            // Convert config to JSON string
             const jsonStr = JSON.stringify(config);
-            const encrypted = Buffer.concat([
-                cipher.update(jsonStr, 'utf8'),
-                cipher.final()
-            ]);
             
+            // Encrypt the data
+            let encrypted = cipher.update(jsonStr, 'utf8', 'hex');
+            encrypted += cipher.final('hex');
+            
+            // Get the auth tag
             const authTag = cipher.getAuthTag();
             
+            // Return the encrypted data with IV and auth tag
             return {
                 iv: iv.toString('hex'),
-                data: encrypted.toString('hex'),
+                data: encrypted,
                 authTag: authTag.toString('hex')
             };
         } catch (error) {
@@ -122,19 +135,27 @@ class SecurityManager {
 
     decryptConfig(encryptedConfig) {
         try {
+            // Convert hex strings back to buffers
             const iv = Buffer.from(encryptedConfig.iv, 'hex');
-            const encrypted = Buffer.from(encryptedConfig.data, 'hex');
             const authTag = Buffer.from(encryptedConfig.authTag, 'hex');
+            const encryptedData = Buffer.from(encryptedConfig.data, 'hex');
             
-            const decipher = crypto.createDecipheriv(this.algorithm, this.encryptionKey, iv);
+            // Create decipher
+            const decipher = crypto.createDecipheriv(
+                this.algorithm,
+                Buffer.from(this.encryptionKey),
+                iv
+            );
+            
+            // Set auth tag
             decipher.setAuthTag(authTag);
             
-            const decrypted = Buffer.concat([
-                decipher.update(encrypted),
-                decipher.final()
-            ]);
+            // Decrypt the data
+            let decrypted = decipher.update(encryptedData, 'hex', 'utf8');
+            decrypted += decipher.final('utf8');
             
-            return JSON.parse(decrypted.toString('utf8'));
+            // Parse and return the decrypted config
+            return JSON.parse(decrypted);
         } catch (error) {
             this.logger.error('Failed to decrypt config', error);
             throw error;

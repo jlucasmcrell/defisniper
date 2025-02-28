@@ -107,68 +107,96 @@ class TradingEngine {
     }
 
     async initializeBlockchainConnectors(decryptedConfig) {
-    try {
-        if (decryptedConfig.ethereum?.enabled) {
-            const ethereumLogger = new Logger('EthereumConnector');
-            // Initialize the logger first and ensure it has all required methods
-            if (!ethereumLogger.error || !ethereumLogger.info || !ethereumLogger.warn) {
-                throw new Error('Logger not properly initialized');
+        try {
+            if (decryptedConfig.ethereum?.enabled) {
+                const ethereumLogger = new Logger('EthereumConnector');
+                if (!ethereumLogger.error || !ethereumLogger.info || !ethereumLogger.warn) {
+                    throw new Error('Logger not properly initialized');
+                }
+                
+                this.blockchain.ethereum = new EthereumConnector(
+                    decryptedConfig.ethereum,
+                    ethereumLogger
+                );
+                await this.blockchain.ethereum.initialize();
             }
             
-            this.blockchain.ethereum = new EthereumConnector(
-                decryptedConfig.ethereum,  // Pass the entire ethereum config
-                ethereumLogger
-            );
-            await this.blockchain.ethereum.initialize();
-        }
-        
-        if (decryptedConfig.bnbChain?.enabled) {
-            const bnbLogger = new Logger('BnbConnector');
-            // Initialize the logger first and ensure it has all required methods
-            if (!bnbLogger.error || !bnbLogger.info || !bnbLogger.warn) {
-                throw new Error('Logger not properly initialized');
+            if (decryptedConfig.bnbChain?.enabled) {
+                const bnbLogger = new Logger('BnbConnector');
+                if (!bnbLogger.error || !bnbLogger.info || !bnbLogger.warn) {
+                    throw new Error('Logger not properly initialized');
+                }
+                
+                this.blockchain.bnbChain = new BnbConnector(
+                    decryptedConfig.bnbChain,
+                    bnbLogger
+                );
+                await this.blockchain.bnbChain.initialize();
             }
-            
-            this.blockchain.bnbChain = new BnbConnector(
-                decryptedConfig.bnbChain,  // Pass the entire bnbChain config
-                bnbLogger
-            );
-            await this.blockchain.bnbChain.initialize();
+        } catch (error) {
+            if (this.logger && typeof this.logger.error === 'function') {
+                this.logger.error('Failed to initialize blockchain connectors', error);
+            } else {
+                console.error('Failed to initialize blockchain connectors:', error);
+            }
+            throw error;
         }
-    } catch (error) {
-        if (this.logger && typeof this.logger.error === 'function') {
-            this.logger.error('Failed to initialize blockchain connectors', error);
-        } else {
-            console.error('Failed to initialize blockchain connectors:', error);
-        }
-        throw error;
     }
-}
 
     async initializeExchangeConnectors(decryptedConfig) {
         try {
-            if (decryptedConfig.exchanges?.binanceUS?.enabled) {
+            // Initialize Binance.US connector if enabled and properly configured
+            if (decryptedConfig.exchanges?.binanceUS?.enabled && 
+                decryptedConfig.exchanges.binanceUS.apiKey && 
+                decryptedConfig.exchanges.binanceUS.apiSecret) {
                 const binanceLogger = new Logger('BinanceExchange');
                 this.exchanges.binanceUS = new BinanceExchange(
                     decryptedConfig.exchanges.binanceUS.apiKey,
                     decryptedConfig.exchanges.binanceUS.apiSecret,
                     binanceLogger
                 );
-                await this.exchanges.binanceUS.initialize();
+                try {
+                    await this.exchanges.binanceUS.initialize();
+                    this.logger.info('Binance.US exchange connector initialized');
+                } catch (error) {
+                    this.logger.warn('Failed to initialize Binance.US connector:', error.message);
+                }
+            } else if (decryptedConfig.exchanges?.binanceUS?.enabled) {
+                this.logger.warn('Binance.US is enabled but API credentials are missing');
             }
             
-            if (decryptedConfig.exchanges?.cryptoCom?.enabled) {
+            // Initialize Crypto.com connector if enabled and properly configured
+            if (decryptedConfig.exchanges?.cryptoCom?.enabled && 
+                decryptedConfig.exchanges.cryptoCom.apiKey && 
+                decryptedConfig.exchanges.cryptoCom.apiSecret) {
                 const cryptoLogger = new Logger('CryptocomExchange');
                 this.exchanges.cryptoCom = new CryptocomExchange(
                     decryptedConfig.exchanges.cryptoCom.apiKey,
                     decryptedConfig.exchanges.cryptoCom.apiSecret,
                     cryptoLogger
                 );
-                await this.exchanges.cryptoCom.initialize();
+                try {
+                    await this.exchanges.cryptoCom.initialize();
+                    this.logger.info('Crypto.com exchange connector initialized');
+                } catch (error) {
+                    this.logger.warn('Failed to initialize Crypto.com connector:', error.message);
+                    delete this.exchanges.cryptoCom;
+                }
+            } else if (decryptedConfig.exchanges?.cryptoCom?.enabled) {
+                this.logger.warn('Crypto.com is enabled but API credentials are missing');
             }
+
+            // If no exchanges were initialized but some were enabled, log a warning
+            if (Object.keys(this.exchanges).length === 0 && 
+                (decryptedConfig.exchanges?.binanceUS?.enabled || 
+                 decryptedConfig.exchanges?.cryptoCom?.enabled)) {
+                this.logger.warn('No exchange connectors were initialized despite having enabled exchanges');
+            }
+
         } catch (error) {
+            // Log the error but don't throw - allow the engine to continue without exchange support
             this.logger.error('Failed to initialize exchange connectors', error);
-            throw error;
+            this.logger.info('Continuing without exchange support');
         }
     }
 
@@ -419,8 +447,7 @@ class TradingEngine {
             this.logger.error('Error monitoring trades', error);
         }
     }
-
-    async updateTradeStatus(trade) {
+	async updateTradeStatus(trade) {
         try {
             const updatedTrade = { ...trade };
             
@@ -630,7 +657,12 @@ class TradingEngine {
 
             for (const [exchange, connector] of Object.entries(this.exchanges)) {
                 if (connector && typeof connector.getBalances === 'function') {
-                    balances.exchanges[exchange] = await connector.getBalances();
+                    try {
+                        balances.exchanges[exchange] = await connector.getBalances();
+                    } catch (error) {
+                        this.logger.warn(`Failed to get balances for ${exchange}:`, error.message);
+                        balances.exchanges[exchange] = {};
+                    }
                 }
             }
 
