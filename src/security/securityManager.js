@@ -29,7 +29,6 @@ class SecurityManager {
                 await fs.access(this.keyPath);
                 return false;
             } catch (error) {
-                // Generate a 32-byte (256-bit) key
                 const key = crypto.randomBytes(32);
                 await fs.writeFile(this.keyPath, key);
                 this.encryptionKey = key;
@@ -96,7 +95,10 @@ class SecurityManager {
 
     encryptConfig(config) {
         try {
-            // Use key derivation to get a proper length key
+            if (!config) {
+                throw new Error('Config is required for encryption');
+            }
+
             const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
             const iv = crypto.randomBytes(16);
             const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
@@ -117,6 +119,11 @@ class SecurityManager {
 
     decryptConfig(encryptedConfig) {
         try {
+            if (!encryptedConfig || !encryptedConfig.iv || !encryptedConfig.data) {
+                this.logger.error('Invalid encrypted config format');
+                return null;
+            }
+
             const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
             const iv = Buffer.from(encryptedConfig.iv, 'hex');
             const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);

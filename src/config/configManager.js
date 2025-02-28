@@ -29,8 +29,11 @@ class ConfigManager {
             try {
                 const configData = await fs.readFile(this.configPath, 'utf8');
                 const parsedConfig = JSON.parse(configData);
-                const decryptedConfig = this.securityManager.decryptConfig(parsedConfig);
-                return this.validateConfig(decryptedConfig);
+                if (!parsedConfig) {
+                    return this.getDefaultConfig();
+                }
+                const decryptedConfig = await this.securityManager.decryptConfig(parsedConfig);
+                return this.validateConfig(decryptedConfig || this.getDefaultConfig());
             } catch (error) {
                 if (error.code === 'ENOENT') {
                     return this.getDefaultConfig();
@@ -44,6 +47,10 @@ class ConfigManager {
     }
     
     validateConfig(config) {
+        if (!config) {
+            return this.getDefaultConfig();
+        }
+
         const defaultConfig = this.getDefaultConfig();
         const mergedConfig = this.deepMerge(defaultConfig, config);
 
@@ -147,10 +154,9 @@ class ConfigManager {
             // Update configured status
             this.config.configured = this.checkConfigured(this.config);
             
-            // Encrypt sensitive data
+            // Encrypt and save
             const encryptedConfig = this.securityManager.encryptConfig(this.config);
             
-            // Save to disk
             await fs.writeFile(
                 this.configPath,
                 JSON.stringify(encryptedConfig, null, 2),
@@ -166,7 +172,7 @@ class ConfigManager {
     }
     
     getConfig() {
-        return this.config;
+        return this.config || this.getDefaultConfig();
     }
 
     isConfigured() {
