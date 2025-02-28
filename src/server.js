@@ -120,4 +120,212 @@ function setupRoutes() {
             return res.status(500).json({ success: false, message: 'Security system not initialized' });
         }
         
-        if (securityManager.verifyPasswor
+        if (securityManager.verifyPassword(password)) {
+            req.session.authenticated = true;
+            authenticated = true;
+            res.json({ success: true, message: 'Login successful' });
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid password' });
+        }
+    });
+    
+    app.post('/api/auth/logout', (req, res) => {
+        req.session.destroy();
+        authenticated = false;
+        res.json({ success: true, message: 'Logout successful' });
+    });
+    
+    app.get('/api/auth/status', (req, res) => {
+        res.json({ 
+            authenticated: !!req.session.authenticated,
+            initialized: !!tradingEngine,
+            running: tradingEngine ? tradingEngine.isRunning() : false
+        });
+    });
+    
+    // API Routes - Configuration
+    app.get('/api/config', (req, res) => {
+        if (!configManager) {
+            return res.status(500).json({ success: false, message: 'Config manager not initialized' });
+        }
+        
+        // Get masked configuration (no sensitive data)
+        const maskedConfig = getMaskedConfig(configManager.getConfig());
+        res.json({ success: true, config: maskedConfig });
+    });
+    
+    app.post('/api/config', async (req, res) => {
+        if (!configManager || !securityManager) {
+            return res.status(500).json({ success: false, message: 'Config/Security manager not initialized' });
+        }
+        
+        try {
+            const newConfig = req.body.config;
+            
+            // Encrypt and save the new configuration
+            const encryptedConfig = await securityManager.encryptConfig(newConfig);
+            await configManager.saveConfig(encryptedConfig);
+            
+            res.json({ success: true, message: 'Configuration saved successfully' });
+        } catch (error) {
+            logger.error('Failed to save configuration', error);
+            res.status(500).json({ success: false, message: 'Failed to save configuration' });
+        }
+    });
+    
+    // API Routes - Trading Engine Control
+    app.post('/api/bot/start', async (req, res) => {
+        if (!tradingEngine) {
+            return res.status(500).json({ success: false, message: 'Trading engine not initialized' });
+        }
+        
+        try {
+            if (tradingEngine.isRunning()) {
+                return res.json({ success: true, message: 'Bot is already running' });
+            }
+            
+            const started = await tradingEngine.start();
+            if (started) {
+                res.json({ success: true, message: 'Bot started successfully' });
+            } else {
+                res.status(500).json({ success: false, message: 'Failed to start bot' });
+            }
+        } catch (error) {
+            logger.error('Failed to start bot', error);
+            res.status(500).json({ success: false, message: `Failed to start bot: ${error.message}` });
+        }
+    });
+    
+    app.post('/api/bot/stop', async (req, res) => {
+        if (!tradingEngine) {
+            return res.status(500).json({ success: false, message: 'Trading engine not initialized' });
+        }
+        
+        try {
+            if (!tradingEngine.isRunning()) {
+                return res.json({ success: true, message: 'Bot is not running' });
+            }
+            
+            const stopped = await tradingEngine.stop();
+            if (stopped) {
+                res.json({ success: true, message: 'Bot stopped successfully' });
+            } else {
+                res.status(500).json({ success: false, message: 'Failed to stop bot' });
+            }
+        } catch (error) {
+            logger.error('Failed to stop bot', error);
+            res.status(500).json({ success: false, message: `Failed to stop bot: ${error.message}` });
+        }
+    });
+    
+    // API Routes - Data
+    app.get('/api/trades', (req, res) => {
+        if (!tradingEngine) {
+            return res.status(500).json({ success: false, message: 'Trading engine not initialized' });
+        }
+        
+        const activeTrades = tradingEngine.getActiveTrades();
+        const tradeHistory = tradingEngine.getTradeHistory();
+        
+        res.json({ 
+            success: true, 
+            activeTrades, 
+            tradeHistory 
+        });
+    });
+    
+    app.get('/api/balances', (req, res) => {
+        if (!tradingEngine) {
+            return res.status(500).json({ success: false, message: 'Trading engine not initialized' });
+        }
+        
+        const balances = tradingEngine.getBalances();
+        
+        res.json({ 
+            success: true, 
+            balances 
+        });
+    });
+    
+    app.get('/api/stats', (req, res) => {
+        if (!tradingEngine) {
+            return res.status(500).json({ success: false, message: 'Trading engine not initialized' });
+        }
+        
+        const stats = tradingEngine.getStats();
+        
+        res.json({ 
+            success: true, 
+            stats 
+        });
+    });
+    
+    // Catch-all route to serve React app for any path not matched
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+    });
+}
+
+// Set up Socket.IO events
+function setupSocketIO() {
+    io.on('connection', (socket) => {
+        logger.info('User connected to websocket');
+        
+        socket.on('authenticate', (data) => {
+            if (data && data.authenticated === true) {
+                socket.join('authenticated');
+                socket.emit('authenticated', { success: true });
+            }
+        });
+        
+        socket.on('disconnect', () => {
+            logger.info('User disconnected from websocket');
+        });
+    });
+}
+
+// Helper function to mask sensitive data in the configuration
+function getMaskedConfig(config) {
+    if (!config) return {};
+    
+    const maskedConfig = JSON.parse(JSON.stringify(config));
+    
+    // Mask API keys and private keys
+    if (maskedConfig.ethereum && maskedConfig.ethereum.privateKey) {
+        maskedConfig.ethereum.privateKey = maskedConfig.ethereum.privateKey.replace(/./g, '*');
+    }
+    
+    if (maskedConfig.bnbChain && maskedConfig.bnbChain.privateKey) {
+        maskedConfig.bnbChain.privateKey = maskedConfig.bnbChain.privateKey.replace(/./g, '*');
+    }
+    
+    if (maskedConfig.exchanges) {
+        if (maskedConfig.exchanges.binanceUS && maskedConfig.exchanges.binanceUS.apiSecret) {
+            maskedConfig.exchanges.binanceUS.apiSecret = maskedConfig.exchanges.binanceUS.apiSecret.replace(/./g, '*');
+        }
+        
+        if (maskedConfig.exchanges.cryptoCom && maskedConfig.exchanges.cryptoCom.apiSecret) {
+            maskedConfig.exchanges.cryptoCom.apiSecret = maskedConfig.exchanges.cryptoCom.apiSecret.replace(/./g, '*');
+        }
+    }
+    
+    return maskedConfig;
+}
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+
+// Initialize and start the server
+initialize()
+    .then(success => {
+        if (!success) {
+            logger.error('Failed to initialize app');
+        }
+        
+        server.listen(PORT, () => {
+            logger.info(`CryptoSniperBot server running on port ${PORT}`);
+        });
+    })
+    .catch(error => {
+        logger.error('Fatal error during initialization', error);
+    });

@@ -77,39 +77,42 @@ class TradingEngine {
         try {
             this.logger.info('Initializing trading engine');
             
-            // Create default configuration
-            const defaultConfig = {
-                ethereum: { enabled: false },
-                bnbChain: { enabled: false },
-                exchanges: { 
-                    binanceUS: { enabled: false },
-                    cryptoCom: { enabled: false } 
-                },
-                strategies: { 
-                    tokenSniper: { enabled: false },
-                    trendTrading: { enabled: false }
-                },
-                trading: {
-                    autoStart: false,
-                    maxConcurrentTrades: 3
-                }
-            };
+            // Initialize with default config in case decryption fails
+            let decryptedConfig = null;
             
-            // Try to decrypt configuration
-            let decryptedConfig = defaultConfig;
-            try {
-                if (this.securityManager && typeof this.securityManager.decryptConfig === 'function') {
-                    const result = await this.securityManager.decryptConfig(this.config);
-                    if (result && typeof result === 'object') {
-                        decryptedConfig = result;
-                    } else {
+            // Try to decrypt configuration if security manager is available
+            if (this.securityManager && typeof this.securityManager.decryptConfig === 'function') {
+                try {
+                    decryptedConfig = await this.securityManager.decryptConfig(this.config);
+                    if (!decryptedConfig || typeof decryptedConfig !== 'object') {
                         this.logger.warn('Decrypted config is invalid, using default configuration');
+                        decryptedConfig = this.securityManager.getDefaultConfig();
                     }
-                } else {
-                    this.logger.warn('Security manager not available, using default configuration');
+                } catch (error) {
+                    this.logger.error('Failed to decrypt configuration, using default configuration', error);
+                    decryptedConfig = this.securityManager.getDefaultConfig();
                 }
-            } catch (error) {
-                this.logger.error('Failed to decrypt configuration, using default configuration', error);
+            } else {
+                // If no security manager, use the config directly
+                decryptedConfig = this.config;
+                if (!decryptedConfig || typeof decryptedConfig !== 'object') {
+                    decryptedConfig = {
+                        ethereum: { enabled: false },
+                        bnbChain: { enabled: false },
+                        exchanges: { 
+                            binanceUS: { enabled: false },
+                            cryptoCom: { enabled: false } 
+                        },
+                        strategies: { 
+                            tokenSniper: { enabled: false },
+                            trendTrading: { enabled: false }
+                        },
+                        trading: {
+                            autoStart: false,
+                            maxConcurrentTrades: 3
+                        }
+                    };
+                }
             }
             
             // Initialize blockchain connectors
@@ -140,7 +143,7 @@ class TradingEngine {
 
     async initializeBlockchainConnectors(decryptedConfig) {
         try {
-            // Ensure decryptedConfig and its properties exist
+            // Ensure decryptedConfig exists
             if (!decryptedConfig) {
                 this.logger.warn('No configuration provided for blockchain connectors');
                 return;
@@ -148,20 +151,34 @@ class TradingEngine {
 
             if (decryptedConfig.ethereum && decryptedConfig.ethereum.enabled) {
                 const ethereumLogger = new Logger('EthereumConnector');
+                
                 this.blockchain.ethereum = new EthereumConnector(
                     decryptedConfig.ethereum,
                     ethereumLogger
                 );
-                await this.blockchain.ethereum.initialize();
+                try {
+                    await this.blockchain.ethereum.initialize();
+                    this.logger.info('Ethereum blockchain connector initialized');
+                } catch (ethError) {
+                    this.logger.error('Failed to initialize Ethereum connector:', ethError);
+                    delete this.blockchain.ethereum;
+                }
             }
             
             if (decryptedConfig.bnbChain && decryptedConfig.bnbChain.enabled) {
                 const bnbLogger = new Logger('BnbConnector');
+                
                 this.blockchain.bnbChain = new BnbConnector(
                     decryptedConfig.bnbChain,
                     bnbLogger
                 );
-                await this.blockchain.bnbChain.initialize();
+                try {
+                    await this.blockchain.bnbChain.initialize();
+                    this.logger.info('BNB Chain connector initialized');
+                } catch (bnbError) {
+                    this.logger.error('Failed to initialize BNB Chain connector:', bnbError);
+                    delete this.blockchain.bnbChain;
+                }
             }
         } catch (error) {
             if (this.logger && typeof this.logger.error === 'function') {
@@ -196,6 +213,7 @@ class TradingEngine {
                     this.logger.info('Binance.US exchange connector initialized');
                 } catch (error) {
                     this.logger.warn('Failed to initialize Binance.US connector:', error.message);
+                    delete this.exchanges.binanceUS;
                 }
             } else if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) {
                 this.logger.warn('Binance.US is enabled but API credentials are missing');
@@ -252,7 +270,13 @@ class TradingEngine {
                     decryptedConfig.strategies.tokenSniper,
                     sniperLogger
                 );
-                await this.strategies.tokenSniper.initialize();
+                try {
+                    await this.strategies.tokenSniper.initialize();
+                    this.logger.info('Token Sniper strategy initialized');
+                } catch (error) {
+                    this.logger.error('Failed to initialize Token Sniper strategy:', error.message);
+                    delete this.strategies.tokenSniper;
+                }
             }
 
             if (decryptedConfig.strategies.trendTrading && decryptedConfig.strategies.trendTrading.enabled) {
@@ -263,7 +287,13 @@ class TradingEngine {
                     decryptedConfig.strategies.trendTrading,
                     trendLogger
                 );
-                await this.strategies.trendTrading.initialize();
+                try {
+                    await this.strategies.trendTrading.initialize();
+                    this.logger.info('Trend Trading strategy initialized');
+                } catch (error) {
+                    this.logger.error('Failed to initialize Trend Trading strategy:', error.message);
+                    delete this.strategies.trendTrading;
+                }
             }
         } catch (error) {
             this.logger.error('Failed to initialize strategies', error);
@@ -286,20 +316,26 @@ class TradingEngine {
                 scannerLogger
             );
             
-            await this.tokenScanner.initialize();
-            
-            if (this.tokenScanner.on) {
-                this.tokenScanner.on('newToken', (token) => {
-                    try {
-                        this.handleNewToken(token);
-                    } catch (error) {
-                        this.logger.error('Error handling new token', error);
-                    }
-                });
+            try {
+                await this.tokenScanner.initialize();
+                this.logger.info('Token scanner initialized');
                 
-                this.tokenScanner.on('error', (error) => {
-                    this.logger.error('Token scanner error', error);
-                });
+                if (this.tokenScanner.on) {
+                    this.tokenScanner.on('newToken', (token) => {
+                        try {
+                            this.handleNewToken(token);
+                        } catch (error) {
+                            this.logger.error('Error handling new token', error);
+                        }
+                    });
+                    
+                    this.tokenScanner.on('error', (error) => {
+                        this.logger.error('Token scanner error', error);
+                    });
+                }
+            } catch (error) {
+                this.logger.error('Failed to initialize token scanner:', error.message);
+                delete this.tokenScanner;
             }
         } catch (error) {
             this.logger.error('Failed to initialize token scanner', error);
@@ -315,19 +351,20 @@ class TradingEngine {
                 return;
             }
 
+            const fsSync = require('fs');
             try {
-                const fs = require('fs');
-                if (fs.existsSync(historyPath)) {
+                if (fsSync.existsSync(historyPath)) {
                     const history = JSON.parse(
-                        fs.readFileSync(historyPath, 'utf8')
+                        fsSync.readFileSync(historyPath, 'utf8')
                     );
-                    this.tradeHistory = history;
+                    this.tradeHistory = Array.isArray(history) ? history : [];
                     await this.updateStats();
-                    this.logger.info(`Loaded ${history.length} historical trades`);
+                    this.logger.info(`Loaded ${this.tradeHistory.length} historical trades`);
                 } else {
                     this.logger.info('No trade history file found, starting fresh');
                     // Create an empty trade history file
-                    fs.writeFileSync(historyPath, JSON.stringify([], null, 2), 'utf8');
+                    fsSync.writeFileSync(historyPath, JSON.stringify([], null, 2), 'utf8');
+                    this.tradeHistory = [];
                 }
             } catch (readError) {
                 this.logger.error('Failed to read trade history', readError);
@@ -351,7 +388,12 @@ class TradingEngine {
 
             // Start token scanner if initialized
             if (this.tokenScanner && typeof this.tokenScanner.start === 'function') {
-                await this.tokenScanner.start();
+                try {
+                                        await this.tokenScanner.start();
+                    this.logger.info('Token scanner started');
+                } catch (error) {
+                    this.logger.error('Failed to start token scanner:', error);
+                }
             }
 
             // Start main trading loop
@@ -400,7 +442,12 @@ class TradingEngine {
 
             // Stop token scanner
             if (this.tokenScanner && typeof this.tokenScanner.stop === 'function') {
-                await this.tokenScanner.stop();
+                try {
+                    await this.tokenScanner.stop();
+                    this.logger.info('Token scanner stopped');
+                } catch (error) {
+                    this.logger.error('Failed to stop token scanner:', error);
+                }
             }
 
             this.running = false;
@@ -413,7 +460,7 @@ class TradingEngine {
                 });
             }
 
-                        this.logger.info('Trading engine stopped successfully');
+            this.logger.info('Trading engine stopped successfully');
             return true;
         } catch (error) {
             this.logger.error('Failed to stop trading engine', error);
@@ -540,13 +587,13 @@ class TradingEngine {
             if (trade.exchange === 'dex') {
                 // Get price from blockchain
                 const connector = this.blockchain[trade.network];
-                if (connector) {
+                if (connector && typeof connector.getTokenPrice === 'function') {
                     return await connector.getTokenPrice(trade.tokenAddress);
                 }
             } else {
                 // Get price from CEX
                 const exchange = this.exchanges[trade.exchange];
-                if (exchange) {
+                if (exchange && typeof exchange.getPrice === 'function') {
                     return await exchange.getPrice(trade.symbol);
                 }
             }
@@ -612,12 +659,12 @@ class TradingEngine {
         try {
             if (trade.exchange === 'dex') {
                 const connector = this.blockchain[trade.network];
-                if (connector) {
+                if (connector && typeof connector.closePosition === 'function') {
                     await connector.closePosition(trade);
                 }
             } else {
                 const exchange = this.exchanges[trade.exchange];
-                if (exchange) {
+                if (exchange && typeof exchange.closePosition === 'function') {
                     await exchange.closePosition(trade);
                 }
             }
@@ -631,7 +678,18 @@ class TradingEngine {
                 trade.closePrice || trade.currentPrice
             );
             
-            this.tradeHistory.push(trade);
+            // Save trade history
+            try {
+                const fs = require('fs');
+                const historyPath = this.configManager.getTradeHistoryPath();
+                if (historyPath) {
+                    this.tradeHistory.push(trade);
+                    fs.writeFileSync(historyPath, JSON.stringify(this.tradeHistory, null, 2), 'utf8');
+                }
+            } catch (saveError) {
+                this.logger.error('Failed to save trade history', saveError);
+            }
+            
             delete this.activeTrades[trade.id];
             
             await this.updateStats();
@@ -702,12 +760,20 @@ class TradingEngine {
                 exchanges: {}
             };
 
-            if (this.blockchain.ethereum) {
-                balances.ethereum = await this.blockchain.ethereum.getBalances();
+            if (this.blockchain.ethereum && typeof this.blockchain.ethereum.getBalances === 'function') {
+                try {
+                    balances.ethereum = await this.blockchain.ethereum.getBalances();
+                } catch (error) {
+                    this.logger.warn('Failed to get Ethereum balances:', error.message);
+                }
             }
 
-            if (this.blockchain.bnbChain) {
-                balances.bnbChain = await this.blockchain.bnbChain.getBalances();
+            if (this.blockchain.bnbChain && typeof this.blockchain.bnbChain.getBalances === 'function') {
+                try {
+                    balances.bnbChain = await this.blockchain.bnbChain.getBalances();
+                } catch (error) {
+                    this.logger.warn('Failed to get BNB Chain balances:', error.message);
+                }
             }
 
             for (const [exchange, connector] of Object.entries(this.exchanges)) {

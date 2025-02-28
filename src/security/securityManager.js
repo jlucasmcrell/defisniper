@@ -4,6 +4,7 @@
  */
 const crypto = require('crypto');
 const fs = require('fs').promises;
+const fsSync = require('fs');
 const path = require('path');
 const { Logger } = require('../utils/logger');
 
@@ -95,7 +96,7 @@ class SecurityManager {
     verifyPassword(password) {
         try {
             const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
-            const storedHash = fs.readFileSync(path.join(this.configPath, 'password.hash'), 'utf8');
+            const storedHash = fsSync.readFileSync(path.join(this.configPath, 'password.hash'), 'utf8');
             return hashedPassword === storedHash;
         } catch (error) {
             this.logger.error('Password verification error', error);
@@ -150,18 +151,23 @@ class SecurityManager {
                 return this.getDefaultConfig();
             }
             
-            const decipher = crypto.createDecipheriv(
-                encryptedConfig.algorithm || this.algorithm,
-                Buffer.from(this.encryptionKey, 'hex'),
-                Buffer.from(encryptedConfig.iv, 'hex')
-            );
-            
-            decipher.setAuthTag(Buffer.from(encryptedConfig.authTag, 'hex'));
-            
-            let decrypted = decipher.update(encryptedConfig.encryptedData, 'hex', 'utf8');
-            decrypted += decipher.final('utf8');
-            
-            return JSON.parse(decrypted);
+            try {
+                const decipher = crypto.createDecipheriv(
+                    encryptedConfig.algorithm || this.algorithm,
+                    Buffer.from(this.encryptionKey, 'hex'),
+                    Buffer.from(encryptedConfig.iv, 'hex')
+                );
+                
+                decipher.setAuthTag(Buffer.from(encryptedConfig.authTag, 'hex'));
+                
+                let decrypted = decipher.update(encryptedConfig.encryptedData, 'hex', 'utf8');
+                decrypted += decipher.final('utf8');
+                
+                return JSON.parse(decrypted);
+            } catch (decryptError) {
+                this.logger.error('Decryption error - possibly corrupted data or wrong key', decryptError);
+                return this.getDefaultConfig();
+            }
         } catch (error) {
             this.logger.error('Failed to decrypt config', error);
             return this.getDefaultConfig();
@@ -170,15 +176,51 @@ class SecurityManager {
 
     getDefaultConfig() {
         return {
-            ethereum: { enabled: false },
-            bnbChain: { enabled: false },
+            ethereum: { 
+                enabled: false,
+                nodeUrl: '',
+                privateKey: '',
+                gasLimit: 250000,
+                gasPriceMultiplier: 1.1
+            },
+            bnbChain: { 
+                enabled: false,
+                nodeUrl: '',
+                privateKey: '',
+                gasLimit: 250000,
+                gasPriceMultiplier: 1.1
+            },
             exchanges: { 
-                binanceUS: { enabled: false },
-                cryptoCom: { enabled: false } 
+                binanceUS: { 
+                    enabled: false,
+                    apiKey: '',
+                    apiSecret: ''
+                },
+                cryptoCom: { 
+                    enabled: false,
+                    apiKey: '',
+                    apiSecret: '' 
+                }
             },
             strategies: { 
-                tokenSniper: { enabled: false },
-                trendTrading: { enabled: false }
+                tokenSniper: { 
+                    enabled: false,
+                    maxTransactionAmount: 0.1,
+                    slippageTolerance: 3,
+                    autoSellTimeoutMinutes: 30,
+                    stopLossPercentage: 10,
+                    takeProfitPercentage: 50
+                },
+                trendTrading: { 
+                    enabled: false,
+                    tradingPairs: ["BTC/USDT", "ETH/USDT"],
+                    timeframes: ["1h", "4h"]
+                }
+            },
+            trading: {
+                autoStart: false,
+                maxConcurrentTrades: 3,
+                defaultRiskPercentage: 2
             }
         };
     }

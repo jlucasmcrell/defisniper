@@ -4,6 +4,7 @@
  */
 const path = require('path');
 const fs = require('fs').promises;
+const fsSync = require('fs');
 const { Logger } = require('../utils/logger');
 
 class ConfigManager {
@@ -49,24 +50,49 @@ class ConfigManager {
     async loadConfig() {
         try {
             // Check if config file exists
+            let fileExists = false;
             try {
                 await fs.access(this.configFile);
+                fileExists = true;
             } catch (error) {
                 if (error.code === 'ENOENT') {
-                    this.logger.info('Config file not found, using default configuration');
-                    this.config = this.getDefaultConfig();
-                    return;
+                    this.logger.info('Config file not found, creating with default configuration');
+                    
+                    // Create a default encrypted config if security manager is available
+                    if (this.securityManager) {
+                        const defaultConfig = this.securityManager.getDefaultConfig();
+                        const encryptedConfig = await this.securityManager.encryptConfig(defaultConfig);
+                        await fs.writeFile(this.configFile, JSON.stringify(encryptedConfig, null, 2), 'utf8');
+                        this.config = encryptedConfig;
+                        return;
+                    } else {
+                        this.config = this.getDefaultConfig();
+                        await fs.writeFile(this.configFile, JSON.stringify(this.config, null, 2), 'utf8');
+                        return;
+                    }
                 }
                 throw error;
             }
 
-            // Read and parse config
-            const fileData = await fs.readFile(this.configFile, 'utf8');
-            const configData = JSON.parse(fileData);
-
-            // Store parsed config
-            this.config = configData;
-            this.logger.info('Configuration loaded successfully');
+            if (fileExists) {
+                // Read and parse config
+                const fileData = await fs.readFile(this.configFile, 'utf8');
+                try {
+                    this.config = JSON.parse(fileData);
+                    this.logger.info('Configuration loaded successfully');
+                } catch (parseError) {
+                    this.logger.error('Error parsing configuration file', parseError);
+                    this.config = this.getDefaultConfig();
+                    
+                    // Back up corrupted file
+                    const backupFile = `${this.configFile}.backup.${Date.now()}`;
+                    await fs.writeFile(backupFile, fileData, 'utf8');
+                    this.logger.info(`Backed up corrupted config to ${backupFile}`);
+                    
+                    // Write default config
+                    await fs.writeFile(this.configFile, JSON.stringify(this.config, null, 2), 'utf8');
+                }
+            }
         } catch (error) {
             this.logger.error('Error loading configuration', error);
             this.config = this.getDefaultConfig();
