@@ -2091,3 +2091,47 @@
 {"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:21:52.711Z"}
 {"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:21:52.711Z"}
 {"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:21:52.711Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T14:28:33.325Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T14:28:33.331Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T14:28:33.332Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T14:28:33.333Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-28T14:28:33.335Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-28T14:28:33.347Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-28T14:28:33.337Z"}
+{"level":"info","message":"Initializing enhanced token scanner","module":"TokenScanner","timestamp":"2025-02-28T14:28:33.341Z"}
+{"level":"warn","message":"No exchange configuration provided","module":"TradingEngine","timestamp":"2025-02-28T14:28:33.338Z"}
+{"level":"warn","message":"No strategy configuration provided","module":"TradingEngine","timestamp":"2025-02-28T14:28:33.338Z"}
+{"level":"info","message":"Token scanner initialized","module":"TradingEngine","timestamp":"2025-02-28T14:28:33.342Z"}
+{"level":"info","message":"Loaded 0 historical trades","module":"TradingEngine","timestamp":"2025-02-28T14:28:33.344Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-28T14:28:33.344Z"}
+{"level":"info","message":"No providers or factories initialized, trying parent initialization","module":"TokenScanner","timestamp":"2025-02-28T14:28:33.341Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:28:33.342Z"}
+{"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:28:33.342Z"}
+{"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:28:33.342Z"}
+{"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:28:33.342Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T14:29:04.702Z"}
+{"level":"info","message":"Generated new encryption key","module":"SecurityManager","timestamp":"2025-02-28T14:29:04.709Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T14:29:04.709Z"}
+{"level":"info","message":"Admin password set successfully","module":"Setup","timestamp":"2025-02-28T14:29:15.588Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T14:29:15.589Z"}
+{"level":"info","message":"Config file not found, creating with default configuration","module":"ConfigManager","timestamp":"2025-02-28T14:29:15.591Z"}
+{"level":"info","message":"Configuration saved successfully","module":"ConfigManager","timestamp":"2025-02-28T14:29:15.595Z"}
+{"level":"info","message":"Default configuration created successfully","module":"Setup","timestamp":"2025-02-28T14:29:15.595Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T14:29:23.538Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T14:29:23.544Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T14:29:23.545Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T14:29:23.546Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-28T14:29:23.548Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-28T14:29:23.559Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-28T14:29:23.549Z"}
+{"level":"info","message":"Initializing enhanced token scanner","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.553Z"}
+{"level":"warn","message":"No exchange configuration provided","module":"TradingEngine","timestamp":"2025-02-28T14:29:23.550Z"}
+{"level":"warn","message":"No strategy configuration provided","module":"TradingEngine","timestamp":"2025-02-28T14:29:23.550Z"}
+{"level":"info","message":"Token scanner initialized","module":"TradingEngine","timestamp":"2025-02-28T14:29:23.554Z"}
+{"level":"info","message":"Loaded 0 historical trades","module":"TradingEngine","timestamp":"2025-02-28T14:29:23.556Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-28T14:29:23.556Z"}
+{"level":"info","message":"No providers or factories initialized, trying parent initialization","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.553Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.554Z"}
+{"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.554Z"}
+{"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.554Z"}
+{"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.554Z"}

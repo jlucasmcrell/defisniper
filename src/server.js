@@ -73,27 +73,6 @@ async function initialize() {
             // Continue anyway, with limited functionality
         }
         
-        // Set up authentication check middleware
-        app.use((req, res, next) => {
-            // Skip auth check for the login endpoint
-            if (req.path === '/api/auth/login' || req.path === '/api/status') {
-                return next();
-            }
-
-            // Check session authentication
-            if (req.session.authenticated) {
-                return next();
-            }
-
-            // Reject unauthenticated API requests
-            if (req.path.startsWith('/api/')) {
-                return res.status(401).json({ success: false, message: 'Authentication required' });
-            }
-
-            // Redirect to login page for UI requests
-            res.redirect('/');
-        });
-        
         // Set up routes
         setupRoutes();
         
@@ -111,6 +90,22 @@ async function initialize() {
 function setupRoutes() {
     // Serve static files from 'public' directory
     app.use(express.static(path.join(__dirname, '..', 'public')));
+    
+    // Set up authentication check middleware - IMPORTANT: This needs to be after static file serving
+    // but before API routes to prevent redirect loops
+    app.use('/api', (req, res, next) => {
+        // Skip auth check for these specific endpoints
+        if (req.path === '/auth/login' || req.path === '/status') {
+            return next();
+        }
+
+        // Check session authentication for API routes
+        if (req.session.authenticated) {
+            return next();
+        } else {
+            return res.status(401).json({ success: false, message: 'Authentication required' });
+        }
+    });
     
     // API Routes - Auth
     app.post('/api/auth/login', (req, res) => {
