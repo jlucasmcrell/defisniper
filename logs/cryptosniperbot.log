@@ -1471,3 +1471,5 @@
 {"error":"this.initializeTokenScanner is not a function","level":"error","message":"Failed to initialize trading engine","module":"TradingEngine","stack":"TypeError: this.initializeTokenScanner is not a function\n    at TradingEngine.initialize (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\trading\\engine.js:161:24)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\routes\\api.js:168:25","timestamp":"2025-02-28T09:28:05.955Z"}
 {"level":"info","message":"Client disconnected: kvDDWgfZnNJUtbHoAAAD","module":"Server","timestamp":"2025-02-28T09:28:10.403Z"}
 {"level":"info","message":"Client connected: _XMLiW7toNjkHSsAAAAF","module":"Server","timestamp":"2025-02-28T09:28:10.973Z"}
+{"level":"info","message":"Client disconnected: _XMLiW7toNjkHSsAAAAF","module":"Server","timestamp":"2025-02-28T09:28:56.002Z"}
+{"level":"info","message":"Client connected: JZ4kOLmoA131ozATAAAH","module":"Server","timestamp":"2025-02-28T09:28:57.262Z"}

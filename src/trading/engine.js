@@ -94,7 +94,6 @@ class TradingEngine {
 
     /**
      * Check if the trading engine is running
-     * @returns {boolean} True if the engine is running, false otherwise
      */
     isRunning() {
         return this.running;
@@ -102,7 +101,6 @@ class TradingEngine {
 
     /**
      * Get active trades
-     * @returns {Object} Dictionary of active trades
      */
     getActiveTrades() {
         return this.activeTrades;
@@ -110,7 +108,6 @@ class TradingEngine {
 
     /**
      * Get wallet balances
-     * @returns {Object} Current balances for all connected wallets
      */
     getBalances() {
         return this.balances;
@@ -118,7 +115,6 @@ class TradingEngine {
 
     /**
      * Get trading stats
-     * @returns {Object} Current trading statistics
      */
     getStats() {
         return this.stats;
@@ -126,12 +122,12 @@ class TradingEngine {
 
     /**
      * Get trade history
-     * @returns {Array} List of historical trades
      */
     getTradeHistory() {
         return this.tradeHistory;
     }
-	/**
+
+    /**
      * Initialize the trading engine with improved error handling
      */
     async initialize() {
@@ -316,7 +312,8 @@ class TradingEngine {
             return false;
         }
     }
-	    /**
+
+    /**
      * Initialize trading strategies
      */
     async initializeStrategies(decryptedConfig) {
@@ -379,101 +376,103 @@ class TradingEngine {
     }
 
     /**
-     * Start the trading engine
+     * Initialize token scanner with error handling
      */
-    async start() {
-        if (this.running) {
-            this.logger.warn('Trading engine is already running');
-            return false;
-        }
-
+    async initializeTokenScanner(decryptedConfig) {
         try {
-            this.logger.info('Starting trading engine');
-            this.running = true;
-            this.stats.startTime = new Date();
-
-            // Start token scanner if initialized
-            if (this.tokenScanner && typeof this.tokenScanner.start === 'function') {
-                await this.tokenScanner.start();
-            }
-
-            // Start main trading loop
-            this.mainLoopInterval = setInterval(() => this.mainLoop(), 1000);
-
-            // Start monitoring loop
-            this.monitoringInterval = setInterval(() => this.monitor(), 5000);
-
-            this.logger.info('Trading engine started successfully');
+            this.logger.info('Initializing token scanner');
             
-            // Emit started event
-            this.socketIo.emit('botStarted', {
-                timestamp: new Date().toISOString(),
-                stats: this.stats
+            // Create token scanner instance with blockchain connectors and exchanges
+            this.tokenScanner = new EnhancedTokenScanner(
+                this.blockchain,
+                this.exchanges,
+                decryptedConfig,
+                this.logger
+            );
+            
+            // Initialize the scanner
+            await this.tokenScanner.initialize();
+            
+            // Set up event listeners for new token detection
+            this.tokenScanner.on('newToken', async (tokenData) => {
+                try {
+                    this.logger.info('New token detected', tokenData);
+                    
+                    // Emit token detection to UI
+                    this.socketIo.emit('newTokenDetected', {
+                        ...tokenData,
+                        timestamp: new Date().toISOString()
+                    });
+                    
+                    // If token sniper strategy is enabled, analyze the token
+                    if (this.strategies.tokenSniper) {
+                        await this.strategies.tokenSniper.analyzeToken(tokenData);
+                    }
+                } catch (error) {
+                    this.logger.error('Error processing new token', error);
+                }
+            });
+            
+            // Set up error handling for scanner
+            this.tokenScanner.on('error', (error) => {
+                this.logger.error('Token scanner error', error);
+                this.socketIo.emit('scannerError', {
+                    error: error.message,
+                    timestamp: new Date().toISOString()
+                });
             });
 
+            this.logger.info('Token scanner initialized successfully');
             return true;
         } catch (error) {
-            this.running = false;
-            this.logger.error('Failed to start trading engine', error);
+            this.logger.error('Failed to initialize token scanner', error);
             return false;
         }
     }
 
     /**
-     * Stop the trading engine
+     * Load trade history from storage
      */
-    async stop() {
-        if (!this.running) {
-            this.logger.warn('Trading engine is not running');
-            return false;
-        }
-
+    async loadTradeHistory() {
         try {
-            this.logger.info('Stopping trading engine');
-
-            // Clear intervals
-            if (this.mainLoopInterval) {
-                clearInterval(this.mainLoopInterval);
-                this.mainLoopInterval = null;
-            }
-
-            if (this.monitoringInterval) {
-                clearInterval(this.monitoringInterval);
-                this.monitoringInterval = null;
-            }
-
-            // Stop token scanner
-            if (this.tokenScanner && typeof this.tokenScanner.stop === 'function') {
-                await this.tokenScanner.stop();
-            }
-
-            this.running = false;
-            
-            // Emit stopped event
-            this.socketIo.emit('botStopped', {
-                timestamp: new Date().toISOString(),
-                stats: this.stats
-            });
-
-            this.logger.info('Trading engine stopped successfully');
+            // Implementation for loading trade history
+            // This would typically load from a database or file
+            this.tradeHistory = [];
+            await this.updateStats();
             return true;
         } catch (error) {
-            this.logger.error('Failed to stop trading engine', error);
+            this.logger.error('Failed to load trade history', error);
             return false;
         }
     }
 
     /**
-     * Main trading loop
+     * Update wallet balances
      */
-    async mainLoop() {
-        if (!this.running) return;
-
+    async updateBalances() {
         try {
-            // Update balances every 60 seconds
-            const now = Date.now();
-            if (now - this.lastBalanceUpdate > 60000) {
-                await this.updateBalances();
+            const balances = {
+                ethereum: {},
+                bnbChain: {},
+                exchanges: {}
+            };
+
+            // Update blockchain wallet balances
+            if (this.blockchain.ethereum) {
+                balances.ethereum = await this.blockchain.ethereum.getBalances();
+            }
+
+            if (this.blockchain.bnbChain) {
+                balances.bnbChain = await this.blockchain.bnbChain.getBalances();
+            }
+
+            // Update exchange balances
+            for (const [exchange, connector] of Object.entries(this.exchanges)) {
+                if (connector && typeof connector.getBalances === 'function') {
+                    balances.exchanges[exchange] = await connector.getBalances();
+                }
+            }
+ await this.updateBalances();
                 this.lastBalanceUpdate = now;
             }
 
@@ -508,8 +507,25 @@ class TradingEngine {
                         delete this.activeTrades[tradeId];
                         this.tradeHistory.push(updatedTrade);
                         await this.updateStats();
+                        
+                        // Emit trade completion event
+                        this.socketIo.emit('tradeCompleted', {
+                            tradeId,
+                            status: updatedTrade.status,
+                            profitLoss: updatedTrade.profitLoss,
+                            timestamp: new Date().toISOString()
+                        });
                     } else {
                         this.activeTrades[tradeId] = updatedTrade;
+                        
+                        // Emit trade update event
+                        this.socketIo.emit('tradeUpdated', {
+                            tradeId,
+                            status: updatedTrade.status,
+                            currentPrice: updatedTrade.currentPrice,
+                            profitLoss: updatedTrade.unrealizedProfitLoss,
+                            timestamp: new Date().toISOString()
+                        });
                     }
                 } catch (tradeError) {
                     this.logger.error(`Error monitoring trade ${tradeId}`, tradeError);
@@ -521,11 +537,175 @@ class TradingEngine {
     }
 
     /**
-     * Update trade status
+     * Update trade status and calculate current positions
      */
     async updateTradeStatus(trade) {
-        // Implementation details depend on trade structure and blockchain/exchange specifics
-        return trade;
+        try {
+            const updatedTrade = { ...trade };
+            
+            // Get current price for the trading pair
+            const currentPrice = await this.getPriceForTrade(trade);
+            updatedTrade.currentPrice = currentPrice;
+            
+            // Calculate unrealized profit/loss
+            const unrealizedPL = this.calculateUnrealizedProfitLoss(trade, currentPrice);
+            updatedTrade.unrealizedProfitLoss = unrealizedPL;
+            
+            // Check stop loss and take profit conditions
+            if (this.shouldTriggerStopLoss(trade, currentPrice)) {
+                await this.closeTrade(trade, 'stop_loss');
+                updatedTrade.status = 'completed';
+                updatedTrade.closeReason = 'stop_loss';
+            } else if (this.shouldTriggerTakeProfit(trade, currentPrice)) {
+                await this.closeTrade(trade, 'take_profit');
+                updatedTrade.status = 'completed';
+                updatedTrade.closeReason = 'take_profit';
+            }
+            
+            // Update trade timestamps
+            updatedTrade.lastUpdated = new Date().toISOString();
+            
+            return updatedTrade;
+        } catch (error) {
+            this.logger.error(`Error updating trade status for trade ${trade.id}`, error);
+            return trade;
+        }
+    }
+
+    /**
+     * Get current price for a trade
+     */
+    async getPriceForTrade(trade) {
+        try {
+            if (trade.exchange === 'dex') {
+                // Get price from blockchain
+                const connector = this.blockchain[trade.network];
+                if (connector) {
+                    return await connector.getTokenPrice(trade.tokenAddress);
+                }
+            } else {
+                // Get price from CEX
+                const exchange = this.exchanges[trade.exchange];
+                if (exchange) {
+                    return await exchange.getPrice(trade.symbol);
+                }
+            }
+            throw new Error('No valid price source found for trade');
+        } catch (error) {
+            this.logger.error(`Error getting price for trade ${trade.id}`, error);
+            return null;
+        }
+    }
+
+    /**
+     * Calculate unrealized profit/loss for a trade
+     */
+    calculateUnrealizedProfitLoss(trade, currentPrice) {
+        try {
+            if (!currentPrice || !trade.entryPrice || !trade.quantity) {
+                return 0;
+            }
+            
+            const difference = trade.side === 'buy' 
+                ? currentPrice - trade.entryPrice 
+                : trade.entryPrice - currentPrice;
+                
+            return difference * trade.quantity;
+        } catch (error) {
+            this.logger.error(`Error calculating unrealized P/L for trade ${trade.id}`, error);
+            return 0;
+        }
+    }
+
+    /**
+     * Check if stop loss should be triggered
+     */
+    shouldTriggerStopLoss(trade, currentPrice) {
+        try {
+            if (!trade.stopLoss || !currentPrice) {
+                return false;
+            }
+            
+            if (trade.side === 'buy') {
+                return currentPrice <= trade.stopLoss;
+            } else {
+                return currentPrice >= trade.stopLoss;
+            }
+        } catch (error) {
+            this.logger.error(`Error checking stop loss for trade ${trade.id}`, error);
+            return false;
+        }
+    }
+
+    /**
+     * Check if take profit should be triggered
+     */
+    shouldTriggerTakeProfit(trade, currentPrice) {
+        try {
+            if (!trade.takeProfit || !currentPrice) {
+                return false;
+            }
+            
+            if (trade.side === 'buy') {
+                return currentPrice >= trade.takeProfit;
+            } else {
+                return currentPrice <= trade.takeProfit;
+            }
+        } catch (error) {
+            this.logger.error(`Error checking take profit for trade ${trade.id}`, error);
+            return false;
+        }
+    }
+
+    /**
+     * Close a trade with the specified reason
+     */
+    async closeTrade(trade, reason) {
+        try {
+            if (trade.exchange === 'dex') {
+                // Close position on DEX
+                const connector = this.blockchain[trade.network];
+                if (connector) {
+                    await connector.closePosition(trade);
+                }
+            } else {
+                // Close position on CEX
+                const exchange = this.exchanges[trade.exchange];
+                if (exchange) {
+                    await exchange.closePosition(trade);
+                }
+            }
+            
+            trade.status = 'completed';
+            trade.closeReason = reason;
+            trade.closedAt = new Date().toISOString();
+            
+            // Calculate final profit/loss
+            trade.profitLoss = this.calculateUnrealizedProfitLoss(
+                trade,
+                trade.closePrice || trade.currentPrice
+            );
+            
+            // Update trade history
+            this.tradeHistory.push(trade);
+            delete this.activeTrades[trade.id];
+            
+            // Update stats
+            await this.updateStats();
+            
+            // Emit trade closed event
+            this.socketIo.emit('tradeClosed', {
+                tradeId: trade.id,
+                reason,
+                profitLoss: trade.profitLoss,
+                timestamp: new Date().toISOString()
+            });
+            
+            return true;
+        } catch (error) {
+            this.logger.error(`Error closing trade ${trade.id}`, error);
+            return false;
+        }
     }
 
     /**
@@ -535,22 +715,22 @@ class TradingEngine {
         try {
             const stats = {
                 totalTrades: this.tradeHistory.length,
-                successfulTrades: this.tradeHistory.filter(t => t.status === 'completed').length,
-                failedTrades: this.tradeHistory.filter(t => t.status === 'failed').length,
+                successfulTrades: this.tradeHistory.filter(t => t.status === 'completed' && t.profitLoss > 0).length,
+                failedTrades: this.tradeHistory.filter(t => t.status === 'failed' || t.profitLoss <= 0).length,
                 profitLoss: this.calculateTotalProfitLoss(),
                 startTime: this.stats.startTime,
                 lastTradeTime: this.tradeHistory.length > 0 ? 
                     this.tradeHistory[this.tradeHistory.length - 1].timestamp : null
             };
-
+            
             stats.winRate = stats.totalTrades > 0 ? 
                 (stats.successfulTrades / stats.totalTrades) * 100 : 0;
-
+            
             this.stats = stats;
-
+            
             // Emit updated stats
             this.socketIo.emit('statsUpdate', stats);
-
+            
             return stats;
         } catch (error) {
             this.logger.error('Error updating stats', error);
@@ -562,9 +742,17 @@ class TradingEngine {
      * Calculate total profit/loss
      */
     calculateTotalProfitLoss() {
-        return this.tradeHistory.reduce((total, trade) => {
-            return total + (trade.profitLoss || 0);
-        }, 0);
+        try {
+            return this.tradeHistory.reduce((total, trade) => {
+                if (trade.profitLoss) {
+                    return total + trade.profitLoss;
+                }
+                return total;
+            }, 0);
+        } catch (error) {
+            this.logger.error('Error calculating total profit/loss', error);
+            return 0;
+        }
     }
 }
 
