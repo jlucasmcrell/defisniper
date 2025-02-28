@@ -214,7 +214,21 @@ class SecurityManager {
                 trendTrading: { 
                     enabled: false,
                     tradingPairs: ["BTC/USDT", "ETH/USDT"],
-                    timeframes: ["1h", "4h"]
+                    timeframes: ["1h", "4h"],
+                    indicators: {
+                        rsi: {
+                            enabled: true,
+                            period: 14,
+                            overbought: 70,
+                            oversold: 30
+                        },
+                        macd: {
+                            enabled: true,
+                            fastPeriod: 12,
+                            slowPeriod: 26,
+                            signalPeriod: 9
+                        }
+                    }
                 }
             },
             trading: {
