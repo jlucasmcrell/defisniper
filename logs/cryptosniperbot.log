@@ -2214,3 +2214,36 @@
 {"level":"info","message":"GET /css/styles.css","module":"Server","timestamp":"2025-02-28T15:21:22.270Z"}
 {"level":"info","message":"GET /","module":"Server","timestamp":"2025-02-28T15:21:26.204Z"}
 {"level":"info","message":"GET /css/styles.css","module":"Server","timestamp":"2025-02-28T15:21:26.220Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T15:37:10.382Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T15:37:10.388Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T15:37:10.389Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T15:37:10.391Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-28T15:37:10.393Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-28T15:37:10.405Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-28T15:37:10.394Z"}
+{"level":"info","message":"Initializing enhanced token scanner","module":"TokenScanner","timestamp":"2025-02-28T15:37:10.399Z"}
+{"level":"warn","message":"No exchange configuration provided","module":"TradingEngine","timestamp":"2025-02-28T15:37:10.395Z"}
+{"level":"warn","message":"No strategy configuration provided","module":"TradingEngine","timestamp":"2025-02-28T15:37:10.396Z"}
+{"level":"info","message":"Token scanner initialized","module":"TradingEngine","timestamp":"2025-02-28T15:37:10.400Z"}
+{"level":"info","message":"Loaded 0 historical trades","module":"TradingEngine","timestamp":"2025-02-28T15:37:10.401Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-28T15:37:10.401Z"}
+{"level":"info","message":"No providers or factories initialized, trying parent initialization","module":"TokenScanner","timestamp":"2025-02-28T15:37:10.399Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T15:37:10.399Z"}
+{"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T15:37:10.400Z"}
+{"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T15:37:10.400Z"}
+{"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T15:37:10.400Z"}
+{"level":"info","message":"GET /","module":"Server","timestamp":"2025-02-28T15:37:59.162Z"}
+{"level":"info","message":"GET /css/styles.css","module":"Server","timestamp":"2025-02-28T15:37:59.188Z"}
+{"level":"info","message":"GET /js/auth.js","module":"Server","timestamp":"2025-02-28T15:37:59.189Z"}
+{"level":"info","message":"GET /js/trades.js","module":"Server","timestamp":"2025-02-28T15:37:59.192Z"}
+{"level":"info","message":"GET /js/settings.js","module":"Server","timestamp":"2025-02-28T15:37:59.193Z"}
+{"level":"info","message":"GET /js/dashboard.js","module":"Server","timestamp":"2025-02-28T15:37:59.194Z"}
+{"level":"info","message":"GET /js/logs.js","module":"Server","timestamp":"2025-02-28T15:37:59.195Z"}
+{"level":"info","message":"GET /js/app.js","module":"Server","timestamp":"2025-02-28T15:37:59.195Z"}
+{"level":"info","message":"GET /api/auth/status","module":"Server","timestamp":"2025-02-28T15:37:59.411Z"}
+{"level":"info","message":"POST /api/auth/login","module":"Server","timestamp":"2025-02-28T15:38:07.727Z"}
+{"level":"warn","message":"Authentication failed - incorrect password","module":"Server","timestamp":"2025-02-28T15:38:07.728Z"}
+{"level":"info","message":"POST /api/auth/login","module":"Server","timestamp":"2025-02-28T15:38:11.189Z"}
+{"level":"info","message":"User authenticated successfully","module":"Server","timestamp":"2025-02-28T15:38:11.189Z"}
+{"level":"info","message":"GET /api/auth/status","module":"Server","timestamp":"2025-02-28T15:38:11.192Z"}
+{"level":"info","message":"User connected to websocket","module":"Server","timestamp":"2025-02-28T15:38:11.204Z"}
