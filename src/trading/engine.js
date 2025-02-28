@@ -93,67 +93,65 @@ class TradingEngine {
     }
 
     /**
-     * Check if the trading engine is running
-     */
-    isRunning() {
-        return this.running;
-    }
-
-    /**
-     * Get active trades
-     */
-    getActiveTrades() {
-        return this.activeTrades;
-    }
-
-    /**
-     * Get wallet balances
-     */
-    getBalances() {
-        return this.balances;
-    }
-
-    /**
-     * Get trading stats
-     */
-    getStats() {
-        return this.stats;
-    }
-
-    /**
-     * Get trade history
-     */
-    getTradeHistory() {
-        return this.tradeHistory;
-    }
-
-    /**
-     * Initialize the trading engine with improved error handling
+     * Initialize the trading engine
      */
     async initialize() {
         try {
-            this.logger.info('Initializing trading engine with enhanced capabilities');
+            this.logger.info('Initializing trading engine');
             
-            // Decrypt private keys and API credentials with better error handling
-            let decryptedConfig;
-            try {
-                decryptedConfig = this.securityManager.decryptConfig(this.config);
-                this.logger.info('Config decrypted successfully');
-            } catch (decryptError) {
-                this.logger.error('Failed to decrypt configuration', decryptError);
-                throw new Error('Configuration decryption failed. Please check your encryption key.');
+            // Decrypt private keys and API credentials
+            const decryptedConfig = this.securityManager.decryptConfig(this.config);
+            
+            // Initialize blockchain connectors
+            if (decryptedConfig.ethereum && decryptedConfig.ethereum.enabled) {
+                this.blockchain.ethereum = new EthereumConnector(
+                    decryptedConfig.ethereum.privateKey,
+                    decryptedConfig.ethereum.alchemyKey,
+                    this.logger
+                );
+                await this.blockchain.ethereum.initialize();
             }
             
-            // Initialize blockchain connectors with improved error handling
-            await this.initializeBlockchainConnectors(decryptedConfig);
+            if (decryptedConfig.bnbChain && decryptedConfig.bnbChain.enabled) {
+                this.blockchain.bnbChain = new BnbConnector(
+                    decryptedConfig.ethereum.privateKey, // Same private key for ETH and BNB
+                    this.logger
+                );
+                await this.blockchain.bnbChain.initialize();
+            }
             
-            // Initialize exchange connectors with improved error handling
-            await this.initializeExchangeConnectors(decryptedConfig);
+            // Initialize exchange connectors
+            if (decryptedConfig.exchanges) {
+                if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) {
+                    this.exchanges.binanceUS = new BinanceExchange(
+                        decryptedConfig.exchanges.binanceUS.apiKey,
+                        decryptedConfig.exchanges.binanceUS.apiSecret,
+                        this.logger
+                    );
+                    await this.exchanges.binanceUS.initialize();
+                }
+                
+                if (decryptedConfig.exchanges.cryptoCom && decryptedConfig.exchanges.cryptoCom.enabled) {
+                    this.exchanges.cryptoCom = new CryptocomExchange(
+                        decryptedConfig.exchanges.cryptoCom.apiKey,
+                        decryptedConfig.exchanges.cryptoCom.apiSecret,
+                        this.logger
+                    );
+                    await this.exchanges.cryptoCom.initialize();
+                }
+            }
             
-            // Initialize trading strategies with expanded token support
-            await this.initializeStrategies(decryptedConfig);
-            
-            // Set up token scanner for new token detection
+            // Initialize trading strategies
+            if (decryptedConfig.strategies.tokenSniper.enabled) {
+                this.strategies.tokenSniper = new TokenSniperStrategy(
+                    this.blockchain,
+                    this.exchanges,
+                    decryptedConfig.strategies.tokenSniper,
+                    this.logger
+                );
+            }
+
+            // Initialize token scanner
             await this.initializeTokenScanner(decryptedConfig);
             
             // Load trade history and update stats
@@ -162,216 +160,11 @@ class TradingEngine {
             // Update wallet balances
             await this.updateBalances();
             
-            // Add test tokens for debugging if in development mode
-            if (decryptedConfig.development) {
-                await this.addTestTokens();
-            }
-            
-            // Emit initialized event to clients
-            this.socketIo.emit('engineInitialized', {
-                blockchains: Object.keys(this.blockchain),
-                exchanges: Object.keys(this.exchanges),
-                strategies: Object.keys(this.strategies)
-            });
-            
             this.logger.info('Trading engine initialized successfully');
             return true;
         } catch (error) {
             this.logger.error('Failed to initialize trading engine', error);
-            
-            // Emit error to clients
-            this.socketIo.emit('initializationError', {
-                message: error.message,
-                stack: error.stack
-            });
-            
             throw error;
-        }
-    }
-
-    /**
-     * Initialize blockchain connectors with improved error handling
-     */
-    async initializeBlockchainConnectors(decryptedConfig) {
-        try {
-            this.logger.info('Initializing blockchain connectors');
-            
-            // Initialize Ethereum connector
-            if (decryptedConfig.ethereum && decryptedConfig.ethereum.enabled) {
-                this.logger.info('Setting up Ethereum connector');
-                
-                try {
-                    this.blockchain.ethereum = new EthereumConnector(
-                        decryptedConfig,
-                        this.logger
-                    );
-                    
-                    const success = await this.blockchain.ethereum.initialize();
-                    
-                    if (success) {
-                        const address = this.blockchain.ethereum.getAddress();
-                        if (typeof address === 'string') {
-                            this.logger.info(`Ethereum wallet address: ${address.substr(0, 10)}...`);
-                        } else {
-                            this.logger.info('Ethereum wallet address: Unknown');
-                        }
-                    }
-                } catch (ethError) {
-                    this.logger.error('Failed to initialize Ethereum connector', ethError);
-                }
-            }
-            
-            // Initialize BNB Chain connector
-            if (decryptedConfig.bnbChain && decryptedConfig.bnbChain.enabled) {
-                this.logger.info('Setting up BNB Chain connector');
-                
-                try {
-                    this.blockchain.bnbChain = new BnbConnector(
-                        decryptedConfig,
-                        this.logger
-                    );
-                    
-                    const success = await this.blockchain.bnbChain.initialize();
-                    
-                    if (success) {
-                        const address = this.blockchain.bnbChain.getAddress();
-                        if (typeof address === 'string') {
-                            this.logger.info(`BNB Chain wallet address: ${address.substr(0, 10)}...`);
-                        } else {
-                            this.logger.info('BNB Chain wallet address: Unknown');
-                        }
-                    }
-                } catch (bnbError) {
-                    this.logger.error('Failed to initialize BNB Chain connector', bnbError);
-                }
-            }
-            
-            return true;
-        } catch (error) {
-            this.logger.error('Error initializing blockchain connectors', error);
-            return false;
-        }
-    }
-
-    /**
-     * Initialize exchange connectors with improved error handling
-     */
-    async initializeExchangeConnectors(decryptedConfig) {
-        try {
-            this.logger.info('Initializing exchange connectors');
-            
-            // Initialize Binance.US connector
-            if (decryptedConfig.exchanges?.binanceUS?.enabled) {
-                this.logger.info('Setting up Binance.US connector');
-                
-                try {
-                    const binanceConfig = decryptedConfig.exchanges.binanceUS;
-                    if (!binanceConfig.apiKey || !binanceConfig.apiSecret) {
-                        throw new Error('Missing Binance.US API credentials');
-                    }
-
-                    this.exchanges.binanceUS = new BinanceExchange(
-                        binanceConfig.apiKey,
-                        binanceConfig.apiSecret,
-                        this.logger
-                    );
-                    
-                    await this.exchanges.binanceUS.initialize();
-                    this.logger.info('Binance.US connector initialized successfully');
-                } catch (binanceError) {
-                    this.logger.error('Failed to initialize Binance.US connector', binanceError);
-                }
-            }
-            
-            // Initialize Crypto.com connector
-            if (decryptedConfig.exchanges?.cryptoCom?.enabled) {
-                this.logger.info('Setting up Crypto.com connector');
-                
-                try {
-                    const cryptoConfig = decryptedConfig.exchanges.cryptoCom;
-                    if (!cryptoConfig.apiKey || !cryptoConfig.apiSecret) {
-                        throw new Error('Missing Crypto.com API credentials');
-                    }
-
-                    this.exchanges.cryptoCom = new CryptocomExchange(
-                        cryptoConfig.apiKey,
-                        cryptoConfig.apiSecret,
-                        this.logger
-                    );
-                    
-                    await this.exchanges.cryptoCom.initialize();
-                    this.logger.info('Crypto.com connector initialized successfully');
-                } catch (cryptoError) {
-                    this.logger.error('Failed to initialize Crypto.com connector', cryptoError);
-                }
-            }
-            
-            return true;
-        } catch (error) {
-            this.logger.error('Error initializing exchange connectors', error);
-            return false;
-        }
-    }
-
-    /**
-     * Initialize trading strategies
-     */
-    async initializeStrategies(decryptedConfig) {
-        try {
-            this.logger.info('Initializing trading strategies');
-            
-            // Initialize Token Sniper strategy if enabled
-            if (decryptedConfig.strategies?.tokenSniper?.enabled) {
-                try {
-                    this.strategies.tokenSniper = new TokenSniperStrategy(
-                        this.blockchain,
-                        this.exchanges,
-                        decryptedConfig.strategies.tokenSniper,
-                        this.logger
-                    );
-                    await this.strategies.tokenSniper.initialize();
-                    this.logger.info('Token Sniper strategy initialized successfully');
-                } catch (error) {
-                    this.logger.error('Failed to initialize Token Sniper strategy', error);
-                }
-            }
-
-            // Initialize Scalping strategy if enabled
-            if (decryptedConfig.strategies?.scalping?.enabled) {
-                try {
-                    this.strategies.scalping = new ScalpingStrategy(
-                        this.blockchain,
-                        this.exchanges,
-                        decryptedConfig.strategies.scalping,
-                        this.logger
-                    );
-                    await this.strategies.scalping.initialize();
-                    this.logger.info('Scalping strategy initialized successfully');
-                } catch (error) {
-                    this.logger.error('Failed to initialize Scalping strategy', error);
-                }
-            }
-
-            // Initialize Enhanced Trend Trading strategy if enabled
-            if (decryptedConfig.strategies?.enhancedTrendTrading?.enabled) {
-                try {
-                    this.strategies.enhancedTrendTrading = new EnhancedTrendTradingStrategy(
-                        this.blockchain,
-                        this.exchanges,
-                        decryptedConfig.strategies.enhancedTrendTrading,
-                        this.logger
-                    );
-                    await this.strategies.enhancedTrendTrading.initialize();
-                    this.logger.info('Enhanced Trend Trading strategy initialized successfully');
-                } catch (error) {
-                    this.logger.error('Failed to initialize Enhanced Trend Trading strategy', error);
-                }
-            }
-
-            return true;
-        } catch (error) {
-            this.logger.error('Error initializing strategies', error);
-            return false;
         }
     }
 
@@ -431,48 +224,101 @@ class TradingEngine {
     }
 
     /**
-     * Load trade history from storage
+     * Start the trading engine
      */
-    async loadTradeHistory() {
+    async start() {
+        if (this.running) {
+            this.logger.warn('Trading engine is already running');
+            return false;
+        }
+
         try {
-            // Implementation for loading trade history
-            // This would typically load from a database or file
-            this.tradeHistory = [];
-            await this.updateStats();
+            this.logger.info('Starting trading engine');
+            this.running = true;
+            this.stats.startTime = new Date();
+
+            // Start token scanner if initialized
+            if (this.tokenScanner && typeof this.tokenScanner.start === 'function') {
+                await this.tokenScanner.start();
+            }
+
+            // Start main trading loop
+            this.mainLoopInterval = setInterval(() => this.mainLoop(), 1000);
+
+            // Start monitoring loop
+            this.monitoringInterval = setInterval(() => this.monitor(), 5000);
+
+            this.logger.info('Trading engine started successfully');
+            
+            // Emit started event
+            this.socketIo.emit('botStarted', {
+                timestamp: new Date().toISOString(),
+                stats: this.stats
+            });
+
             return true;
         } catch (error) {
-            this.logger.error('Failed to load trade history', error);
+            this.running = false;
+            this.logger.error('Failed to start trading engine', error);
             return false;
         }
     }
 
     /**
-     * Update wallet balances
+     * Stop the trading engine
      */
-    async updateBalances() {
+    async stop() {
+        if (!this.running) {
+            this.logger.warn('Trading engine is not running');
+            return false;
+        }
+
         try {
-            const balances = {
-                ethereum: {},
-                bnbChain: {},
-                exchanges: {}
-            };
+            this.logger.info('Stopping trading engine');
 
-            // Update blockchain wallet balances
-            if (this.blockchain.ethereum) {
-                balances.ethereum = await this.blockchain.ethereum.getBalances();
+            // Clear intervals
+            if (this.mainLoopInterval) {
+                clearInterval(this.mainLoopInterval);
+                this.mainLoopInterval = null;
             }
 
-            if (this.blockchain.bnbChain) {
-                balances.bnbChain = await this.blockchain.bnbChain.getBalances();
+            if (this.monitoringInterval) {
+                clearInterval(this.monitoringInterval);
+                this.monitoringInterval = null;
             }
 
-            // Update exchange balances
-            for (const [exchange, connector] of Object.entries(this.exchanges)) {
-                if (connector && typeof connector.getBalances === 'function') {
-                    balances.exchanges[exchange] = await connector.getBalances();
-                }
+            // Stop token scanner
+            if (this.tokenScanner && typeof this.tokenScanner.stop === 'function') {
+                await this.tokenScanner.stop();
             }
- await this.updateBalances();
+
+            this.running = false;
+            
+            // Emit stopped event
+            this.socketIo.emit('botStopped', {
+                timestamp: new Date().toISOString(),
+                stats: this.stats
+            });
+
+            this.logger.info('Trading engine stopped successfully');
+            return true;
+        } catch (error) {
+            this.logger.error('Failed to stop trading engine', error);
+            return false;
+        }
+    }
+
+    /**
+     * Main trading loop
+     */
+    async mainLoop() {
+        if (!this.running) return;
+
+        try {
+            // Update balances every 60 seconds
+            const now = Date.now();
+            if (now - this.lastBalanceUpdate > 60000) {
+                await this.updateBalances();
                 this.lastBalanceUpdate = now;
             }
 
@@ -753,6 +599,83 @@ class TradingEngine {
             this.logger.error('Error calculating total profit/loss', error);
             return 0;
         }
+    }
+
+    /**
+     * Update wallet balances
+     */
+    async updateBalances() {
+        try {
+            const balances = {
+                ethereum: {},
+                bnbChain: {},
+                exchanges: {}
+            };
+
+            // Update blockchain wallet balances
+            if (this.blockchain.ethereum) {
+                balances.ethereum = await this.blockchain.ethereum.getBalances();
+            }
+
+            if (this.blockchain.bnbChain) {
+                balances.bnbChain = await this.blockchain.bnbChain.getBalances();
+            }
+
+            // Update exchange balances
+            for (const [exchange, connector] of Object.entries(this.exchanges)) {
+                if (connector && typeof connector.getBalances === 'function') {
+                    balances.exchanges[exchange] = await connector.getBalances();
+                }
+            }
+
+            this.balances = balances;
+
+            // Emit balance update
+            this.socketIo.emit('balanceUpdate', {
+                balances,
+                timestamp: new Date().toISOString()
+            });
+
+            return balances;
+        } catch (error) {
+            this.logger.error('Error updating balances', error);
+            return this.balances;
+        }
+    }
+
+    /**
+     * Get active trades
+     */
+    getActiveTrades() {
+        return this.activeTrades;
+    }
+
+    /**
+     * Get trade history
+     */
+    getTradeHistory() {
+        return this.tradeHistory;
+    }
+
+    /**
+     * Get current balances
+     */
+    getBalances() {
+        return this.balances;
+    }
+
+    /**
+     * Get trading statistics
+     */
+    getStats() {
+        return this.stats;
+    }
+
+    /**
+     * Check if the trading engine is running
+     */
+    isRunning() {
+        return this.running;
     }
 }
 
