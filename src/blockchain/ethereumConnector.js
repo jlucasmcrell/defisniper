@@ -5,12 +5,18 @@ const UNISWAP_ROUTER_ABI = require('./abis/uniswapRouter.json');
 
 class EthereumConnector {
     constructor(config, logger) {
+        if (!logger || typeof logger.error !== 'function' || 
+            typeof logger.info !== 'function' || 
+            typeof logger.warn !== 'function') {
+            throw new Error('Invalid logger provided to EthereumConnector');
+        }
+
         this.config = config;
         this.logger = logger;
         
         // Contract addresses
-        this.uniswapRouterAddress = config.ethereum?.uniswapRouterAddress || '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
-        this.uniswapFactoryAddress = config.ethereum?.uniswapFactoryAddress || '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
+        this.uniswapRouterAddress = config?.uniswapRouterAddress || '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
+        this.uniswapFactoryAddress = config?.uniswapFactoryAddress || '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
         this.wethAddress = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2';
         
         this.provider = null;
@@ -24,22 +30,22 @@ class EthereumConnector {
             this.logger.info('Initializing Ethereum connector');
 
             // Validate private key
-            const privateKey = this.config.ethereum?.privateKey;
+            const privateKey = this.config?.privateKey;
             if (!privateKey || typeof privateKey !== 'string') {
                 throw new Error('Missing or invalid private key for Ethereum');
             }
 
             // Validate API key
-            const apiKey = this.config.ethereum?.infuraId || this.config.ethereum?.alchemyKey;
+            const apiKey = this.config?.infuraId || this.config?.alchemyKey;
             if (!apiKey || typeof apiKey !== 'string') {
                 throw new Error('Missing or invalid API key for Ethereum provider');
             }
 
             // Set up provider
-            if (this.config.ethereum?.infuraId) {
-                this.provider = new ethers.providers.InfuraProvider('mainnet', this.config.ethereum.infuraId);
-            } else if (this.config.ethereum?.alchemyKey) {
-                this.provider = new ethers.providers.AlchemyProvider('mainnet', this.config.ethereum.alchemyKey);
+            if (this.config?.infuraId) {
+                this.provider = new ethers.providers.InfuraProvider('mainnet', this.config.infuraId);
+            } else if (this.config?.alchemyKey) {
+                this.provider = new ethers.providers.AlchemyProvider('mainnet', this.config.alchemyKey);
             } else {
                 throw new Error('No valid provider configuration found');
             }

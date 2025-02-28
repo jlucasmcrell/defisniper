@@ -107,30 +107,43 @@ class TradingEngine {
     }
 
     async initializeBlockchainConnectors(decryptedConfig) {
-        try {
-            if (decryptedConfig.ethereum?.enabled) {
-                const ethereumLogger = new Logger('EthereumConnector');
-                this.blockchain.ethereum = new EthereumConnector(
-                    decryptedConfig.ethereum.privateKey,
-                    decryptedConfig.ethereum.alchemyKey,
-                    ethereumLogger
-                );
-                await this.blockchain.ethereum.initialize();
+    try {
+        if (decryptedConfig.ethereum?.enabled) {
+            const ethereumLogger = new Logger('EthereumConnector');
+            // Initialize the logger first and ensure it has all required methods
+            if (!ethereumLogger.error || !ethereumLogger.info || !ethereumLogger.warn) {
+                throw new Error('Logger not properly initialized');
             }
             
-            if (decryptedConfig.bnbChain?.enabled) {
-                const bnbLogger = new Logger('BnbConnector');
-                this.blockchain.bnbChain = new BnbConnector(
-                    decryptedConfig.ethereum.privateKey,
-                    bnbLogger
-                );
-                await this.blockchain.bnbChain.initialize();
-            }
-        } catch (error) {
-            this.logger.error('Failed to initialize blockchain connectors', error);
-            throw error;
+            this.blockchain.ethereum = new EthereumConnector(
+                decryptedConfig.ethereum,  // Pass the entire ethereum config
+                ethereumLogger
+            );
+            await this.blockchain.ethereum.initialize();
         }
+        
+        if (decryptedConfig.bnbChain?.enabled) {
+            const bnbLogger = new Logger('BnbConnector');
+            // Initialize the logger first and ensure it has all required methods
+            if (!bnbLogger.error || !bnbLogger.info || !bnbLogger.warn) {
+                throw new Error('Logger not properly initialized');
+            }
+            
+            this.blockchain.bnbChain = new BnbConnector(
+                decryptedConfig.bnbChain,  // Pass the entire bnbChain config
+                bnbLogger
+            );
+            await this.blockchain.bnbChain.initialize();
+        }
+    } catch (error) {
+        if (this.logger && typeof this.logger.error === 'function') {
+            this.logger.error('Failed to initialize blockchain connectors', error);
+        } else {
+            console.error('Failed to initialize blockchain connectors:', error);
+        }
+        throw error;
     }
+}
 
     async initializeExchangeConnectors(decryptedConfig) {
         try {

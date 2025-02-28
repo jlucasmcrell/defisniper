@@ -5,12 +5,18 @@ const PANCAKESWAP_ROUTER_ABI = require('./abis/pancakeswapRouter.json');
 
 class BnbConnector {
     constructor(config, logger) {
+        if (!logger || typeof logger.error !== 'function' || 
+            typeof logger.info !== 'function' || 
+            typeof logger.warn !== 'function') {
+            throw new Error('Invalid logger provided to BnbConnector');
+        }
+        
         this.config = config;
         this.logger = logger;
         
         // Contract addresses
-        this.pancakeRouterAddress = config.bnbChain?.pancakeRouterAddress || '0x10ED43C718714eb63d5aA57B78B54704E256024E';
-        this.pancakeFactoryAddress = config.bnbChain?.pancakeFactoryAddress || '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73';
+        this.pancakeRouterAddress = config?.pancakeRouterAddress || '0x10ED43C718714eb63d5aA57B78B54704E256024E';
+        this.pancakeFactoryAddress = config?.pancakeFactoryAddress || '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73';
         this.wbnbAddress = '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c';
         
         this.provider = null;
@@ -32,7 +38,7 @@ class BnbConnector {
             this.logger.info('Initializing BNB Chain connector');
 
             // Validate private key
-            const privateKey = this.config.bnbChain?.privateKey || this.config.ethereum?.privateKey;
+            const privateKey = this.config?.privateKey || this.config?.ethereum?.privateKey;
             if (!privateKey || typeof privateKey !== 'string') {
                 throw new Error('Missing or invalid private key for BNB Chain');
             }

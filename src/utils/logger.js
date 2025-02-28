@@ -16,7 +16,7 @@ class Logger {
             fs.mkdirSync(this.logDir, { recursive: true });
         }
 
-        this.logger = winston.createLogger({
+        const winstonLogger = winston.createLogger({
             level: 'debug',
             format: winston.format.combine(
                 winston.format.timestamp(),
@@ -36,36 +36,40 @@ class Logger {
         });
 
         if (process.env.NODE_ENV !== 'production') {
-            this.logger.add(new winston.transports.Console({
+            winstonLogger.add(new winston.transports.Console({
                 format: winston.format.combine(
                     winston.format.colorize(),
                     winston.format.simple()
                 )
             }));
         }
-    }
 
-    info(message, meta = {}) {
-        this.logger.info(message, { ...meta });
-    }
+        // Bind the logging methods to this instance
+        this.info = (message, meta = {}) => {
+            winstonLogger.info(message, { ...meta });
+        };
 
-    error(message, error = null) {
-        if (error instanceof Error) {
-            this.logger.error(message, { 
-                error: error.message,
-                stack: error.stack
-            });
-        } else {
-            this.logger.error(message, { error });
-        }
-    }
+        this.error = (message, error = null) => {
+            if (error instanceof Error) {
+                winstonLogger.error(message, { 
+                    error: error.message,
+                    stack: error.stack
+                });
+            } else {
+                winstonLogger.error(message, { error });
+            }
+        };
 
-    warn(message, meta = {}) {
-        this.logger.warn(message, { ...meta });
-    }
+        this.warn = (message, meta = {}) => {
+            winstonLogger.warn(message, { ...meta });
+        };
 
-    debug(message, meta = {}) {
-        this.logger.debug(message, { ...meta });
+        this.debug = (message, meta = {}) => {
+            winstonLogger.debug(message, { ...meta });
+        };
+
+        // Store winston logger instance
+        this.winstonLogger = winstonLogger;
     }
 
     getLogs(options = {}) {
