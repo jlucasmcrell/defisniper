@@ -12,6 +12,29 @@ class SecurityManager {
         this.setDefaultPassword();
     }
 
+    // Add the initialize method right after constructor
+    async initialize() {
+        try {
+            // Verify the encryption key exists and is valid
+            if (!this.key || this.key.length !== 64) {
+                this.initKey();
+            }
+
+            // Verify the session secret exists
+            if (!this.sessionSecret) {
+                this.initSessionSecret();
+            }
+
+            // Ensure password file exists
+            await this.setDefaultPassword();
+
+            return true;
+        } catch (error) {
+            this.logger.error('Failed to initialize security manager', error);
+            throw error;
+        }
+    }
+
     async setPassword(password) {
         try {
             const salt = crypto.randomBytes(16).toString('hex');
@@ -275,4 +298,4 @@ class SecurityManager {
     }
 }
 
-module.exports = SecurityManager;
+module.exports = { SecurityManager };
