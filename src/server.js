@@ -1,6 +1,3 @@
-/**
- * CryptoSniperBot Server
- */
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
@@ -15,7 +12,6 @@ const { SecurityManager } = require('./security/securityManager');
 const { ConfigManager } = require('./config/configManager');
 const { Logger } = require('./utils/logger');
 const apiRoutes = require('./routes/api');
-const { version } = require('../package.json');
 
 // Initialize logger
 const logger = new Logger('Server');
@@ -30,13 +26,13 @@ const io = socketIo(server, {
     }
 });
 
-/**
- * Ensure required directories exist
- */
+// Ensure required directories exist first
 async function ensureDirectories() {
-    const dirs = ['logs', 'data', 'secure-config'].map(dir => 
-        path.join(process.cwd(), dir)
-    );
+    const dirs = [
+        path.join(process.cwd(), 'logs'),
+        path.join(process.cwd(), 'data'),
+        path.join(process.cwd(), 'secure-config')
+    ];
     
     for (const dir of dirs) {
         try {
@@ -49,73 +45,58 @@ async function ensureDirectories() {
     }
 }
 
-/**
- * Initialize security components
- */
-async function initializeSecurity() {
-    const securityManager = new SecurityManager();
-    await securityManager.initialize();
-    return securityManager;
-}
+// Basic middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-/**
- * Initialize configuration
- */
-async function initializeConfig(securityManager) {
-    const configManager = new ConfigManager(securityManager);
-    await configManager.initialize();
-    return configManager;
-}
+// Serve static files - Login related files without authentication
+app.use('/css', express.static(path.join(__dirname, '../public/css')));
+app.use('/js', express.static(path.join(__dirname, '../public/js')));
 
-/**
- * Initialize trading engine
- */
-async function initializeTradingEngine(configManager, securityManager) {
-    try {
-        if (!configManager.isConfigured()) {
-            logger.info('Trading engine not initialized - configuration required');
-            return null;
-        }
-
-        const engine = new TradingEngine(configManager, securityManager, io);
-        await engine.initialize();
-        logger.info('Trading engine initialized successfully');
-        
-        // Store engine instance globally
-        global.tradingEngine = engine;
-        
-        // Auto-start if configured
-        const config = configManager.getConfig();
-        if (config.trading?.autoStart) {
-            await engine.start();
-            logger.info('Trading engine auto-started');
-        }
-        
-        return engine;
-    } catch (error) {
-        logger.error('Failed to initialize trading engine', error);
-        return null;
+// Authentication middleware
+const authenticate = (req, res, next) => {
+    // Public paths that don't require authentication
+    const publicPaths = [
+        '/login',
+        '/css/login.css',
+        '/auth/login',
+        '/auth/status'
+    ];
+    
+    if (publicPaths.includes(req.path) || req.path.startsWith('/css/') || req.path.startsWith('/js/')) {
+        return next();
     }
-}
+    
+    if (req.session?.authenticated) {
+        next();
+    } else {
+        if (req.accepts('html')) {
+            res.redirect('/login');
+        } else {
+            res.status(401).json({ success: false, message: 'Authentication required' });
+        }
+    }
+};
 
-/**
- * Main initialization function
- */
+// Initialize the application
 async function initialize() {
     try {
-        // Ensure directories exist first
+        // Ensure directories exist
         await ensureDirectories();
         logger.info('Required directories created');
 
         // Initialize security manager
-        const securityManager = await initializeSecurity();
+        const securityManager = new SecurityManager();
+        await securityManager.initialize();
         logger.info('Security manager initialized');
 
         // Initialize config manager
-        const configManager = await initializeConfig(securityManager);
+        const configManager = new ConfigManager(securityManager);
+        await configManager.initialize();
         logger.info('Configuration manager initialized');
 
-        // Configure session middleware
+        // Session configuration
         app.use(session({
             secret: securityManager.getSessionSecret(),
             resave: false,
@@ -128,27 +109,14 @@ async function initialize() {
             genid: () => uuidv4()
         }));
 
-        // Configure other middleware
-        app.use(cors());
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({ extended: true }));
-
-        // Authentication middleware
-        const authenticate = (req, res, next) => {
-            if (req.path === '/login' || req.path === '/auth/login' || req.path === '/auth/status') {
-                return next();
-            }
-            
-            if (req.session.authenticated) {
-                next();
+        // Login route - must be before authentication middleware
+        app.get('/login', (req, res) => {
+            if (req.session?.authenticated) {
+                res.redirect('/');
             } else {
-                if (req.accepts('html')) {
-                    res.redirect('/login');
-                } else {
-                    res.status(401).json({ success: false, message: 'Authentication required' });
-                }
+                res.sendFile(path.join(__dirname, '../public/login.html'));
             }
-        };
+        });
 
         // Auth routes
         app.post('/auth/login', (req, res) => {
@@ -158,7 +126,10 @@ async function initialize() {
                 req.session.authenticated = true;
                 res.json({ success: true });
             } else {
-                res.status(401).json({ success: false, message: 'Invalid password' });
+                res.status(401).json({ 
+                    success: false, 
+                    message: 'Invalid password' 
+                });
             }
         });
 
@@ -169,7 +140,7 @@ async function initialize() {
 
         app.get('/auth/status', (req, res) => {
             res.json({
-                authenticated: req.session.authenticated === true,
+                authenticated: req.session?.authenticated === true,
                 configured: configManager.isConfigured()
             });
         });
@@ -177,26 +148,39 @@ async function initialize() {
         // Apply authentication middleware
         app.use(authenticate);
 
-        // Serve static files
+        // Serve remaining static files (protected by authentication)
         app.use(express.static(path.join(__dirname, '../public')));
 
-        // Mount API routes
+        // API routes
         app.use('/api', apiRoutes(securityManager, configManager));
 
-        // Initialize trading engine
-        await initializeTradingEngine(configManager, securityManager);
+        // Main route
+        app.get('/', (req, res) => {
+            res.sendFile(path.join(__dirname, '../public/index.html'));
+        });
 
-        // Start server
+        // Initialize trading engine if configured
+        if (configManager.isConfigured()) {
+            const config = configManager.getConfig();
+            global.tradingEngine = new TradingEngine(configManager, securityManager, io);
+            await global.tradingEngine.initialize();
+            
+            if (config.trading?.autoStart) {
+                await global.tradingEngine.start();
+                logger.info('Trading engine auto-started');
+            }
+        }
+
+        // Start the server
         const PORT = process.env.PORT || 3000;
         server.listen(PORT, () => {
             logger.info(`CryptoSniperBot server running on port ${PORT}`);
         });
 
-        // Handle WebSocket connections
+        // WebSocket connection handling
         io.on('connection', (socket) => {
             logger.info(`Client connected: ${socket.id}`);
             
-            // Send initial bot status
             if (global.tradingEngine) {
                 socket.emit('botStatus', {
                     running: global.tradingEngine.isRunning(),
@@ -217,7 +201,7 @@ async function initialize() {
     }
 }
 
-// Handle shutdown
+// Graceful shutdown
 process.on('SIGINT', async () => {
     logger.info('Shutting down server...');
     

@@ -33,7 +33,6 @@ class ConfigManager {
                 return this.validateConfig(decryptedConfig);
             } catch (error) {
                 if (error.code === 'ENOENT') {
-                    // File doesn't exist, return default config
                     return this.getDefaultConfig();
                 }
                 throw error;
@@ -46,7 +45,28 @@ class ConfigManager {
     
     validateConfig(config) {
         const defaultConfig = this.getDefaultConfig();
-        return this.deepMerge(defaultConfig, config);
+        const mergedConfig = this.deepMerge(defaultConfig, config);
+
+        // Ensure contract addresses are strings
+        if (mergedConfig.ethereum) {
+            if (mergedConfig.ethereum.uniswapFactoryAddress) {
+                mergedConfig.ethereum.uniswapFactoryAddress = String(mergedConfig.ethereum.uniswapFactoryAddress);
+            }
+            if (mergedConfig.ethereum.uniswapRouterAddress) {
+                mergedConfig.ethereum.uniswapRouterAddress = String(mergedConfig.ethereum.uniswapRouterAddress);
+            }
+        }
+
+        if (mergedConfig.bnbChain) {
+            if (mergedConfig.bnbChain.pancakeFactoryAddress) {
+                mergedConfig.bnbChain.pancakeFactoryAddress = String(mergedConfig.bnbChain.pancakeFactoryAddress);
+            }
+            if (mergedConfig.bnbChain.pancakeRouterAddress) {
+                mergedConfig.bnbChain.pancakeRouterAddress = String(mergedConfig.bnbChain.pancakeRouterAddress);
+            }
+        }
+
+        return mergedConfig;
     }
     
     getDefaultConfig() {
@@ -91,16 +111,30 @@ class ConfigManager {
             }
         };
     }
-    
-    getConfig() {
-        return this.config;
-    }
-    
+
     async updateConfig(newConfig) {
         try {
-            // Validate input
             if (!newConfig || typeof newConfig !== 'object') {
                 throw new Error('Invalid configuration object');
+            }
+
+            // Ensure contract addresses remain as strings
+            if (newConfig.ethereum) {
+                if (newConfig.ethereum.uniswapFactoryAddress) {
+                    newConfig.ethereum.uniswapFactoryAddress = String(newConfig.ethereum.uniswapFactoryAddress);
+                }
+                if (newConfig.ethereum.uniswapRouterAddress) {
+                    newConfig.ethereum.uniswapRouterAddress = String(newConfig.ethereum.uniswapRouterAddress);
+                }
+            }
+
+            if (newConfig.bnbChain) {
+                if (newConfig.bnbChain.pancakeFactoryAddress) {
+                    newConfig.bnbChain.pancakeFactoryAddress = String(newConfig.bnbChain.pancakeFactoryAddress);
+                }
+                if (newConfig.bnbChain.pancakeRouterAddress) {
+                    newConfig.bnbChain.pancakeRouterAddress = String(newConfig.bnbChain.pancakeRouterAddress);
+                }
             }
 
             // Deep merge with current config
@@ -131,6 +165,14 @@ class ConfigManager {
         }
     }
     
+    getConfig() {
+        return this.config;
+    }
+
+    isConfigured() {
+        return this.config?.configured === true;
+    }
+
     checkConfigured(config) {
         return !!(
             (config.ethereum?.enabled && config.ethereum?.privateKey) ||
@@ -160,14 +202,6 @@ class ConfigManager {
         });
         
         return output;
-    }
-    
-    isConfigured() {
-        return this.config?.configured === true;
-    }
-
-    getTradeHistoryPath() {
-        return path.join(process.cwd(), 'data', 'trade_history.json');
     }
 }
 
