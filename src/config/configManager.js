@@ -203,6 +203,10 @@ class ConfigManager {
         
         return output;
     }
+
+    getTradeHistoryPath() {
+        return path.join(process.cwd(), 'data', 'trade_history.json');
+    }
 }
 
 module.exports = { ConfigManager };
