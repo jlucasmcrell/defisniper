@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
-const SecurityManager = require('./security/securityManager');  // Fixed import path
-const ConfigManager = require('./config/configManager');
+const { SecurityManager } = require('./security/securityManager');  // Fixed import path
+const { ConfigManager } = require('./config/configManager');
 const { Logger } = require('./utils/logger');
 
 const logger = new Logger('Setup');
