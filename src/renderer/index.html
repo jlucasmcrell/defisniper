@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoSniperBot</title>
+    <link href="/styles/output.css" rel="stylesheet">
+</head>
+<body class="bg-dark-bg text-dark-text">
+    <div id="app" class="min-h-screen">
+        <!-- Login Screen -->
+        <div id="login-screen" class="container mx-auto px-4 py-8">
+            <div class="max-w-md mx-auto bg-dark-surface rounded-xl shadow-lg p-6">
+                <h3 class="text-2xl font-bold text-center mb-6">CryptoSniperBot</h3>
+                <div id="login-error" class="hidden bg-red-600 text-white p-3 rounded mb-4"></div>
+                <form id="login-form">
+                    <div class="mb-4">
+                        <label for="password" class="block text-sm font-medium mb-2">Password</label>
+                        <input type="password" id="password" class="w-full px-3 py-2 bg-dark-bg border border-dark-border rounded focus:outline-none focus:ring-2 focus:ring-brand-primary" required>
+                    </div>
+                    <button type="submit" class="w-full bg-brand-primary hover:bg-brand-primary/90 text-white font-medium py-2 px-4 rounded">
+                        Login
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main App -->
+        <div id="main-app" class="hidden">
+            <!-- Navigation -->
+            <nav class="bg-dark-surface border-b border-dark-border">
+                <div class="max-w-7xl mx-auto px-4">
+                    <div class="flex justify-between h-16">
+                        <div class="flex">
+                            <div class="flex-shrink-0 flex items-center">
+                                <span class="text-xl font-bold">CryptoSniperBot</span>
+                            </div>
+                            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                                <a href="#" class="border-brand-primary text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" data-tab="dashboard">
+                                    Dashboard
+                                </a>
+                                <a href="#" class="border-transparent text-dark-text-secondary hover:border-gray-300 hover:text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" data-tab="trades">
+                                    Trades
+                                </a>
+                                <a href="#" class="border-transparent text-dark-text-secondary hover:border-gray-300 hover:text-dark-text inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium" data-tab="settings">
+                                    Settings
+                                </a>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex items-center space-x-2">
+                                    <div id="bot-status-indicator" class="h-3 w-3 rounded-full bg-status-danger"></div>
+                                    <span id="bot-status-text">Stopped</span>
+                                </div>
+                                <button id="start-bot" class="bg-status-success hover:bg-status-success/90 text-white px-4 py-2 rounded text-sm">
+                                    Start Bot
+                                </button>
+                                <button id="stop-bot" class="bg-status-danger hover:bg-status-danger/90 text-white px-4 py-2 rounded text-sm">
+                                    Stop Bot
+                                </button>
+                                <button id="logout-btn" class="text-dark-text-secondary hover:text-dark-text">
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Content Area -->
+            <main class="max-w-7xl mx-auto px-4 py-6">
+                <div id="dashboard" class="tab-content">
+                    <!-- Dashboard content -->
+                </div>
+                <div id="trades" class="tab-content hidden">
+                    <!-- Trades content -->
+                </div>
+                <div id="settings" class="tab-content hidden">
+                    <!-- Settings content -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="/js/app.js" type="module"></script>
+</body>
+</html>
