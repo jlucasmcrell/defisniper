@@ -3,8 +3,15 @@
  */
 const { spawn } = require('child_process');
 const path = require('path');
-const open = require('open');
 const fs = require('fs');
+
+// If open module is available, use it; otherwise, handle gracefully
+let open;
+try {
+    open = require('open');
+} catch (error) {
+    console.log('Open module not available. Browser will not open automatically.');
+}
 
 // Ensure required directories exist
 const dirs = ['logs', 'data', 'secure-config'];
@@ -32,9 +39,11 @@ serverProcess.on('error', (err) => {
 // Give the server a moment to start
 setTimeout(async () => {
     try {
-        // Open the default browser to the web interface
-        await open('http://localhost:3000');
-        console.log('\nWeb interface opened in your default browser');
+        // Open the default browser to the web interface if open module is available
+        if (open) {
+            await open('http://localhost:3000');
+            console.log('\nWeb interface opened in your default browser');
+        }
         console.log('If the browser didn\'t open automatically, visit: http://localhost:3000\n');
     } catch (error) {
         console.log('\nPlease open your browser and visit: http://localhost:3000\n');

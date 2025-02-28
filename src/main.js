@@ -5,7 +5,6 @@
  * This is the main file loaded when launching in standalone mode.
  */
 
-const { app } = require('electron');
 const path = require('path');
 const { Logger } = require('./utils/logger');
 const { ConfigManager } = require('./config/configManager');
@@ -115,7 +114,7 @@ class CryptoSniperBot {
   }
 }
 
-// If running directly (not through Electron)
+// If running directly
 if (require.main === module) {
   const bot = new CryptoSniperBot();
   
@@ -144,4 +143,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = CryptoSniperBot;
+module.exports = { CryptoSniperBot };

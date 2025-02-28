@@ -38,23 +38,17 @@ if not exist secure-config\config.json (
     )
 )
 
-:: Check for --electron flag
-if "%1"=="--electron" (
-    echo Starting in Electron mode...
-    start "DeFi Sniper Bot" cmd /c npm run start-electron
-) else (
-    :: Start the server with increased visibility
-    echo Starting server...
-    start "DeFi Sniper Server" cmd /k "node src/server.js --debug"
-    
-    :: Wait for server to initialize
-    echo Waiting for server to initialize...
-    timeout /t 5 /nobreak > nul
-    
-    :: Start the UI in default browser
-    echo Starting UI...
-    start http://localhost:3000
-)
+:: Start the server with increased visibility
+echo Starting server...
+start "DeFi Sniper Server" cmd /k "node src/server.js --debug"
+
+:: Wait for server to initialize
+echo Waiting for server to initialize...
+timeout /t 5 /nobreak > nul
+
+:: Start the UI in default browser
+echo Starting UI...
+start http://localhost:3000
 
 :: Keep the main window open
 echo.

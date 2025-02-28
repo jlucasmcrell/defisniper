@@ -2,10 +2,9 @@
   "name": "defi-sniper-bot",
   "version": "1.0.0",
   "description": "DeFi Sniper Bot for automated trading",
-  "main": "src/electron/main.js",
+  "main": "src/server.js",
   "scripts": {
-    "start": "start.bat",
-    "start-electron": "electron .",
+    "start": "node start.js",
     "start-server": "node src/server.js",
     "start-ui": "start http://localhost:3000",
     "test": "jest",
@@ -31,30 +30,13 @@
     "winston": "^3.8.2",
     "dotenv": "^16.0.3",
     "tailwindcss": "^2.2.19",
-    "chart.js": "^3.7.1"
+    "chart.js": "^3.7.1",
+    "open": "^8.4.0"
   },
   "devDependencies": {
-    "electron": "^28.0.0",
-    "electron-builder": "^24.0.0",
     "jest": "^29.0.0",
     "eslint": "^8.0.0",
     "nodemon": "^2.0.15"
-  },
-  "build": {
-    "appId": "com.defisniper.bot",
-    "productName": "DeFi Sniper Bot",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "src/**/*",
-      "public/**/*",
-      "package.json"
-    ],
-    "win": {
-      "target": "nsis",
-      "icon": "public/assets/icon.ico"
-    }
   },
   "author": "jlucasmcrell",
   "license": "MIT",
