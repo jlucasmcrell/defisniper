@@ -10,23 +10,30 @@ class ConfigManager {
         
         this.securityManager = securityManager;
         this.logger = new Logger('ConfigManager');
+        this.configPath = path.join(process.cwd(), 'secure-config', 'config.json');
         this.config = this.loadConfig();
     }
     
     loadConfig() {
         try {
-            const configPath = path.join(process.cwd(), 'secure-config', 'config.json');
-            
-            if (fs.existsSync(configPath)) {
-                const configData = fs.readFileSync(configPath, 'utf8');
-                const parsedConfig = JSON.parse(configData);
+            if (fs.existsSync(this.configPath)) {
+                const configData = fs.readFileSync(this.configPath, 'utf8');
+                let parsedConfig;
+                
+                try {
+                    parsedConfig = JSON.parse(configData);
+                } catch (parseError) {
+                    this.logger.error('Invalid JSON in config file', parseError);
+                    return this.getDefaultConfig();
+                }
                 
                 // Decrypt sensitive information
                 try {
-                    return this.securityManager.decryptConfig(parsedConfig);
+                    const decryptedConfig = this.securityManager.decryptConfig(parsedConfig);
+                    return this.validateConfig(decryptedConfig);
                 } catch (decryptError) {
                     this.logger.error('Error decrypting config', decryptError);
-                    return parsedConfig;
+                    return this.getDefaultConfig();
                 }
             }
             
@@ -35,6 +42,13 @@ class ConfigManager {
             this.logger.error('Error loading config', error);
             return this.getDefaultConfig();
         }
+    }
+
+    validateConfig(config) {
+        const defaultConfig = this.getDefaultConfig();
+        
+        // Ensure all required fields exist by deep merging with default config
+        return this.deepMerge(defaultConfig, config);
     }
 
     getDefaultConfig() {
@@ -86,36 +100,74 @@ class ConfigManager {
         return this.config;
     }
     
-    updateConfig(newConfig) {
+    async updateConfig(newConfig) {
         try {
-            this.config = this.deepMerge(this.config || this.getDefaultConfig(), newConfig);
-            return this.saveConfig();
+            if (!newConfig || typeof newConfig !== 'object') {
+                throw new Error('Invalid configuration object');
+            }
+
+            // Create a deep copy of the current config
+            const currentConfig = this.config || this.getDefaultConfig();
+            
+            // Merge the new config with the current config
+            const mergedConfig = this.deepMerge(currentConfig, newConfig);
+            
+            // Validate the merged config
+            this.config = this.validateConfig(mergedConfig);
+            
+            // Save to disk
+            const saved = await this.saveConfig();
+            if (!saved) {
+                throw new Error('Failed to save configuration');
+            }
+            
+            return true;
         } catch (error) {
-            this.logger.error('Error updating config', error);
+            this.logger.error('Error updating config', {
+                error: error.message,
+                module: 'ConfigManager',
+                stack: error.stack
+            });
             return false;
         }
     }
     
-    saveConfig() {
+    async saveConfig() {
         try {
-            const configDir = path.join(process.cwd(), 'secure-config');
+            const configDir = path.dirname(this.configPath);
             
             if (!fs.existsSync(configDir)) {
                 fs.mkdirSync(configDir, { recursive: true });
             }
             
-            const configPath = path.join(configDir, 'config.json');
+            // Update configured status based on enabled features
+            this.config.configured = !!(
+                (this.config.ethereum && this.config.ethereum.enabled) ||
+                (this.config.bnbChain && this.config.bnbChain.enabled) ||
+                (this.config.exchanges.binanceUS && this.config.exchanges.binanceUS.enabled) ||
+                (this.config.exchanges.cryptoCom && this.config.exchanges.cryptoCom.enabled)
+            );
             
-            // Mark as configured
-            this.config.configured = true;
+            // Create a copy of the config for saving
+            const configToSave = { ...this.config };
             
             // Encrypt sensitive data
-            const configToSave = this.securityManager.encryptConfig({ ...this.config });
+            const encryptedConfig = await this.securityManager.encryptConfig(configToSave);
             
-            fs.writeFileSync(configPath, JSON.stringify(configToSave, null, 2));
+            // Write to file with proper formatting
+            fs.writeFileSync(
+                this.configPath,
+                JSON.stringify(encryptedConfig, null, 2),
+                'utf8'
+            );
+            
             return true;
         } catch (error) {
-            this.logger.error('Error saving config', error);
+            this.logger.error('Error saving config', {
+                error: error.message,
+                module: 'ConfigManager',
+                stack: error.stack
+            });
             return false;
         }
     }
@@ -140,6 +192,53 @@ class ConfigManager {
     
     isConfigured() {
         return this.config && this.config.configured === true;
+    }
+
+    /**
+     * Get raw encrypted config for backup purposes
+     * @returns {Object} Raw encrypted configuration
+     */
+    getRawConfig() {
+        try {
+            if (fs.existsSync(this.configPath)) {
+                const configData = fs.readFileSync(this.configPath, 'utf8');
+                return JSON.parse(configData);
+            }
+            return null;
+        } catch (error) {
+            this.logger.error('Error getting raw config', error);
+            return null;
+        }
+    }
+
+    /**
+     * Restore config from raw encrypted backup
+     * @param {Object} rawConfig - Raw encrypted configuration
+     * @returns {boolean} Success status
+     */
+    async restoreFromRaw(rawConfig) {
+        try {
+            if (!rawConfig || typeof rawConfig !== 'object') {
+                throw new Error('Invalid raw configuration');
+            }
+
+            // Try to decrypt the raw config to validate it
+            const decryptedConfig = this.securityManager.decryptConfig(rawConfig);
+            if (!decryptedConfig) {
+                throw new Error('Failed to decrypt raw configuration');
+            }
+
+            // Write the raw config directly to file
+            fs.writeFileSync(this.configPath, JSON.stringify(rawConfig, null, 2), 'utf8');
+            
+            // Reload the configuration
+            this.config = this.loadConfig();
+            
+            return true;
+        } catch (error) {
+            this.logger.error('Error restoring raw config', error);
+            return false;
+        }
     }
 }
 

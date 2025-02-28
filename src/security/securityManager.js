@@ -9,7 +9,7 @@ class SecurityManager {
         this.algorithm = 'aes-256-gcm';
         this.initKey();
         this.initSessionSecret();
-        this.setDefaultPassword(); // Add this line
+        this.setDefaultPassword();
     }
 
     async setPassword(password) {
@@ -48,10 +48,14 @@ class SecurityManager {
     }
 
     async setDefaultPassword() {
-        const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
-        if (!fs.existsSync(passwordPath)) {
-            await this.setPassword('admin');
-            this.logger.warn('Using default password: "admin" - please change this immediately!');
+        try {
+            const passwordPath = path.join(process.cwd(), 'secure-config', 'password.dat');
+            if (!fs.existsSync(passwordPath)) {
+                await this.setPassword('admin');
+                this.logger.warn('Using default password: "admin" - please change this immediately!');
+            }
+        } catch (error) {
+            this.logger.error('Failed to set default password', error);
         }
     }
 
@@ -170,13 +174,63 @@ class SecurityManager {
         }
     }
 
+    encryptConfig(config) {
+        try {
+            if (!config) return config;
+
+            const encryptedConfig = { ...config };
+
+            // Encrypt sensitive fields only if they exist and aren't already encrypted
+            if (encryptedConfig.ethereum) {
+                if (encryptedConfig.ethereum.privateKey) {
+                    encryptedConfig.ethereum.privateKey = this.encrypt(encryptedConfig.ethereum.privateKey);
+                }
+                if (encryptedConfig.ethereum.alchemyKey) {
+                    encryptedConfig.ethereum.alchemyKey = this.encrypt(encryptedConfig.ethereum.alchemyKey);
+                }
+                if (encryptedConfig.ethereum.infuraId) {
+                    encryptedConfig.ethereum.infuraId = this.encrypt(encryptedConfig.ethereum.infuraId);
+                }
+            }
+
+            if (encryptedConfig.bnbChain && encryptedConfig.bnbChain.privateKey) {
+                encryptedConfig.bnbChain.privateKey = this.encrypt(encryptedConfig.bnbChain.privateKey);
+            }
+
+            if (encryptedConfig.exchanges) {
+                if (encryptedConfig.exchanges.binanceUS) {
+                    if (encryptedConfig.exchanges.binanceUS.apiKey) {
+                        encryptedConfig.exchanges.binanceUS.apiKey = this.encrypt(encryptedConfig.exchanges.binanceUS.apiKey);
+                    }
+                    if (encryptedConfig.exchanges.binanceUS.apiSecret) {
+                        encryptedConfig.exchanges.binanceUS.apiSecret = this.encrypt(encryptedConfig.exchanges.binanceUS.apiSecret);
+                    }
+                }
+
+                if (encryptedConfig.exchanges.cryptoCom) {
+                    if (encryptedConfig.exchanges.cryptoCom.apiKey) {
+                        encryptedConfig.exchanges.cryptoCom.apiKey = this.encrypt(encryptedConfig.exchanges.cryptoCom.apiKey);
+                    }
+                    if (encryptedConfig.exchanges.cryptoCom.apiSecret) {
+                        encryptedConfig.exchanges.cryptoCom.apiSecret = this.encrypt(encryptedConfig.exchanges.cryptoCom.apiSecret);
+                    }
+                }
+            }
+
+            return encryptedConfig;
+        } catch (error) {
+            this.logger.error('Failed to encrypt config', error);
+            return config;
+        }
+    }
+
     decryptConfig(config) {
         try {
             if (!config) return config;
 
             const decryptedConfig = { ...config };
 
-            // Decrypt sensitive fields only if they exist and are encrypted
+            // Decrypt sensitive fields only if they exist
             if (decryptedConfig.ethereum) {
                 if (decryptedConfig.ethereum.privateKey) {
                     decryptedConfig.ethereum.privateKey = this.decrypt(decryptedConfig.ethereum.privateKey);
@@ -216,7 +270,6 @@ class SecurityManager {
             return decryptedConfig;
         } catch (error) {
             this.logger.error('Failed to decrypt config', error);
-            // Return original config if decryption fails
             return config;
         }
     }

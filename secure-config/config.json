@@ -1,35 +1,44 @@
 {
   "version": "1.0.0",
   "configured": true,
-  "trading": {
-    "maxConcurrentTrades": 20,
-    "walletBuyPercentage": 20,
-    "takeProfit": 25,
-    "stopLoss": 5,
-    "autoTradeNewTokens": false
-  },
   "ethereum": {
     "enabled": "on",
     "network": "mainnet",
-    "infuraId": "9ebca9fc8854a17a00943db7:8c804bd1a0f5f999a301908ca26def57:689efcf3b9990058b00878c15e8a9286e56ae96ffd83acace99dfc34ae0873d8",
-    "privateKey": "df68df085875790e2ee62924:19b162d00e227b9f90d7389393c40d15:b2874400efb0b697a32322f3702555687d848cf9f1",
-    "alchemyKey": 0
+    "privateKey": "8ea50e6364825f6075b96356:46630fc37af164787a738188b34202fc:1ed3ecf70b6c0eccd76567b57d7ef5224d14385b77",
+    "infuraId": "1682c9ff9c22c0a437c17dee:638adda0c12fe954c704e82000c36aad:f1bd0667509c9d0a22e1cee8e48b4da66059662b9b2f932928ae55e46c684df6",
+    "alchemyKey": "",
+    "uniswapFactoryAddress": 5.275853591037655e+47,
+    "uniswapRouterAddress": 6.973231634015965e+47
   },
   "bnbChain": {
     "enabled": "on",
-    "privateKey": 0
+    "privateKey": "b7dcc44fbfc1f63131ea1c7d:f241f4608f4ccd216de771fc9772b348:ca7384f578f5e87347bd0c9f7880ee4e56279cfb0c",
+    "pancakeFactoryAddress": 1.1536674546553155e+48,
+    "pancakeRouterAddress": 9.663503321707144e+46
   },
   "exchanges": {
     "binanceUS": {
       "enabled": "on",
-      "apiKey": "b6247ff703eb087ecf84dc8d:d0e3a18b248253c3351473c95f186fed:b5606f5bb847181028d43f7770ba4cbad2ab6ccc38db4890e2e216d9537a5b75066d2d4a7ac5a8de4b98e5bbbad94c2b330c53137f79e77e4ad4df1ad5ae22b2",
-      "apiSecret": "6fe417cbdce8e5b1cc906ee0:d889edc3b1d7ae0f6cbfe64982baacbe:ecc3da35d0bee2a2dd29a66177d9d8dc7052abb4dabecf62bf43ba3a7ed7b94531e4cbc2de6bff3e35625c5aadc099bd070c80e3a8c69f3a44daab5c21361134"
+      "apiKey": "582582ee53edc3430a1f8ac2:ca8e16a252d338c1e667dd7c5341aea1:2768f64b8ddd2e50fb5d76b5d7c3f7f17d20a15dbda1b7019885300cb60648a4292ca41c98423421d4599eac236d5fc1876ea7a2f8afb79ce729cd876ed0091d",
+      "apiSecret": "e7c4dab9a57145561811a259:39a40ad0aa31ec3908ab113701098056:eb50d742eefce2b621effa9cc620b085af4202d548718ce4b47a4c9992ab62c2518cd52706a5e735fdca62e25faef9c8160c9f1ba42cb22a2e6b3d0f2d66e63e"
     },
     "cryptoCom": {
       "enabled": "on",
-      "apiKey": "208ec1c6ee0b1f3b1e5772c6:17efc0006bc10fab87a568fe063e86f0:25faa00bce8c301260eb7714cd7bbbb1c6e92b860a07",
-      "apiSecret": "30b0c505a4d00ccd58dcd73e:e1d9cc562006382426d692da607b2663:8e552eb815950fafcb512be675fe78da28881e732ed1"
+      "apiKey": "e10a23a5bcf3bdee86b6ea5c:8d58faa492723138840dbf1da37c1f3b:d0a5fc8f1e4ddf9bd60acd57bd7bbf83c4b8ab63f527",
+      "apiSecret": "98544f53d0c354b8a9fe7237:3acbf688fb7ea7d7e98aeba11878fe2b:599aeba655dc22f6eefd7f5d16098d4c3d933cb9a755"
     }
+  },
+  "tokens": {},
+  "trading": {
+    "walletBuyPercentage": 20,
+    "stopLoss": 5,
+    "takeProfit": 25,
+    "maxConcurrentTrades": 20,
+    "maxTradesPerHour": 10,
+    "closeTradesOnStop": "on",
+    "autoStart": false,
+    "slippageTolerance": 0.05,
+    "autoTradeNewTokens": false
   },
   "strategies": {
     "tokenSniper": {
@@ -48,5 +57,9 @@
       "rsiLow": 30,
       "rsiHigh": 70
     }
+  },
+  "riskManagement": {
+    "maxTradeSize": 0,
+    "dailyLossLimit": 500
   }
 }
