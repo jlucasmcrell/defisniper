@@ -77,7 +77,7 @@ class TradingEngine {
         try {
             this.logger.info('Initializing trading engine');
             
-            // Create default configuration in case decryption fails
+            // Create default configuration
             const defaultConfig = {
                 ethereum: { enabled: false },
                 bnbChain: { enabled: false },
@@ -88,17 +88,25 @@ class TradingEngine {
                 strategies: { 
                     tokenSniper: { enabled: false },
                     trendTrading: { enabled: false }
+                },
+                trading: {
+                    autoStart: false,
+                    maxConcurrentTrades: 3
                 }
             };
             
             // Try to decrypt configuration
             let decryptedConfig = defaultConfig;
             try {
-                const result = await this.securityManager.decryptConfig(this.config);
-                if (result && typeof result === 'object') {
-                    decryptedConfig = result;
+                if (this.securityManager && typeof this.securityManager.decryptConfig === 'function') {
+                    const result = await this.securityManager.decryptConfig(this.config);
+                    if (result && typeof result === 'object') {
+                        decryptedConfig = result;
+                    } else {
+                        this.logger.warn('Decrypted config is invalid, using default configuration');
+                    }
                 } else {
-                    this.logger.warn('Decrypted config is invalid, using default configuration');
+                    this.logger.warn('Security manager not available, using default configuration');
                 }
             } catch (error) {
                 this.logger.error('Failed to decrypt configuration, using default configuration', error);
@@ -140,10 +148,6 @@ class TradingEngine {
 
             if (decryptedConfig.ethereum && decryptedConfig.ethereum.enabled) {
                 const ethereumLogger = new Logger('EthereumConnector');
-                if (!ethereumLogger.error || !ethereumLogger.info || !ethereumLogger.warn) {
-                    throw new Error('Logger not properly initialized');
-                }
-                
                 this.blockchain.ethereum = new EthereumConnector(
                     decryptedConfig.ethereum,
                     ethereumLogger
@@ -153,10 +157,6 @@ class TradingEngine {
             
             if (decryptedConfig.bnbChain && decryptedConfig.bnbChain.enabled) {
                 const bnbLogger = new Logger('BnbConnector');
-                if (!bnbLogger.error || !bnbLogger.info || !bnbLogger.warn) {
-                    throw new Error('Logger not properly initialized');
-                }
-                
                 this.blockchain.bnbChain = new BnbConnector(
                     decryptedConfig.bnbChain,
                     bnbLogger
@@ -173,8 +173,7 @@ class TradingEngine {
             this.logger.warn('Continuing without blockchain connector support');
         }
     }
-
-    async initializeExchangeConnectors(decryptedConfig) {
+	    async initializeExchangeConnectors(decryptedConfig) {
         try {
             // Ensure decryptedConfig and its exchanges property exist
             if (!decryptedConfig || !decryptedConfig.exchanges) {
@@ -222,7 +221,8 @@ class TradingEngine {
             } else if (decryptedConfig.exchanges.cryptoCom && decryptedConfig.exchanges.cryptoCom.enabled) {
                 this.logger.warn('Crypto.com is enabled but API credentials are missing');
             }
-			            // If no exchanges were initialized but some were enabled, log a warning
+
+            // If no exchanges were initialized but some were enabled, log a warning
             if (Object.keys(this.exchanges).length === 0 && 
                 ((decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) || 
                 (decryptedConfig.exchanges.cryptoCom && decryptedConfig.exchanges.cryptoCom.enabled))) {
@@ -315,23 +315,30 @@ class TradingEngine {
                 return;
             }
 
-            if (require('fs').existsSync(historyPath)) {
-                const history = JSON.parse(
-                    require('fs').readFileSync(historyPath, 'utf8')
-                );
-                this.tradeHistory = history;
-                await this.updateStats();
-                this.logger.info(`Loaded ${history.length} historical trades`);
-            } else {
-                this.logger.info('No trade history file found, starting fresh');
+            try {
+                const fs = require('fs');
+                if (fs.existsSync(historyPath)) {
+                    const history = JSON.parse(
+                        fs.readFileSync(historyPath, 'utf8')
+                    );
+                    this.tradeHistory = history;
+                    await this.updateStats();
+                    this.logger.info(`Loaded ${history.length} historical trades`);
+                } else {
+                    this.logger.info('No trade history file found, starting fresh');
+                    // Create an empty trade history file
+                    fs.writeFileSync(historyPath, JSON.stringify([], null, 2), 'utf8');
+                }
+            } catch (readError) {
+                this.logger.error('Failed to read trade history', readError);
+                this.tradeHistory = [];
             }
         } catch (error) {
             this.logger.error('Failed to load trade history', error);
             this.tradeHistory = [];
         }
     }
-
-    async start() {
+	    async start() {
         if (this.running) {
             this.logger.warn('Trading engine is already running');
             return false;
@@ -406,7 +413,7 @@ class TradingEngine {
                 });
             }
 
-            this.logger.info('Trading engine stopped successfully');
+                        this.logger.info('Trading engine stopped successfully');
             return true;
         } catch (error) {
             this.logger.error('Failed to stop trading engine', error);
@@ -687,7 +694,7 @@ class TradingEngine {
         }
     }
 
-        async updateBalances() {
+    async updateBalances() {
         try {
             const balances = {
                 ethereum: {},

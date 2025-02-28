@@ -1,256 +1,123 @@
+/**
+ * Web Server for CryptoSniperBot
+ * Provides a web interface and REST API for the trading bot
+ */
 const express = require('express');
 const http = require('http');
-const cors = require('cors');
-const bodyParser = require('body-parser');
 const path = require('path');
-const socketIo = require('socket.io');
+const socketIO = require('socket.io');
 const session = require('express-session');
-const { v4: uuidv4 } = require('uuid');
-const fs = require('fs').promises;
-const { TradingEngine } = require('./trading/engine');
-const { SecurityManager } = require('./security/securityManager');
-const { ConfigManager } = require('./config/configManager');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 const { Logger } = require('./utils/logger');
-const apiRoutes = require('./routes/api');
+const { ConfigManager } = require('./config/configManager');
+const { SecurityManager } = require('./security/securityManager');
+const { TradingEngine } = require('./trading/engine');
 
 // Initialize logger
 const logger = new Logger('Server');
 
-// Create Express app
+// Express App Setup
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
+const io = socketIO(server, {
     cors: {
         origin: '*',
         methods: ['GET', 'POST']
     }
 });
 
-// Ensure required directories exist first
-async function ensureDirectories() {
-    const dirs = [
-        path.join(process.cwd(), 'logs'),
-        path.join(process.cwd(), 'data'),
-        path.join(process.cwd(), 'secure-config')
-    ];
-    
-    for (const dir of dirs) {
-        try {
-            await fs.mkdir(dir, { recursive: true });
-        } catch (error) {
-            if (error.code !== 'EEXIST') {
-                throw error;
-            }
-        }
-    }
-}
-
-// Basic middleware
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Serve static files - Login related files without authentication
-app.use('/css', express.static(path.join(__dirname, '../public/css')));
-app.use('/js', express.static(path.join(__dirname, '../public/js')));
+// Global state
+let securityManager = null;
+let configManager = null;
+let tradingEngine = null;
+let authenticated = false;
 
-// Authentication middleware
-const authenticate = (req, res, next) => {
-    // Public paths that don't require authentication
-    const publicPaths = [
-        '/login',
-        '/css/login.css',
-        '/auth/login',
-        '/auth/status'
-    ];
-    
-    if (publicPaths.includes(req.path) || req.path.startsWith('/css/') || req.path.startsWith('/js/')) {
-        return next();
-    }
-    
-    if (req.session?.authenticated) {
-        next();
-    } else {
-        if (req.accepts('html')) {
-            res.redirect('/login');
-        } else {
-            res.status(401).json({ success: false, message: 'Authentication required' });
-        }
-    }
-};
-
-// Initialize the application
+// Initialize application components
 async function initialize() {
     try {
-        // Ensure directories exist
-        await ensureDirectories();
-        logger.info('Required directories created');
-
         // Initialize security manager
-        const securityManager = new SecurityManager();
-        await securityManager.initialize();
-        logger.info('Security manager initialized');
-
-        // Initialize config manager
-        const configManager = new ConfigManager(securityManager);
-        await configManager.initialize();
-        logger.info('Configuration manager initialized');
-
-        // Session configuration
+        securityManager = new SecurityManager();
+        const securityInitialized = await securityManager.initialize();
+        if (!securityInitialized) {
+            logger.error('Failed to initialize security manager');
+            return false;
+        }
+        
+        // Set up session middleware with the generated secret
         app.use(session({
             secret: securityManager.getSessionSecret(),
             resave: false,
-            saveUninitialized: false,
-            cookie: {
-                secure: process.env.NODE_ENV === 'production',
-                maxAge: 3600000,
-                httpOnly: true
-            },
-            genid: () => uuidv4()
+            saveUninitialized: true,
+            cookie: { secure: false } // Set to true if using HTTPS
         }));
 
-        // Login route - must be before authentication middleware
-        app.get('/login', (req, res) => {
-            if (req.session?.authenticated) {
-                res.redirect('/');
-            } else {
-                res.sendFile(path.join(__dirname, '../public/login.html'));
-            }
-        });
-
-        // Auth routes
-        app.post('/auth/login', (req, res) => {
-            const { password } = req.body;
-            
-            if (securityManager.verifyPassword(password)) {
-                req.session.authenticated = true;
-                res.json({ success: true });
-            } else {
-                res.status(401).json({ 
-                    success: false, 
-                    message: 'Invalid password' 
-                });
-            }
-        });
-
-        // Password change route
-        app.post('/auth/change-password', authenticate, async (req, res) => {
-            const { currentPassword, newPassword } = req.body;
-            
-            if (!securityManager.verifyPassword(currentPassword)) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Current password is incorrect'
-                });
-            }
-
-            try {
-                await securityManager.setPassword(newPassword);
-                res.json({ success: true, message: 'Password changed successfully' });
-            } catch (error) {
-                res.status(500).json({
-                    success: false,
-                    message: 'Failed to change password'
-                });
-            }
-        });
-
-        app.post('/auth/logout', (req, res) => {
-            req.session.destroy();
-            res.json({ success: true });
-        });
-
-        app.get('/auth/status', (req, res) => {
-            res.json({
-                authenticated: req.session?.authenticated === true,
-                configured: configManager.isConfigured()
-            });
-        });
-
-        // Apply authentication middleware
-        app.use(authenticate);
-
-        // Serve remaining static files (protected by authentication)
-        app.use(express.static(path.join(__dirname, '../public')));
-
-        // API routes
-        app.use('/api', apiRoutes(securityManager, configManager));
-
-        // Main route
-        app.get('/', (req, res) => {
-            res.sendFile(path.join(__dirname, '../public/index.html'));
-        });
-
-        // Initialize trading engine if configured
-        if (configManager.isConfigured()) {
-            try {
-                const config = configManager.getConfig();
-                global.tradingEngine = new TradingEngine(configManager, securityManager, io);
-                await global.tradingEngine.initialize().catch(error => {
-                    logger.error('Failed to initialize trading engine', error);
-                });
-                
-                if (global.tradingEngine && config.trading?.autoStart) {
-                    await global.tradingEngine.start().catch(error => {
-                        logger.error('Failed to auto-start trading engine', error);
-                    });
-                }
-            } catch (error) {
-                logger.error('Error setting up trading engine. Continuing without trading functionality', error);
-            }
+        // Initialize config manager
+        configManager = new ConfigManager(securityManager);
+        const configInitialized = await configManager.initialize();
+        if (!configInitialized) {
+            logger.error('Failed to initialize configuration manager');
+            return false;
         }
-
-        // Start the server
-        const PORT = process.env.PORT || 3000;
-        server.listen(PORT, () => {
-            logger.info(`CryptoSniperBot server running on port ${PORT}`);
-        });
-
-        // WebSocket connection handling
-        io.on('connection', (socket) => {
-            logger.info(`Client connected: ${socket.id}`);
-            
-            if (global.tradingEngine) {
-                socket.emit('botStatus', {
-                    running: global.tradingEngine.isRunning(),
-                    activeTrades: global.tradingEngine.getActiveTrades(),
-                    balances: global.tradingEngine.getBalances(),
-                    stats: global.tradingEngine.getStats()
-                });
+        
+        // Initialize trading engine with socket.io for real-time updates
+        tradingEngine = new TradingEngine(configManager, securityManager, io);
+        const engineInitialized = await tradingEngine.initialize();
+        if (!engineInitialized) {
+            logger.error('Failed to initialize trading engine');
+            // Continue anyway, with limited functionality
+        }
+        
+        // Set up authentication check middleware
+        app.use((req, res, next) => {
+            // Skip auth check for the login endpoint
+            if (req.path === '/api/auth/login' || req.path === '/api/status') {
+                return next();
             }
-            
-            socket.on('disconnect', () => {
-                logger.info(`Client disconnected: ${socket.id}`);
-            });
-        });
 
+            // Check session authentication
+            if (req.session.authenticated) {
+                return next();
+            }
+
+            // Reject unauthenticated API requests
+            if (req.path.startsWith('/api/')) {
+                return res.status(401).json({ success: false, message: 'Authentication required' });
+            }
+
+            // Redirect to login page for UI requests
+            res.redirect('/');
+        });
+        
+        // Set up routes
+        setupRoutes();
+        
+        // Set up Socket.IO events
+        setupSocketIO();
+        
+        return true;
     } catch (error) {
-        logger.error('Server initialization failed', error);
-        process.exit(1);
+        logger.error('Initialization error', error);
+        return false;
     }
 }
 
-// Graceful shutdown
-process.on('SIGINT', async () => {
-    logger.info('Shutting down server gracefully...');
+// Set up API and UI routes
+function setupRoutes() {
+    // Serve static files from 'public' directory
+    app.use(express.static(path.join(__dirname, '..', 'public')));
     
-    if (global.tradingEngine) {
-        try {
-            await global.tradingEngine.stop();
-            logger.info('Trading engine stopped');
-        } catch (error) {
-            logger.error('Error stopping trading engine', error);
+    // API Routes - Auth
+    app.post('/api/auth/login', (req, res) => {
+        const { password } = req.body;
+        
+        if (!securityManager) {
+            return res.status(500).json({ success: false, message: 'Security system not initialized' });
         }
-    }
-    
-    server.close(() => {
-        logger.info('Server shut down complete');
-        process.exit(0);
-    });
-});
-
-// Start the server
-initialize().catch(error => {
-    logger.error('Failed to initialize server', error);
-    process.exit(1);
-});
+        
+        if (securityManager.verifyPasswor

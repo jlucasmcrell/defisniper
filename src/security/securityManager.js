@@ -141,24 +141,13 @@ class SecurityManager {
         try {
             if (!this.encryptionKey) {
                 this.logger.error('Cannot decrypt config - encryption key not set');
-                throw new Error('Encryption key not set');
+                return this.getDefaultConfig();
             }
 
             // If the config is not encrypted or doesn't have the expected format
             if (!encryptedConfig || !encryptedConfig.iv || !encryptedConfig.encryptedData || !encryptedConfig.authTag) {
                 this.logger.error('Invalid encrypted config format');
-                return {
-                    ethereum: { enabled: false },
-                    bnbChain: { enabled: false },
-                    exchanges: { 
-                        binanceUS: { enabled: false },
-                        cryptoCom: { enabled: false } 
-                    },
-                    strategies: { 
-                        tokenSniper: { enabled: false },
-                        trendTrading: { enabled: false }
-                    }
-                };
+                return this.getDefaultConfig();
             }
             
             const decipher = crypto.createDecipheriv(
@@ -175,20 +164,23 @@ class SecurityManager {
             return JSON.parse(decrypted);
         } catch (error) {
             this.logger.error('Failed to decrypt config', error);
-            // Return default empty config if decryption fails
-            return {
-                ethereum: { enabled: false },
-                bnbChain: { enabled: false },
-                exchanges: { 
-                    binanceUS: { enabled: false },
-                    cryptoCom: { enabled: false } 
-                },
-                strategies: { 
-                    tokenSniper: { enabled: false },
-                    trendTrading: { enabled: false }
-                }
-            };
+            return this.getDefaultConfig();
         }
+    }
+
+    getDefaultConfig() {
+        return {
+            ethereum: { enabled: false },
+            bnbChain: { enabled: false },
+            exchanges: { 
+                binanceUS: { enabled: false },
+                cryptoCom: { enabled: false } 
+            },
+            strategies: { 
+                tokenSniper: { enabled: false },
+                trendTrading: { enabled: false }
+            }
+        };
     }
 }
 

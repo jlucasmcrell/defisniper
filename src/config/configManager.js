@@ -1,99 +1,137 @@
-const fs = require('fs').promises;
+/**
+ * Configuration Manager
+ * Manages loading, saving, and validating application configuration
+ */
 const path = require('path');
+const fs = require('fs').promises;
 const { Logger } = require('../utils/logger');
 
 class ConfigManager {
-    constructor(securityManager) {
-        if (!securityManager) {
-            throw new Error('SecurityManager is required');
-        }
-        
+    constructor(securityManager = null) {
+        this.config = null;
         this.securityManager = securityManager;
         this.logger = new Logger('ConfigManager');
-        this.configPath = path.join(process.cwd(), 'secure-config', 'config.json');
-        this.config = null;
+        this.configFile = path.join(process.cwd(), 'secure-config', 'config.json');
+        this.tradeHistoryFile = path.join(process.cwd(), 'data', 'trade_history.json');
     }
-    
+
     async initialize() {
         try {
-            this.config = await this.loadConfig();
+            this.logger.info('Initializing configuration manager');
+            await this.ensureDirectories();
+            await this.loadConfig();
             return true;
         } catch (error) {
-            this.logger.error('Failed to initialize config manager', error);
-            throw error;
+            this.logger.error('Failed to initialize configuration manager', error);
+            return false;
         }
     }
-    
+
+    async ensureDirectories() {
+        const dirs = [
+            path.dirname(this.configFile),
+            path.dirname(this.tradeHistoryFile)
+        ];
+        
+        for (const dir of dirs) {
+            try {
+                await fs.mkdir(dir, { recursive: true });
+            } catch (error) {
+                // Ignore if directory already exists
+                if (error.code !== 'EEXIST') {
+                    this.logger.error(`Failed to create directory: ${dir}`, error);
+                    throw error;
+                }
+            }
+        }
+    }
+
     async loadConfig() {
         try {
+            // Check if config file exists
             try {
-                const configData = await fs.readFile(this.configPath, 'utf8');
-                const parsedConfig = JSON.parse(configData);
-                if (!parsedConfig) {
-                    return this.getDefaultConfig();
-                }
-                const decryptedConfig = await this.securityManager.decryptConfig(parsedConfig);
-                return this.validateConfig(decryptedConfig || this.getDefaultConfig());
+                await fs.access(this.configFile);
             } catch (error) {
                 if (error.code === 'ENOENT') {
-                    return this.getDefaultConfig();
+                    this.logger.info('Config file not found, using default configuration');
+                    this.config = this.getDefaultConfig();
+                    return;
                 }
                 throw error;
             }
+
+            // Read and parse config
+            const fileData = await fs.readFile(this.configFile, 'utf8');
+            const configData = JSON.parse(fileData);
+
+            // Store parsed config
+            this.config = configData;
+            this.logger.info('Configuration loaded successfully');
         } catch (error) {
-            this.logger.error('Error loading config', error);
-            return this.getDefaultConfig();
+            this.logger.error('Error loading configuration', error);
+            this.config = this.getDefaultConfig();
         }
     }
-    
-    validateConfig(config) {
-        if (!config) {
-            return this.getDefaultConfig();
+
+    async saveConfig(config) {
+        try {
+            // If security manager is available, encrypt the config
+            let dataToSave = config;
+            
+            if (this.securityManager && typeof this.securityManager.encryptConfig === 'function') {
+                try {
+                    dataToSave = await this.securityManager.encryptConfig(config);
+                } catch (encryptError) {
+                    this.logger.error('Failed to encrypt config', encryptError);
+                    throw encryptError;
+                }
+            }
+            
+            // Make sure directory exists
+            await this.ensureDirectories();
+            
+            // Write to file
+            await fs.writeFile(this.configFile, JSON.stringify(dataToSave, null, 2), 'utf8');
+            
+            // Update in-memory config
+            this.config = dataToSave;
+            
+            this.logger.info('Configuration saved successfully');
+            return true;
+        } catch (error) {
+            this.logger.error('Failed to save configuration', error);
+            throw error;
         }
-
-        const defaultConfig = this.getDefaultConfig();
-        const mergedConfig = this.deepMerge(defaultConfig, config);
-
-        // Ensure contract addresses are strings
-        if (mergedConfig.ethereum) {
-            if (mergedConfig.ethereum.uniswapFactoryAddress) {
-                mergedConfig.ethereum.uniswapFactoryAddress = String(mergedConfig.ethereum.uniswapFactoryAddress);
-            }
-            if (mergedConfig.ethereum.uniswapRouterAddress) {
-                mergedConfig.ethereum.uniswapRouterAddress = String(mergedConfig.ethereum.uniswapRouterAddress);
-            }
-        }
-
-        if (mergedConfig.bnbChain) {
-            if (mergedConfig.bnbChain.pancakeFactoryAddress) {
-                mergedConfig.bnbChain.pancakeFactoryAddress = String(mergedConfig.bnbChain.pancakeFactoryAddress);
-            }
-            if (mergedConfig.bnbChain.pancakeRouterAddress) {
-                mergedConfig.bnbChain.pancakeRouterAddress = String(mergedConfig.bnbChain.pancakeRouterAddress);
-            }
-        }
-
-        return mergedConfig;
     }
-    
+
+    getConfig() {
+        return this.config || this.getDefaultConfig();
+    }
+
+    isConfigured() {
+        return !!this.config;
+    }
+
+    getTradeHistoryPath() {
+        return this.tradeHistoryFile;
+    }
+
+    // Default configuration
     getDefaultConfig() {
         return {
-            version: '1.0.0',
-            configured: false,
             ethereum: {
                 enabled: false,
-                network: 'mainnet',
+                nodeUrl: '',
                 privateKey: '',
-                infuraId: '',
-                alchemyKey: '',
-                uniswapFactoryAddress: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f',
-                uniswapRouterAddress: '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D'
+                gasLimit: 250000,
+                gasPriceMultiplier: 1.1
             },
             bnbChain: {
                 enabled: false,
+                nodeUrl: '',
                 privateKey: '',
-                pancakeFactoryAddress: '0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73',
-                pancakeRouterAddress: '0x10ED43C718714eb63d5aA57B78B54704E256024E'
+                gasLimit: 250000,
+                gasPriceMultiplier: 1.1
             },
             exchanges: {
                 binanceUS: {
@@ -107,111 +145,41 @@ class ConfigManager {
                     apiSecret: ''
                 }
             },
+            strategies: {
+                tokenSniper: {
+                    enabled: false,
+                    maxTransactionAmount: 0.1,
+                    slippageTolerance: 3,
+                    autoSellTimeoutMinutes: 30,
+                    stopLossPercentage: 10,
+                    takeProfitPercentage: 50
+                },
+                trendTrading: {
+                    enabled: false,
+                    tradingPairs: ["BTC/USDT", "ETH/USDT"],
+                    timeframes: ["1h", "4h"],
+                    indicators: {
+                        rsi: {
+                            enabled: true,
+                            period: 14,
+                            overbought: 70,
+                            oversold: 30
+                        },
+                        macd: {
+                            enabled: true,
+                            fastPeriod: 12,
+                            slowPeriod: 26,
+                            signalPeriod: 9
+                        }
+                    }
+                }
+            },
             trading: {
-                maxConcurrentTrades: 5,
-                walletBuyPercentage: 10,
-                takeProfit: 5,
-                stopLoss: 2,
-                autoTradeNewTokens: false,
-                closeTradesOnStop: true,
-                autoStart: false
+                autoStart: false,
+                maxConcurrentTrades: 3,
+                defaultRiskPercentage: 2
             }
         };
-    }
-
-    async updateConfig(newConfig) {
-        try {
-            if (!newConfig || typeof newConfig !== 'object') {
-                throw new Error('Invalid configuration object');
-            }
-
-            // Ensure contract addresses remain as strings
-            if (newConfig.ethereum) {
-                if (newConfig.ethereum.uniswapFactoryAddress) {
-                    newConfig.ethereum.uniswapFactoryAddress = String(newConfig.ethereum.uniswapFactoryAddress);
-                }
-                if (newConfig.ethereum.uniswapRouterAddress) {
-                    newConfig.ethereum.uniswapRouterAddress = String(newConfig.ethereum.uniswapRouterAddress);
-                }
-            }
-
-            if (newConfig.bnbChain) {
-                if (newConfig.bnbChain.pancakeFactoryAddress) {
-                    newConfig.bnbChain.pancakeFactoryAddress = String(newConfig.bnbChain.pancakeFactoryAddress);
-                }
-                if (newConfig.bnbChain.pancakeRouterAddress) {
-                    newConfig.bnbChain.pancakeRouterAddress = String(newConfig.bnbChain.pancakeRouterAddress);
-                }
-            }
-
-            // Deep merge with current config
-            const currentConfig = this.config || this.getDefaultConfig();
-            const mergedConfig = this.deepMerge(currentConfig, newConfig);
-            
-            // Validate merged config
-            this.config = this.validateConfig(mergedConfig);
-            
-            // Update configured status
-            this.config.configured = this.checkConfigured(this.config);
-            
-            // Encrypt and save
-            const encryptedConfig = this.securityManager.encryptConfig(this.config);
-            
-            await fs.writeFile(
-                this.configPath,
-                JSON.stringify(encryptedConfig, null, 2),
-                'utf8'
-            );
-            
-            this.logger.info('Configuration updated successfully');
-            return true;
-        } catch (error) {
-            this.logger.error('Error updating config', error);
-            return false;
-        }
-    }
-    
-    getConfig() {
-        return this.config || this.getDefaultConfig();
-    }
-
-    isConfigured() {
-        return this.config?.configured === true;
-    }
-
-    checkConfigured(config) {
-        return !!(
-            (config.ethereum?.enabled && config.ethereum?.privateKey) ||
-            (config.bnbChain?.enabled && config.bnbChain?.privateKey) ||
-            (config.exchanges?.binanceUS?.enabled && 
-             config.exchanges?.binanceUS?.apiKey && 
-             config.exchanges?.binanceUS?.apiSecret) ||
-            (config.exchanges?.cryptoCom?.enabled && 
-             config.exchanges?.cryptoCom?.apiKey && 
-             config.exchanges?.cryptoCom?.apiSecret)
-        );
-    }
-    
-    deepMerge(target, source) {
-        const output = { ...target };
-        
-        if (!source || typeof source !== 'object') {
-            return output;
-        }
-        
-        Object.keys(source).forEach(key => {
-            if (source[key] instanceof Object && key in target) {
-                output[key] = this.deepMerge(target[key], source[key]);
-            } else if (source[key] !== undefined) {
-                output[key] = source[key];
-            }
-        });
-        
-        return output;
-    }
-
-    getTradeHistoryPath() {
-        return path.join(process.cwd(), 'data', 'trade_history.json');
     }
 }
 
