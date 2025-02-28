@@ -23,16 +23,16 @@ class EthereumConnector {
         try {
             this.logger.info('Initializing Ethereum connector');
 
-            // Get private key from config with type checking
+            // Validate private key
             const privateKey = this.config.ethereum?.privateKey;
             if (!privateKey || typeof privateKey !== 'string') {
-                throw new Error('Invalid or missing private key for Ethereum');
+                throw new Error('Missing or invalid private key for Ethereum');
             }
 
-            // Get provider API key with type checking
+            // Validate API key
             const apiKey = this.config.ethereum?.infuraId || this.config.ethereum?.alchemyKey;
             if (!apiKey || typeof apiKey !== 'string') {
-                throw new Error('Invalid or missing API key for Ethereum provider');
+                throw new Error('Missing or invalid API key for Ethereum provider');
             }
 
             // Set up provider
@@ -47,7 +47,7 @@ class EthereumConnector {
             // Ensure private key has 0x prefix
             const formattedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
 
-            // Set up wallet
+            // Set up wallet with error handling
             try {
                 this.wallet = new ethers.Wallet(formattedPrivateKey, this.provider);
             } catch (walletError) {
@@ -55,28 +55,36 @@ class EthereumConnector {
             }
 
             // Set up Uniswap contracts
-            this.uniswapRouter = new ethers.Contract(
-                this.uniswapRouterAddress,
-                UNISWAP_ROUTER_ABI,
-                this.wallet
-            );
+            try {
+                this.uniswapRouter = new ethers.Contract(
+                    this.uniswapRouterAddress,
+                    UNISWAP_ROUTER_ABI,
+                    this.wallet
+                );
 
-            this.uniswapFactory = new ethers.Contract(
-                this.uniswapFactoryAddress,
-                UNISWAP_FACTORY_ABI,
-                this.wallet
-            );
+                this.uniswapFactory = new ethers.Contract(
+                    this.uniswapFactoryAddress,
+                    UNISWAP_FACTORY_ABI,
+                    this.wallet
+                );
+            } catch (contractError) {
+                throw new Error(`Failed to initialize Uniswap contracts: ${contractError.message}`);
+            }
 
-            // Verify connection
-            await this.provider.getBlockNumber();
-            const factoryPairCount = await this.uniswapFactory.allPairsLength();
-            
-            this.logger.info('Ethereum connector initialized successfully', {
-                address: this.wallet.address,
-                pairCount: factoryPairCount.toString()
-            });
+            // Verify connection and contracts
+            try {
+                await this.provider.getBlockNumber();
+                const factoryPairCount = await this.uniswapFactory.allPairsLength();
+                
+                this.logger.info('Ethereum connector initialized successfully', {
+                    address: this.wallet.address,
+                    pairCount: factoryPairCount.toString()
+                });
 
-            return true;
+                return true;
+            } catch (verificationError) {
+                throw new Error(`Failed to verify Ethereum connection: ${verificationError.message}`);
+            }
         } catch (error) {
             this.logger.error('Failed to initialize Ethereum connector', error);
             return false;
@@ -84,7 +92,7 @@ class EthereumConnector {
     }
 
     getAddress() {
-        return this.wallet ? this.wallet.address : null;
+        return this.wallet?.address || null;
     }
 
     getProvider() {
@@ -111,11 +119,11 @@ class EthereumConnector {
             };
 
             // Get token balances if configured
-            if (this.config.tokens) {
+            if (Array.isArray(this.config.tokens)) {
                 for (const token of this.config.tokens) {
                     try {
                         if (!token.address || typeof token.address !== 'string') {
-                            this.logger.warn(`Invalid token address for ${token.symbol}`);
+                            this.logger.warn(`Invalid token address for ${token.symbol || 'unknown token'}`);
                             continue;
                         }
 
@@ -124,11 +132,15 @@ class EthereumConnector {
                             ERC20_ABI,
                             this.provider
                         );
-                        const balance = await tokenContract.balanceOf(this.wallet.address);
-                        const decimals = await tokenContract.decimals();
+
+                        const [balance, decimals] = await Promise.all([
+                            tokenContract.balanceOf(this.wallet.address),
+                            tokenContract.decimals()
+                        ]);
+
                         balances[token.symbol] = ethers.utils.formatUnits(balance, decimals);
                     } catch (tokenError) {
-                        this.logger.error(`Error getting balance for token ${token.symbol}`, tokenError);
+                        this.logger.error(`Error getting balance for token ${token.symbol || token.address}`, tokenError);
                     }
                 }
             }
@@ -136,7 +148,41 @@ class EthereumConnector {
             return balances;
         } catch (error) {
             this.logger.error('Error getting Ethereum balances', error);
-            return {};
+            return null;
+        }
+    }
+
+    async getTokenPrice(tokenAddress) {
+        try {
+            if (!this.uniswapFactory || !this.wallet) {
+                throw new Error('Ethereum connector not properly initialized');
+            }
+
+            const pairAddress = await this.uniswapFactory.getPair(tokenAddress, this.wethAddress);
+            if (pairAddress === '0x0000000000000000000000000000000000000000') {
+                throw new Error('No liquidity pair found');
+            }
+
+            const pair = new ethers.Contract(
+                pairAddress,
+                ['function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)'],
+                this.provider
+            );
+
+            const [token0, reserves] = await Promise.all([
+                pair.token0(),
+                pair.getReserves()
+            ]);
+
+            const [reserve0, reserve1] = reserves;
+            const ethPrice = token0.toLowerCase() === tokenAddress.toLowerCase() ? 
+                reserve1 / reserve0 :
+                reserve0 / reserve1;
+
+            return ethPrice;
+        } catch (error) {
+            this.logger.error(`Error getting token price for ${tokenAddress}`, error);
+            return null;
         }
     }
 }

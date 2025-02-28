@@ -17,36 +17,34 @@ class BnbConnector {
         this.wallet = null;
         this.pancakeRouter = null;
         this.pancakeFactory = null;
+        
+        // RPC endpoints for redundancy
+        this.rpcUrls = [
+            'https://bsc-dataseed1.binance.org',
+            'https://bsc-dataseed2.binance.org',
+            'https://bsc-dataseed3.binance.org',
+            'https://bsc-dataseed4.binance.org'
+        ];
     }
 
     async initialize() {
         try {
             this.logger.info('Initializing BNB Chain connector');
 
-            // Get private key from config with type checking
+            // Validate private key
             const privateKey = this.config.bnbChain?.privateKey || this.config.ethereum?.privateKey;
             if (!privateKey || typeof privateKey !== 'string') {
-                throw new Error('Invalid or missing private key for BNB Chain');
+                throw new Error('Missing or invalid private key for BNB Chain');
             }
-
-            // Ensure private key has 0x prefix
-            const formattedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
-
-            // Set up provider with multiple RPC endpoints for redundancy
-            const rpcUrls = [
-                'https://bsc-dataseed1.binance.org',
-                'https://bsc-dataseed2.binance.org',
-                'https://bsc-dataseed3.binance.org',
-                'https://bsc-dataseed4.binance.org'
-            ];
 
             // Try each RPC endpoint until one works
             let connected = false;
-            for (const rpcUrl of rpcUrls) {
+            for (const rpcUrl of this.rpcUrls) {
                 try {
                     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
                     await this.provider.getBlockNumber();
                     connected = true;
+                    this.logger.info(`Connected to BNB Chain RPC: ${rpcUrl}`);
                     break;
                 } catch (error) {
                     this.logger.warn(`Failed to connect to RPC ${rpcUrl}, trying next...`);
@@ -58,7 +56,10 @@ class BnbConnector {
                 throw new Error('Failed to connect to any BSC RPC endpoint');
             }
 
-            // Set up wallet
+            // Ensure private key has 0x prefix
+            const formattedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`;
+
+            // Set up wallet with error handling
             try {
                 this.wallet = new ethers.Wallet(formattedPrivateKey, this.provider);
             } catch (walletError) {
@@ -66,31 +67,39 @@ class BnbConnector {
             }
 
             // Set up PancakeSwap contracts
-            this.pancakeRouter = new ethers.Contract(
-                this.pancakeRouterAddress,
-                PANCAKESWAP_ROUTER_ABI,
-                this.wallet
-            );
+            try {
+                this.pancakeRouter = new ethers.Contract(
+                    this.pancakeRouterAddress,
+                    PANCAKESWAP_ROUTER_ABI,
+                    this.wallet
+                );
 
-            this.pancakeFactory = new ethers.Contract(
-                this.pancakeFactoryAddress,
-                PANCAKESWAP_FACTORY_ABI,
-                this.wallet
-            );
+                this.pancakeFactory = new ethers.Contract(
+                    this.pancakeFactoryAddress,
+                    PANCAKESWAP_FACTORY_ABI,
+                    this.wallet
+                );
+            } catch (contractError) {
+                throw new Error(`Failed to initialize PancakeSwap contracts: ${contractError.message}`);
+            }
 
             // Verify connection and contracts
-            const [blockNumber, factoryPairCount] = await Promise.all([
-                this.provider.getBlockNumber(),
-                this.pancakeFactory.allPairsLength()
-            ]);
-            
-            this.logger.info('BNB Chain connector initialized successfully', {
-                address: this.wallet.address,
-                blockNumber,
-                pairCount: factoryPairCount.toString()
-            });
+            try {
+                const [blockNumber, factoryPairCount] = await Promise.all([
+                    this.provider.getBlockNumber(),
+                    this.pancakeFactory.allPairsLength()
+                ]);
+                
+                this.logger.info('BNB Chain connector initialized successfully', {
+                    address: this.wallet.address,
+                    blockNumber,
+                    pairCount: factoryPairCount.toString()
+                });
 
-            return true;
+                return true;
+            } catch (verificationError) {
+                throw new Error(`Failed to verify BNB Chain connection: ${verificationError.message}`);
+            }
         } catch (error) {
             this.logger.error('Failed to initialize BNB Chain connector', error);
             return false;
@@ -98,7 +107,7 @@ class BnbConnector {
     }
 
     getAddress() {
-        return this.wallet ? this.wallet.address : null;
+        return this.wallet?.address || null;
     }
 
     getProvider() {
@@ -125,11 +134,11 @@ class BnbConnector {
             };
 
             // Get token balances if configured
-            if (this.config.tokens) {
+            if (Array.isArray(this.config.tokens)) {
                 for (const token of this.config.tokens) {
                     try {
                         if (!token.address || typeof token.address !== 'string') {
-                            this.logger.warn(`Invalid token address for ${token.symbol}`);
+                            this.logger.warn(`Invalid token address for ${token.symbol || 'unknown token'}`);
                             continue;
                         }
 
@@ -138,11 +147,15 @@ class BnbConnector {
                             ERC20_ABI,
                             this.provider
                         );
-                        const balance = await tokenContract.balanceOf(this.wallet.address);
-                        const decimals = await tokenContract.decimals();
+
+                        const [balance, decimals] = await Promise.all([
+                            tokenContract.balanceOf(this.wallet.address),
+                            tokenContract.decimals()
+                        ]);
+
                         balances[token.symbol] = ethers.utils.formatUnits(balance, decimals);
                     } catch (tokenError) {
-                        this.logger.error(`Error getting balance for token ${token.symbol}`, tokenError);
+                        this.logger.error(`Error getting balance for token ${token.symbol || token.address}`, tokenError);
                     }
                 }
             }
@@ -150,7 +163,41 @@ class BnbConnector {
             return balances;
         } catch (error) {
             this.logger.error('Error getting BNB Chain balances', error);
-            return {};
+            return null;
+        }
+    }
+
+    async getTokenPrice(tokenAddress) {
+        try {
+            if (!this.pancakeFactory || !this.wallet) {
+                throw new Error('BNB Chain connector not properly initialized');
+            }
+
+            const pairAddress = await this.pancakeFactory.getPair(tokenAddress, this.wbnbAddress);
+            if (pairAddress === '0x0000000000000000000000000000000000000000') {
+                throw new Error('No liquidity pair found');
+            }
+
+            const pair = new ethers.Contract(
+                pairAddress,
+                ['function getReserves() external view returns (uint112 reserve0, uint112 reserve1, uint32 blockTimestampLast)'],
+                this.provider
+            );
+
+            const [token0, reserves] = await Promise.all([
+                pair.token0(),
+                pair.getReserves()
+            ]);
+
+            const [reserve0, reserve1] = reserves;
+            const bnbPrice = token0.toLowerCase() === tokenAddress.toLowerCase() ? 
+                reserve1 / reserve0 :
+                reserve0 / reserve1;
+
+            return bnbPrice;
+        } catch (error) {
+            this.logger.error(`Error getting token price for ${tokenAddress}`, error);
+            return null;
         }
     }
 }
