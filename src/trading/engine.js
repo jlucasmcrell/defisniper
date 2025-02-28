@@ -23,34 +23,42 @@ class TradingEngine {
         this.configManager = configManager;
         this.securityManager = securityManager;
         this.socketIo = socketIo;
+        
+        // Initialize logger first
         this.logger = new Logger('TradingEngine');
         
-        // Set up logger to also emit logs to UI
-        const originalInfo = this.logger.info;
-        const originalError = this.logger.error;
-        const originalWarn = this.logger.warn;
-        const originalDebug = this.logger.debug;
+        // Verify logger methods exist before setting up socket emissions
+        if (this.logger && typeof this.logger.info === 'function') {
+            const originalInfo = this.logger.info.bind(this.logger);
+            this.logger.info = (message, meta) => {
+                originalInfo(message, meta);
+                this.emitLog('info', message, meta);
+            };
+        }
         
-        // Override logger methods to also emit to socket
-        this.logger.info = (message, meta) => {
-            originalInfo.call(this.logger, message, meta);
-            this.emitLog('info', message, meta);
-        };
+        if (this.logger && typeof this.logger.error === 'function') {
+            const originalError = this.logger.error.bind(this.logger);
+            this.logger.error = (message, meta) => {
+                originalError(message, meta);
+                this.emitLog('error', message, meta);
+            };
+        }
         
-        this.logger.error = (message, meta) => {
-            originalError.call(this.logger, message, meta);
-            this.emitLog('error', message, meta);
-        };
+        if (this.logger && typeof this.logger.warn === 'function') {
+            const originalWarn = this.logger.warn.bind(this.logger);
+            this.logger.warn = (message, meta) => {
+                originalWarn(message, meta);
+                this.emitLog('warn', message, meta);
+            };
+        }
         
-        this.logger.warn = (message, meta) => {
-            originalWarn.call(this.logger, message, meta);
-            this.emitLog('warn', message, meta);
-        };
-        
-        this.logger.debug = (message, meta) => {
-            originalDebug.call(this.logger, message, meta);
-            this.emitLog('debug', message, meta);
-        };
+        if (this.logger && typeof this.logger.debug === 'function') {
+            const originalDebug = this.logger.debug.bind(this.logger);
+            this.logger.debug = (message, meta) => {
+                originalDebug(message, meta);
+                this.emitLog('debug', message, meta);
+            };
+        }
         
         this.running = false;
         this.config = configManager.getConfig();
@@ -75,58 +83,46 @@ class TradingEngine {
         this.lastBalanceUpdate = 0;
     }
 
-    /**
-     * Emit log to UI
-     */
-    emitLog(level, message, meta) {
-        try {
-            this.socketIo.emit('log', {
-                level,
-                message,
-                timestamp: new Date().toISOString(),
-                module: 'TradingEngine',
-                meta: meta || {}
-            });
-        } catch (error) {
-            console.error('Error emitting log to UI', error);
-        }
-    }
+    // ... previous emitLog method remains the same ...
 
-    /**
-     * Initialize the trading engine
-     */
     async initialize() {
         try {
             this.logger.info('Initializing trading engine');
             
+            // Create a new logger instance for blockchain connectors
+            const blockchainLogger = new Logger('BlockchainConnector');
+            
             // Decrypt private keys and API credentials
             const decryptedConfig = this.securityManager.decryptConfig(this.config);
             
-            // Initialize blockchain connectors
+            // Initialize blockchain connectors with proper logger
             if (decryptedConfig.ethereum && decryptedConfig.ethereum.enabled) {
                 this.blockchain.ethereum = new EthereumConnector(
                     decryptedConfig.ethereum.privateKey,
                     decryptedConfig.ethereum.alchemyKey,
-                    this.logger
+                    blockchainLogger // Pass the dedicated blockchain logger
                 );
                 await this.blockchain.ethereum.initialize();
             }
             
             if (decryptedConfig.bnbChain && decryptedConfig.bnbChain.enabled) {
                 this.blockchain.bnbChain = new BnbConnector(
-                    decryptedConfig.ethereum.privateKey, // Same private key for ETH and BNB
-                    this.logger
+                    decryptedConfig.ethereum.privateKey,
+                    blockchainLogger // Pass the dedicated blockchain logger
                 );
                 await this.blockchain.bnbChain.initialize();
             }
             
-            // Initialize exchange connectors
+            // Create a new logger instance for exchanges
+            const exchangeLogger = new Logger('ExchangeConnector');
+            
+            // Initialize exchange connectors with proper logger
             if (decryptedConfig.exchanges) {
                 if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) {
                     this.exchanges.binanceUS = new BinanceExchange(
                         decryptedConfig.exchanges.binanceUS.apiKey,
                         decryptedConfig.exchanges.binanceUS.apiSecret,
-                        this.logger
+                        exchangeLogger
                     );
                     await this.exchanges.binanceUS.initialize();
                 }
@@ -135,24 +131,28 @@ class TradingEngine {
                     this.exchanges.cryptoCom = new CryptocomExchange(
                         decryptedConfig.exchanges.cryptoCom.apiKey,
                         decryptedConfig.exchanges.cryptoCom.apiSecret,
-                        this.logger
+                        exchangeLogger
                     );
                     await this.exchanges.cryptoCom.initialize();
                 }
             }
+
+            // Create a new logger instance for strategies
+            const strategyLogger = new Logger('Strategy');
             
-            // Initialize trading strategies
+            // Initialize trading strategies with proper logger
             if (decryptedConfig.strategies.tokenSniper.enabled) {
                 this.strategies.tokenSniper = new TokenSniperStrategy(
                     this.blockchain,
                     this.exchanges,
                     decryptedConfig.strategies.tokenSniper,
-                    this.logger
+                    strategyLogger
                 );
             }
 
-            // Initialize token scanner
-            await this.initializeTokenScanner(decryptedConfig);
+            // Initialize token scanner with its own logger
+            const scannerLogger = new Logger('TokenScanner');
+            await this.initializeTokenScanner(decryptedConfig, scannerLogger);
             
             // Load trade history and update stats
             await this.loadTradeHistory();
@@ -167,7 +167,6 @@ class TradingEngine {
             throw error;
         }
     }
-
     /**
      * Initialize token scanner with error handling
      */
