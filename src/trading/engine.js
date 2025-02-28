@@ -19,6 +19,25 @@ const { EnhancedTrendTradingStrategy } = require('../strategies/enhancedTrendTra
 const { EnhancedTokenScanner } = require('../scanner/enhancedTokenScanner');
 
 class TradingEngine {
+    /**
+     * Emit log to UI
+     */
+    emitLog(level, message, meta) {
+        try {
+            if (this.socketIo) {
+                this.socketIo.emit('log', {
+                    level,
+                    message,
+                    timestamp: new Date().toISOString(),
+                    module: 'TradingEngine',
+                    meta: meta || {}
+                });
+            }
+        } catch (error) {
+            console.error('Error emitting log to UI', error);
+        }
+    }
+
     constructor(configManager, securityManager, socketIo) {
         this.configManager = configManager;
         this.securityManager = securityManager;
@@ -27,38 +46,34 @@ class TradingEngine {
         // Initialize logger first
         this.logger = new Logger('TradingEngine');
         
-        // Verify logger methods exist before setting up socket emissions
-        if (this.logger && typeof this.logger.info === 'function') {
-            const originalInfo = this.logger.info.bind(this.logger);
-            this.logger.info = (message, meta) => {
-                originalInfo(message, meta);
-                this.emitLog('info', message, meta);
-            };
-        }
+        // Store original logger methods
+        const originalLogger = {
+            info: this.logger.info.bind(this.logger),
+            error: this.logger.error.bind(this.logger),
+            warn: this.logger.warn.bind(this.logger),
+            debug: this.logger.debug.bind(this.logger)
+        };
+
+        // Override logger methods with socket emission
+        this.logger.info = (message, meta) => {
+            originalLogger.info(message, meta);
+            this.emitLog('info', message, meta);
+        };
         
-        if (this.logger && typeof this.logger.error === 'function') {
-            const originalError = this.logger.error.bind(this.logger);
-            this.logger.error = (message, meta) => {
-                originalError(message, meta);
-                this.emitLog('error', message, meta);
-            };
-        }
+        this.logger.error = (message, meta) => {
+            originalLogger.error(message, meta);
+            this.emitLog('error', message, meta);
+        };
         
-        if (this.logger && typeof this.logger.warn === 'function') {
-            const originalWarn = this.logger.warn.bind(this.logger);
-            this.logger.warn = (message, meta) => {
-                originalWarn(message, meta);
-                this.emitLog('warn', message, meta);
-            };
-        }
+        this.logger.warn = (message, meta) => {
+            originalLogger.warn(message, meta);
+            this.emitLog('warn', message, meta);
+        };
         
-        if (this.logger && typeof this.logger.debug === 'function') {
-            const originalDebug = this.logger.debug.bind(this.logger);
-            this.logger.debug = (message, meta) => {
-                originalDebug(message, meta);
-                this.emitLog('debug', message, meta);
-            };
-        }
+        this.logger.debug = (message, meta) => {
+            originalLogger.debug(message, meta);
+            this.emitLog('debug', message, meta);
+        };
         
         this.running = false;
         this.config = configManager.getConfig();
@@ -82,9 +97,6 @@ class TradingEngine {
         this.monitoringInterval = null;
         this.lastBalanceUpdate = 0;
     }
-
-    // ... previous emitLog method remains the same ...
-
     async initialize() {
         try {
             this.logger.info('Initializing trading engine');
