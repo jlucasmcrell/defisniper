@@ -1,10 +1,6 @@
 /**
  * Trading Engine
- * 
- * Core component that orchestrates all trading activities including strategy
- * execution, trade management, position monitoring, and risk management.
  */
-
 const ethers = require('ethers');
 const { v4: uuidv4 } = require('uuid');
 const { Logger } = require('../utils/logger');
@@ -19,64 +15,16 @@ const { EnhancedTrendTradingStrategy } = require('../strategies/enhancedTrendTra
 const { EnhancedTokenScanner } = require('../scanner/enhancedTokenScanner');
 
 class TradingEngine {
-    /**
-     * Emit log to UI
-     */
-    emitLog(level, message, meta) {
-        try {
-            if (this.socketIo) {
-                this.socketIo.emit('log', {
-                    level,
-                    message,
-                    timestamp: new Date().toISOString(),
-                    module: 'TradingEngine',
-                    meta: meta || {}
-                });
-            }
-        } catch (error) {
-            console.error('Error emitting log to UI', error);
-        }
-    }
-
     constructor(configManager, securityManager, socketIo) {
+        // Initialize core dependencies first
         this.configManager = configManager;
         this.securityManager = securityManager;
         this.socketIo = socketIo;
-        
-        // Initialize logger first
         this.logger = new Logger('TradingEngine');
-        
-        // Store original logger methods
-        const originalLogger = {
-            info: this.logger.info.bind(this.logger),
-            error: this.logger.error.bind(this.logger),
-            warn: this.logger.warn.bind(this.logger),
-            debug: this.logger.debug.bind(this.logger)
-        };
-
-        // Override logger methods with socket emission
-        this.logger.info = (message, meta) => {
-            originalLogger.info(message, meta);
-            this.emitLog('info', message, meta);
-        };
-        
-        this.logger.error = (message, meta) => {
-            originalLogger.error(message, meta);
-            this.emitLog('error', message, meta);
-        };
-        
-        this.logger.warn = (message, meta) => {
-            originalLogger.warn(message, meta);
-            this.emitLog('warn', message, meta);
-        };
-        
-        this.logger.debug = (message, meta) => {
-            originalLogger.debug(message, meta);
-            this.emitLog('debug', message, meta);
-        };
-        
-        this.running = false;
         this.config = configManager.getConfig();
+
+        // Initialize state variables
+        this.running = false;
         this.strategies = {};
         this.blockchain = {};
         this.exchanges = {};
@@ -96,80 +44,54 @@ class TradingEngine {
         this.mainLoopInterval = null;
         this.monitoringInterval = null;
         this.lastBalanceUpdate = 0;
+
+        // Bind methods to maintain context
+        this.emitLog = this.emitLog.bind(this);
+        this.start = this.start.bind(this);
+        this.stop = this.stop.bind(this);
+        this.mainLoop = this.mainLoop.bind(this);
+        this.monitor = this.monitor.bind(this);
     }
+
+    emitLog(level, message, meta = {}) {
+        if (!this.socketIo) return;
+        
+        try {
+            this.socketIo.emit('log', {
+                level,
+                message,
+                timestamp: new Date().toISOString(),
+                module: 'TradingEngine',
+                meta
+            });
+        } catch (error) {
+            console.error('Error emitting log to UI:', error);
+        }
+    }
+
     async initialize() {
         try {
             this.logger.info('Initializing trading engine');
             
-            // Create a new logger instance for blockchain connectors
-            const blockchainLogger = new Logger('BlockchainConnector');
+            // Decrypt configuration
+            const decryptedConfig = await this.securityManager.decryptConfig(this.config);
             
-            // Decrypt private keys and API credentials
-            const decryptedConfig = this.securityManager.decryptConfig(this.config);
+            // Initialize blockchain connectors
+            await this.initializeBlockchainConnectors(decryptedConfig);
             
-            // Initialize blockchain connectors with proper logger
-            if (decryptedConfig.ethereum && decryptedConfig.ethereum.enabled) {
-                this.blockchain.ethereum = new EthereumConnector(
-                    decryptedConfig.ethereum.privateKey,
-                    decryptedConfig.ethereum.alchemyKey,
-                    blockchainLogger // Pass the dedicated blockchain logger
-                );
-                await this.blockchain.ethereum.initialize();
-            }
+            // Initialize exchange connectors
+            await this.initializeExchangeConnectors(decryptedConfig);
             
-            if (decryptedConfig.bnbChain && decryptedConfig.bnbChain.enabled) {
-                this.blockchain.bnbChain = new BnbConnector(
-                    decryptedConfig.ethereum.privateKey,
-                    blockchainLogger // Pass the dedicated blockchain logger
-                );
-                await this.blockchain.bnbChain.initialize();
-            }
+            // Initialize strategies
+            await this.initializeStrategies(decryptedConfig);
             
-            // Create a new logger instance for exchanges
-            const exchangeLogger = new Logger('ExchangeConnector');
+            // Initialize token scanner
+            await this.initializeTokenScanner(decryptedConfig);
             
-            // Initialize exchange connectors with proper logger
-            if (decryptedConfig.exchanges) {
-                if (decryptedConfig.exchanges.binanceUS && decryptedConfig.exchanges.binanceUS.enabled) {
-                    this.exchanges.binanceUS = new BinanceExchange(
-                        decryptedConfig.exchanges.binanceUS.apiKey,
-                        decryptedConfig.exchanges.binanceUS.apiSecret,
-                        exchangeLogger
-                    );
-                    await this.exchanges.binanceUS.initialize();
-                }
-                
-                if (decryptedConfig.exchanges.cryptoCom && decryptedConfig.exchanges.cryptoCom.enabled) {
-                    this.exchanges.cryptoCom = new CryptocomExchange(
-                        decryptedConfig.exchanges.cryptoCom.apiKey,
-                        decryptedConfig.exchanges.cryptoCom.apiSecret,
-                        exchangeLogger
-                    );
-                    await this.exchanges.cryptoCom.initialize();
-                }
-            }
-
-            // Create a new logger instance for strategies
-            const strategyLogger = new Logger('Strategy');
-            
-            // Initialize trading strategies with proper logger
-            if (decryptedConfig.strategies.tokenSniper.enabled) {
-                this.strategies.tokenSniper = new TokenSniperStrategy(
-                    this.blockchain,
-                    this.exchanges,
-                    decryptedConfig.strategies.tokenSniper,
-                    strategyLogger
-                );
-            }
-
-            // Initialize token scanner with its own logger
-            const scannerLogger = new Logger('TokenScanner');
-            await this.initializeTokenScanner(decryptedConfig, scannerLogger);
-            
-            // Load trade history and update stats
+            // Load trade history
             await this.loadTradeHistory();
             
-            // Update wallet balances
+            // Update initial balances
             await this.updateBalances();
             
             this.logger.info('Trading engine initialized successfully');
@@ -179,61 +101,142 @@ class TradingEngine {
             throw error;
         }
     }
-    /**
-     * Initialize token scanner with error handling
-     */
+
+    async initializeBlockchainConnectors(decryptedConfig) {
+        try {
+            if (decryptedConfig.ethereum?.enabled) {
+                const ethereumLogger = new Logger('EthereumConnector');
+                this.blockchain.ethereum = new EthereumConnector(
+                    decryptedConfig.ethereum.privateKey,
+                    decryptedConfig.ethereum.alchemyKey,
+                    ethereumLogger
+                );
+                await this.blockchain.ethereum.initialize();
+            }
+            
+            if (decryptedConfig.bnbChain?.enabled) {
+                const bnbLogger = new Logger('BnbConnector');
+                this.blockchain.bnbChain = new BnbConnector(
+                    decryptedConfig.ethereum.privateKey,
+                    bnbLogger
+                );
+                await this.blockchain.bnbChain.initialize();
+            }
+        } catch (error) {
+            this.logger.error('Failed to initialize blockchain connectors', error);
+            throw error;
+        }
+    }
+
+    async initializeExchangeConnectors(decryptedConfig) {
+        try {
+            if (decryptedConfig.exchanges?.binanceUS?.enabled) {
+                const binanceLogger = new Logger('BinanceExchange');
+                this.exchanges.binanceUS = new BinanceExchange(
+                    decryptedConfig.exchanges.binanceUS.apiKey,
+                    decryptedConfig.exchanges.binanceUS.apiSecret,
+                    binanceLogger
+                );
+                await this.exchanges.binanceUS.initialize();
+            }
+            
+            if (decryptedConfig.exchanges?.cryptoCom?.enabled) {
+                const cryptoLogger = new Logger('CryptocomExchange');
+                this.exchanges.cryptoCom = new CryptocomExchange(
+                    decryptedConfig.exchanges.cryptoCom.apiKey,
+                    decryptedConfig.exchanges.cryptoCom.apiSecret,
+                    cryptoLogger
+                );
+                await this.exchanges.cryptoCom.initialize();
+            }
+        } catch (error) {
+            this.logger.error('Failed to initialize exchange connectors', error);
+            throw error;
+        }
+    }
+
+    async initializeStrategies(decryptedConfig) {
+        try {
+            if (decryptedConfig.strategies?.tokenSniper?.enabled) {
+                const sniperLogger = new Logger('TokenSniperStrategy');
+                this.strategies.tokenSniper = new TokenSniperStrategy(
+                    this.blockchain,
+                    this.exchanges,
+                    decryptedConfig.strategies.tokenSniper,
+                    sniperLogger
+                );
+                await this.strategies.tokenSniper.initialize();
+            }
+
+            if (decryptedConfig.strategies?.trendTrading?.enabled) {
+                const trendLogger = new Logger('TrendTradingStrategy');
+                this.strategies.trendTrading = new TrendTradingStrategy(
+                    this.blockchain,
+                    this.exchanges,
+                    decryptedConfig.strategies.trendTrading,
+                    trendLogger
+                );
+                await this.strategies.trendTrading.initialize();
+            }
+        } catch (error) {
+            this.logger.error('Failed to initialize strategies', error);
+            throw error;
+        }
+    }
+
     async initializeTokenScanner(decryptedConfig) {
         try {
-            this.logger.info('Initializing token scanner');
-            
-            // Create token scanner instance with blockchain connectors and exchanges
+            const scannerLogger = new Logger('TokenScanner');
             this.tokenScanner = new EnhancedTokenScanner(
                 this.blockchain,
                 this.exchanges,
                 decryptedConfig,
-                this.logger
+                scannerLogger
             );
             
-            // Initialize the scanner
             await this.tokenScanner.initialize();
             
-            // Set up event listeners for new token detection
-            this.tokenScanner.on('newToken', async (tokenData) => {
+            this.tokenScanner.on('newToken', (token) => {
                 try {
-                    this.logger.info('New token detected', tokenData);
-                    
-                    // Emit token detection to UI
-                    this.socketIo.emit('newTokenDetected', {
-                        ...tokenData,
-                        timestamp: new Date().toISOString()
-                    });
-                    
-                    // If token sniper strategy is enabled, analyze the token
-                    if (this.strategies.tokenSniper) {
-                        await this.strategies.tokenSniper.analyzeToken(tokenData);
-                    }
+                    this.handleNewToken(token);
                 } catch (error) {
-                    this.logger.error('Error processing new token', error);
+                    this.logger.error('Error handling new token', error);
                 }
             });
             
-            // Set up error handling for scanner
             this.tokenScanner.on('error', (error) => {
                 this.logger.error('Token scanner error', error);
-                this.socketIo.emit('scannerError', {
-                    error: error.message,
-                    timestamp: new Date().toISOString()
-                });
             });
-
-            this.logger.info('Token scanner initialized successfully');
-            return true;
         } catch (error) {
             this.logger.error('Failed to initialize token scanner', error);
-            return false;
+            throw error;
         }
     }
 
+    async loadTradeHistory() {
+        try {
+            const historyPath = this.configManager.getTradeHistoryPath();
+            if (!historyPath) {
+                this.logger.warn('No trade history path configured');
+                return;
+            }
+
+            if (require('fs').existsSync(historyPath)) {
+                const history = JSON.parse(
+                    require('fs').readFileSync(historyPath, 'utf8')
+                );
+                this.tradeHistory = history;
+                await this.updateStats();
+                this.logger.info(`Loaded ${history.length} historical trades`);
+            } else {
+                this.logger.info('No trade history file found, starting fresh');
+            }
+        } catch (error) {
+            this.logger.error('Failed to load trade history', error);
+            // Continue without history rather than throwing
+            this.tradeHistory = [];
+        }
+    }
     /**
      * Start the trading engine
      */
