@@ -1,77 +1,106 @@
-// Create new settings.js to handle form data properly
-class SettingsManager {
-    constructor() {
-        this.stringFields = [
-            'ethereum.uniswapFactoryAddress',
-            'ethereum.uniswapRouterAddress',
-            'bnbChain.pancakeFactoryAddress',
-            'bnbChain.pancakeRouterAddress',
-            'ethereum.privateKey',
-            'ethereum.infuraId',
-            'ethereum.alchemyKey',
-            'bnbChain.privateKey',
-            'exchanges.binanceUS.apiKey',
-            'exchanges.binanceUS.apiSecret',
-            'exchanges.cryptoCom.apiKey',
-            'exchanges.cryptoCom.apiSecret'
-        ];
-    }
-
-    processFormData(formData) {
-        const settings = {};
-
-        formData.forEach((value, key) => {
-            const parts = key.split('.');
-            let current = settings;
-            
-            // Build nested object structure
-            for (let i = 0; i < parts.length - 1; i++) {
-                current[parts[i]] = current[parts[i]] || {};
-                current = current[parts[i]];
+                    if (arrayMatch) {
+                    const arrayName = arrayMatch[1];
+                    const index = parseInt(arrayMatch[2]);
+                    
+                    if (!obj[arrayName]) {
+                        obj[arrayName] = [];
+                    }
+                    
+                    while (obj[arrayName].length <= index) {
+                        obj[arrayName].push('');
+                    }
+                    
+                    obj[arrayName][index] = value;
+                    continue;
+                }
+                
+                if (!obj[k]) {
+                    obj[k] = {};
+                }
+                obj = obj[k];
             }
-
-            const lastPart = parts[parts.length - 1];
             
-            // Determine field type and handle accordingly
-            if (this.stringFields.includes(key)) {
-                // Always keep as string
-                current[lastPart] = value;
-            } else if (key.endsWith('enabled')) {
-                // Handle checkboxes
-                current[lastPart] = value === 'on';
-            } else if (this.isNumericField(key)) {
-                // Convert numeric fields
-                const numValue = Number(value);
-                current[lastPart] = !isNaN(numValue) ? numValue : value;
+            const lastKey = keys[keys.length - 1];
+            
+            // Handle checkboxes (they're only included in FormData when checked)
+            if (lastKey === 'enabled' || lastKey === 'autoStart') {
+                obj[lastKey] = true;
             } else {
-                // Default to string for unknown fields
-                current[lastPart] = value;
+                // Convert numeric values
+                if (!isNaN(value) && value !== '' && !key.includes('apiKey') && !key.includes('privateKey')) {
+                    obj[lastKey] = parseFloat(value);
+                } else {
+                    obj[lastKey] = value;
+                }
             }
+        }
+        
+        // Set disabled checkboxes to false
+        if (!config.ethereum) config.ethereum = {};
+        if (formData.get('ethereum.enabled') === null) config.ethereum.enabled = false;
+        
+        if (!config.bnbChain) config.bnbChain = {};
+        if (formData.get('bnbChain.enabled') === null) config.bnbChain.enabled = false;
+        
+        if (!config.exchanges) config.exchanges = {};
+        if (!config.exchanges.binanceUS) config.exchanges.binanceUS = {};
+        if (formData.get('exchanges.binanceUS.enabled') === null) config.exchanges.binanceUS.enabled = false;
+        
+        if (!config.exchanges.cryptoCom) config.exchanges.cryptoCom = {};
+        if (formData.get('exchanges.cryptoCom.enabled') === null) config.exchanges.cryptoCom.enabled = false;
+        
+        if (!config.strategies) config.strategies = {};
+        if (!config.strategies.tokenSniper) config.strategies.tokenSniper = {};
+        if (formData.get('strategies.tokenSniper.enabled') === null) config.strategies.tokenSniper.enabled = false;
+        
+        if (!config.strategies.trendTrading) config.strategies.trendTrading = {};
+        if (formData.get('strategies.trendTrading.enabled') === null) config.strategies.trendTrading.enabled = false;
+        
+        if (!config.trading) config.trading = {};
+        if (formData.get('trading.autoStart') === null) config.trading.autoStart = false;
+        
+        // Make save button show loading state
+        const saveButton = configForm.querySelector('button[type="submit"]');
+        const originalText = saveButton.innerHTML;
+        saveButton.disabled = true;
+        saveButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+        
+        // Send config to server
+        const response = await fetch('/api/config', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ config }),
+            credentials: 'include'
         });
-
-        return settings;
-    }
-
-    isNumericField(key) {
-        const numericFields = [
-            'trading.maxConcurrentTrades',
-            'trading.walletBuyPercentage',
-            'trading.takeProfit',
-            'trading.stopLoss',
-            'trading.maxTradesPerHour',
-            'riskManagement.maxTradeSize',
-            'riskManagement.dailyLossLimit'
-        ];
-        return numericFields.includes(key);
-    }
-
-    validateContractAddress(address) {
-        // Check if address is a valid Ethereum address
-        return /^0x[a-fA-F0-9]{40}$/.test(address);
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to save configuration');
+        }
+        
+        showNotification('Configuration saved successfully');
+        currentConfig = config;
+    } catch (error) {
+        console.error('Error saving configuration:', error);
+        showNotification('Failed to save configuration: ' + error.message, 'error');
+    } finally {
+        // Restore save button
+        const saveButton = configForm.querySelector('button[type="submit"]');
+        saveButton.disabled = false;
+        saveButton.innerHTML = 'Save Configuration';
     }
 }
 
-// Export for use in other files
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { SettingsManager };
+// Initialize settings module
+function initSettings() {
+    // No initial setup needed besides what's already in the DOMContentLoaded event
 }
+
+// Export functions for use in other modules
+window.settings = {
+    initSettings,
+    loadConfiguration
+};

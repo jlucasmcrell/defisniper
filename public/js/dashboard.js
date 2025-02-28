@@ -1,366 +1,363 @@
-class Dashboard {
-    constructor() {
-        this.socket = io();
-        this.isAuthenticated = false;
-        this.initialized = false;
-        this.setupEventListeners();
-        this.initializeSocketListeners();
-        this.checkAuthStatus();
+async function startBot() {
+    try {
+        startBotBtn.disabled = true;
         
-        // Set initial active tab
-        this.currentTab = 'dashboard';
-    }
-
-    setupEventListeners() {
-        // Tab switching
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetTab = e.target.getAttribute('data-tab');
-                if (targetTab) {
-                    this.switchTab(targetTab);
-                }
-            });
+        const response = await fetch('/api/bot/start', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
         });
-
-        // Settings form
-        const settingsForm = document.getElementById('settingsForm');
-        if (settingsForm) {
-            settingsForm.addEventListener('submit', (e) => this.handleSettingsSubmit(e));
-        }
-
-        // Bot control buttons
-        const startButton = document.getElementById('startBot');
-        const stopButton = document.getElementById('stopBot');
-
-        if (startButton) {
-            startButton.addEventListener('click', () => this.controlBot('start'));
-        }
-        if (stopButton) {
-            stopButton.addEventListener('click', () => this.controlBot('stop'));
-        }
-
-        // Log controls
-        const logLevel = document.getElementById('logLevel');
-        const clearLogs = document.getElementById('clearLogs');
-        const exportLogs = document.getElementById('exportLogs');
-
-        if (logLevel) {
-            logLevel.addEventListener('change', (e) => this.filterLogs(e.target.value));
-        }
-        if (clearLogs) {
-            clearLogs.addEventListener('click', () => this.clearLogs());
-        }
-        if (exportLogs) {
-            exportLogs.addEventListener('click', () => this.exportLogs());
-        }
-    }
-
-    switchTab(tabId) {
-        // Hide all tab contents
-        document.querySelectorAll('.tab-content').forEach(tab => {
-            tab.classList.remove('active');
-        });
-
-        // Remove active class from all nav links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.classList.remove('active');
-        });
-
-        // Show selected tab content and set nav link as active
-        const selectedTab = document.getElementById(tabId);
-        const selectedLink = document.querySelector(`[data-tab="${tabId}"]`);
-
-        if (selectedTab && selectedLink) {
-            selectedTab.classList.add('active');
-            selectedLink.classList.add('active');
-            this.currentTab = tabId;
-
-            // Special handling for different tabs
-            if (tabId === 'logs') {
-                this.refreshLogs();
-            } else if (tabId === 'settings') {
-                this.loadSettings();
-            }
-        }
-    }
-
-    async handleSettingsSubmit(event) {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        const settings = {};
-
-        formData.forEach((value, key) => {
-            // Handle nested object paths (e.g., "trading.walletBuyPercentage")
-            const parts = key.split('.');
-            let current = settings;
-            
-            for (let i = 0; i < parts.length - 1; i++) {
-                current[parts[i]] = current[parts[i]] || {};
-                current = current[parts[i]];
-            }
-            
-            // Convert string numbers to actual numbers where appropriate
-            const numValue = Number(value);
-            current[parts[parts.length - 1]] = isNaN(numValue) ? value : numValue;
-        });
-
-        try {
-            const response = await fetch('/api/settings', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin',
-                body: JSON.stringify(settings)
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to save settings');
-            }
-
-            const result = await response.json();
-            if (result.success) {
-                this.showSuccess('Settings saved successfully');
-            } else {
-                this.showError(`Failed to save settings: ${result.message}`);
-            }
-        } catch (error) {
-            console.error('Error saving settings:', error);
-            this.showError('Failed to save settings');
-        }
-    }
-
-    async loadSettings() {
-        try {
-            const response = await fetch('/api/settings', {
-                method: 'GET',
-                credentials: 'same-origin'
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to load settings');
-            }
-
-            const settings = await response.json();
-            
-            // Populate form fields
-            const form = document.getElementById('settingsForm');
-            if (form) {
-                Object.entries(this.flattenObject(settings)).forEach(([key, value]) => {
-                    const input = form.querySelector(`[name="${key}"]`);
-                    if (input) {
-                        if (input.type === 'checkbox') {
-                            input.checked = value;
-                        } else {
-                            input.value = value;
-                        }
-                    }
-                });
-            }
-        } catch (error) {
-            console.error('Error loading settings:', error);
-            this.showError('Failed to load settings');
-        }
-    }
-
-    flattenObject(obj, prefix = '') {
-        return Object.keys(obj).reduce((acc, k) => {
-            const pre = prefix.length ? prefix + '.' : '';
-            if (typeof obj[k] === 'object' && obj[k] !== null && !Array.isArray(obj[k])) {
-                Object.assign(acc, this.flattenObject(obj[k], pre + k));
-            } else {
-                acc[pre + k] = obj[k];
-            }
-            return acc;
-        }, {});
-    }
-
-    async controlBot(action) {
-        try {
-            const response = await fetch(`/api/bot/${action}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'same-origin'
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to ${action} bot`);
-            }
-
-            const result = await response.json();
-            if (result.success) {
-                this.updateBotStatus(action === 'start');
-            } else {
-                this.showError(`Failed to ${action} bot: ${result.message}`);
-            }
-        } catch (error) {
-            console.error(`Error ${action}ing bot:`, error);
-            this.showError(`Failed to ${action} bot`);
-        }
-    }
-
-    updateBotStatus(isRunning) {
-        const startButton = document.getElementById('startBot');
-        const stopButton = document.getElementById('stopBot');
-        const statusDot = document.querySelector('#botStatus .status-dot');
-        const statusText = document.querySelector('#botStatus .status-text');
-
-        if (startButton) startButton.disabled = isRunning;
-        if (stopButton) stopButton.disabled = !isRunning;
-        if (statusDot) statusDot.classList.toggle('active', isRunning);
-        if (statusText) statusText.textContent = isRunning ? 'Running' : 'Stopped';
-    }
-
-    initializeSocketListeners() {
-        this.socket.on('connect', () => {
-            this.updateConnectionStatus(true);
-        });
-
-        this.socket.on('disconnect', () => {
-            this.updateConnectionStatus(false);
-        });
-
-        this.socket.on('botStatus', (data) => {
-            this.updateBotStatus(data.running);
-            if (data.activeTrades) {
-                this.updateActiveTrades(data.activeTrades);
-            }
-            if (data.stats) {
-                this.updateStats(data.stats);
-            }
-            if (data.balances) {
-                this.updateBalances(data.balances);
-            }
-        });
-
-        this.socket.on('log', (log) => {
-            this.addLogEntry(log);
-        });
-
-        this.socket.on('newTrade', (trade) => {
-            this.addActiveTrade(trade);
-        });
-
-        this.socket.on('tradeClosed', (trade) => {
-            this.removeActiveTrade(trade.id);
-            this.addTradeHistory(trade);
-        });
-
-        this.socket.on('tradeUpdate', (update) => {
-            this.updateActiveTrade(update);
-        });
-    }
-
-    updateConnectionStatus(connected) {
-        const statusDot = document.querySelector('#connectionStatus .status-dot');
-        const statusText = document.querySelector('#connectionStatus .status-text');
-
-        if (statusDot) statusDot.classList.toggle('active', connected);
-        if (statusText) statusText.textContent = connected ? 'Connected' : 'Disconnected';
-    }
-
-    addLogEntry(log) {
-        const logOutput = document.getElementById('logOutput');
-        if (!logOutput) return;
-
-        const entry = document.createElement('div');
-        entry.className = `log-entry ${log.level}`;
         
-        const timestamp = new Date(log.timestamp).toLocaleTimeString();
-        entry.innerHTML = `[${timestamp}] [${log.level.toUpperCase()}] [${log.module}] ${log.message}`;
+        const data = await response.json();
         
-        if (log.meta && Object.keys(log.meta).length > 0) {
-            entry.innerHTML += `\n${JSON.stringify(log.meta, null, 2)}`;
+        if (response.ok) {
+            updateBotStatus(true);
+            showNotification('Bot started successfully');
+        } else {
+            showNotification(data.message || 'Failed to start bot', 'error');
         }
-        
-        logOutput.appendChild(entry);
-        logOutput.scrollTop = logOutput.scrollHeight;
-
-        // Limit the number of log entries
-        while (logOutput.children.length > 1000) {
-            logOutput.removeChild(logOutput.firstChild);
-        }
-    }
-
-    filterLogs(level) {
-        const logOutput = document.getElementById('logOutput');
-        if (!logOutput) return;
-
-        const entries = logOutput.getElementsByClassName('log-entry');
-        Array.from(entries).forEach(entry => {
-            if (level === 'all' || entry.classList.contains(level)) {
-                entry.style.display = '';
-            } else {
-                entry.style.display = 'none';
-            }
-        });
-    }
-
-    clearLogs() {
-        const logOutput = document.getElementById('logOutput');
-        if (logOutput) {
-            logOutput.innerHTML = '';
-        }
-    }
-
-    exportLogs() {
-        const logOutput = document.getElementById('logOutput');
-        if (!logOutput) return;
-
-        const logs = Array.from(logOutput.getElementsByClassName('log-entry'))
-            .map(entry => entry.textContent)
-            .join('\n');
-
-        const blob = new Blob([logs], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `bot-logs-${new Date().toISOString()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
-    }
-
-    showSuccess(message) {
-        // Implement your preferred success notification
-        alert(message);
-    }
-
-    showError(message) {
-        // Implement your preferred error notification
-        alert(message);
-    }
-
-    async checkAuthStatus() {
-        try {
-            const response = await fetch('/auth/status', {
-                credentials: 'same-origin'
-            });
-            const data = await response.json();
-
-            if (!data.authenticated) {
-                window.location.href = '/login';
-                return;
-            }
-
-            this.isAuthenticated = true;
-            this.initialized = true;
-        } catch (error) {
-            console.error('Error checking auth status:', error);
-            this.showError('Failed to check authentication status');
-        }
-    }
-
-    refreshLogs() {
-        // Additional log refresh logic if needed
+    } catch (error) {
+        console.error('Error starting bot:', error);
+        showNotification('Failed to start bot: ' + (error.message || 'Unknown error'), 'error');
+    } finally {
+        startBotBtn.disabled = false;
     }
 }
 
-// Initialize dashboard when DOM is loaded
+// Stop bot
+async function stopBot() {
+    try {
+        stopBotBtn.disabled = true;
+        
+        const response = await fetch('/api/bot/stop', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+            updateBotStatus(false);
+            showNotification('Bot stopped successfully');
+        } else {
+            showNotification(data.message || 'Failed to stop bot', 'error');
+        }
+    } catch (error) {
+        console.error('Error stopping bot:', error);
+        showNotification('Failed to stop bot: ' + (error.message || 'Unknown error'), 'error');
+    } finally {
+        stopBotBtn.disabled = false;
+    }
+}
+
+// Fetch and display bot stats
+async function fetchStats() {
+    try {
+        const response = await fetch('/api/stats', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch stats');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.stats) {
+            displayStats(data.stats);
+        } else {
+            statsContainer.innerHTML = '<div class="alert alert-info">No stats available</div>';
+        }
+    } catch (error) {
+        console.error('Error fetching stats:', error);
+        statsContainer.innerHTML = '<div class="alert alert-danger">Failed to load stats</div>';
+    }
+}
+
+// Display bot stats
+function displayStats(stats) {
+    if (!statsContainer) return;
+    
+    const startTime = stats.startTime ? new Date(stats.startTime).toLocaleString() : 'N/A';
+    const lastTradeTime = stats.lastTradeTime ? new Date(stats.lastTradeTime).toLocaleString() : 'N/A';
+    
+    statsContainer.innerHTML = `
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <tbody>
+                    <tr>
+                        <th>Total Trades:</th>
+                        <td>${stats.totalTrades}</td>
+                    </tr>
+                    <tr>
+                        <th>Successful Trades:</th>
+                        <td>${stats.successfulTrades}</td>
+                    </tr>
+                    <tr>
+                        <th>Failed Trades:</th>
+                        <td>${stats.failedTrades}</td>
+                    </tr>
+                    <tr>
+                        <th>Win Rate:</th>
+                        <td>${stats.winRate.toFixed(2)}%</td>
+                    </tr>
+                    <tr>
+                        <th>Profit/Loss:</th>
+                        <td class="${stats.profitLoss >= 0 ? 'text-success' : 'text-danger'}">
+                            ${stats.profitLoss.toFixed(8)}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Bot Started:</th>
+                        <td>${startTime}</td>
+                    </tr>
+                    <tr>
+                        <th>Last Trade:</th>
+                        <td>${lastTradeTime}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+// Fetch and display balances
+async function fetchBalances() {
+    try {
+        const response = await fetch('/api/balances', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch balances');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success && data.balances) {
+            displayBalances(data.balances);
+        } else {
+            balancesContainer.innerHTML = '<div class="alert alert-info">No balance data available</div>';
+        }
+    } catch (error) {
+        console.error('Error fetching balances:', error);
+        balancesContainer.innerHTML = '<div class="alert alert-danger">Failed to load balances</div>';
+    }
+}
+
+// Display balances
+function displayBalances(balances) {
+    if (!balancesContainer) return;
+    
+    let html = '';
+    
+    // Display blockchain balances
+    if (balances.ethereum && Object.keys(balances.ethereum).length > 0) {
+        html += '<h6>Ethereum</h6>';
+        html += '<div class="table-responsive mb-3">';
+        html += '<table class="table table-sm table-striped">';
+        html += '<thead><tr><th>Token</th><th>Balance</th></tr></thead><tbody>';
+        
+        for (const [token, amount] of Object.entries(balances.ethereum)) {
+            html += `<tr><td>${token}</td><td>${parseFloat(amount).toFixed(8)}</td></tr>`;
+        }
+        
+        html += '</tbody></table></div>';
+    }
+    
+    if (balances.bnbChain && Object.keys(balances.bnbChain).length > 0) {
+        html += '<h6>BNB Chain</h6>';
+        html += '<div class="table-responsive mb-3">';
+        html += '<table class="table table-sm table-striped">';
+        html += '<thead><tr><th>Token</th><th>Balance</th></tr></thead><tbody>';
+        
+        for (const [token, amount] of Object.entries(balances.bnbChain)) {
+            html += `<tr><td>${token}</td><td>${parseFloat(amount).toFixed(8)}</td></tr>`;
+        }
+        
+        html += '</tbody></table></div>';
+    }
+    
+    // Display exchange balances
+    if (balances.exchanges) {
+        for (const [exchange, tokens] of Object.entries(balances.exchanges)) {
+            if (Object.keys(tokens).length > 0) {
+                html += `<h6>${exchange.charAt(0).toUpperCase() + exchange.slice(1)}</h6>`;
+                html += '<div class="table-responsive mb-3">';
+                html += '<table class="table table-sm table-striped">';
+                html += '<thead><tr><th>Token</th><th>Balance</th></tr></thead><tbody>';
+                
+                for (const [token, amount] of Object.entries(tokens)) {
+                    html += `<tr><td>${token}</td><td>${parseFloat(amount).toFixed(8)}</td></tr>`;
+                }
+                
+                html += '</tbody></table></div>';
+            }
+        }
+    }
+    
+    if (html === '') {
+        balancesContainer.innerHTML = '<div class="alert alert-info">No balances available</div>';
+    } else {
+        balancesContainer.innerHTML = html;
+    }
+}
+
+// Fetch and display trades
+async function fetchTrades() {
+    try {
+        const response = await fetch('/api/trades', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to fetch trades');
+        }
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            displayActiveTrades(data.activeTrades);
+            // Also update trade history if on that tab
+            const tradeHistoryContainer = document.getElementById('trade-history-container');
+            if (tradeHistoryContainer) {
+                displayTradeHistory(data.tradeHistory);
+            }
+        } else {
+            activeTradesContainer.innerHTML = '<div class="alert alert-info">Failed to load trades</div>';
+        }
+    } catch (error) {
+        console.error('Error fetching trades:', error);
+        activeTradesContainer.innerHTML = '<div class="alert alert-danger">Failed to load trades</div>';
+    }
+}
+
+// Display active trades
+function displayActiveTrades(trades) {
+    if (!activeTradesContainer) return;
+    
+    if (!trades || Object.keys(trades).length === 0) {
+        activeTradesContainer.innerHTML = '<div class="alert alert-info">No active trades</div>';
+        return;
+    }
+    
+    let html = '<div class="list-group">';
+    
+    for (const [tradeId, trade] of Object.entries(trades)) {
+        const profitLossClass = trade.unrealizedProfitLoss >= 0 ? 'text-success' : 'text-danger';
+        
+        html += `
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h6 class="mb-1">${trade.symbol || trade.tokenAddress}</h6>
+                    <small>${new Date(trade.timestamp).toLocaleString()}</small>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <small>Entry: ${trade.entryPrice}</small><br>
+                        <small>Current: ${trade.currentPrice}</small>
+                    </div>
+                    <div>
+                        <small>Quantity: ${trade.quantity}</small><br>
+                        <small class="${profitLossClass}">P/L: ${trade.unrealizedProfitLoss.toFixed(8)}</small>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    activeTradesContainer.innerHTML = html;
+}
+
+// Update UI based on socket events
+function setupSocketListeners() {
+    if (!window.socket) return;
+    
+    // Listen for balance updates
+    window.socket.on('balanceUpdate', (data) => {
+        displayBalances(data.balances);
+    });
+    
+    // Listen for stats updates
+    window.socket.on('statsUpdate', (stats) => {
+        displayStats(stats);
+    });
+    
+    // Listen for trade updates
+    window.socket.on('tradeUpdated', (data) => {
+        fetchTrades(); // Refresh trade data
+    });
+    
+    window.socket.on('tradeCompleted', (data) => {
+        fetchTrades(); // Refresh trade data
+        fetchStats();  // Refresh stats
+        showNotification(`Trade ${data.tradeId} completed with ${data.profitLoss >= 0 ? 'profit' : 'loss'}`);
+    });
+}
+
+// Set up tab switching event handlers
+function setupTabHandlers() {
+    document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', (event) => {
+            const targetId = event.target.getAttribute('href');
+            
+            // Load tab-specific data
+            switch (targetId) {
+                case '#dashboard':
+                    fetchStats();
+                    fetchBalances();
+                    fetchTrades();
+                    break;
+                case '#trades':
+                    fetchTrades();
+                    break;
+                case '#settings':
+                    loadConfiguration();
+                    break;
+                case '#logs':
+                    // Logs are handled via socket.io
+                    break;
+            }
+        });
+    });
+}
+
+// Initialize dashboard
 document.addEventListener('DOMContentLoaded', () => {
-    window.dashboard = new Dashboard();
+    setupTabHandlers();
 });
+
+// Function to be called when logged in
+function initDashboard() {
+    fetchStats();
+    fetchBalances();
+    fetchTrades();
+    setupSocketListeners();
+}
+
+// Export functions for use in other modules
+window.dashboard = {
+    initDashboard,
+    updateBotStatus,
+    fetchStats,
+    fetchBalances,
+    fetchTrades
+};

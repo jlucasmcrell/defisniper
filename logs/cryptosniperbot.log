@@ -2135,3 +2135,21 @@
 {"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.554Z"}
 {"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.554Z"}
 {"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:29:23.554Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T14:30:48.257Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T14:30:48.264Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T14:30:48.264Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T14:30:48.266Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-28T14:30:48.268Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-28T14:30:48.279Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-28T14:30:48.269Z"}
+{"level":"info","message":"Initializing enhanced token scanner","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.273Z"}
+{"level":"warn","message":"No exchange configuration provided","module":"TradingEngine","timestamp":"2025-02-28T14:30:48.270Z"}
+{"level":"warn","message":"No strategy configuration provided","module":"TradingEngine","timestamp":"2025-02-28T14:30:48.270Z"}
+{"level":"info","message":"Token scanner initialized","module":"TradingEngine","timestamp":"2025-02-28T14:30:48.274Z"}
+{"level":"info","message":"Loaded 0 historical trades","module":"TradingEngine","timestamp":"2025-02-28T14:30:48.276Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-28T14:30:48.276Z"}
+{"level":"info","message":"No providers or factories initialized, trying parent initialization","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.273Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.274Z"}
+{"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.274Z"}
+{"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.274Z"}
+{"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.274Z"}

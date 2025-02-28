@@ -1,136 +1,67 @@
-/* General Styles */
+/* General styles */
 body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8f9fa;
 }
 
-.hidden {
-    display: none !important;
-}
-
-/* Status Indicators */
+/* Status indicator */
 .status-indicator {
-    display: flex;
-    align-items: center;
-    color: #fff;
-}
-
-.status-dot {
-    width: 8px;
-    height: 8px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background-color: #dc3545;
-    margin-right: 8px;
+    margin-right: 5px;
 }
 
-.status-dot.active {
-    background-color: #28a745;
-}
-
-/* Tab Content */
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-/* Navigation */
-.nav-pills .nav-link {
-    color: #495057;
-    border-radius: 0;
-    padding: 0.75rem 1rem;
-}
-
-.nav-pills .nav-link:hover {
-    background-color: #e9ecef;
-}
-
-.nav-pills .nav-link.active {
-    color: #fff;
-    background-color: #0d6efd;
-}
-
-/* Log Container */
-.log-container {
+/* Logs panel */
+.logs-panel {
+    background-color: #212529;
+    color: #f8f9fa;
+    font-family: 'Courier New', Courier, monospace;
     height: 500px;
     overflow-y: auto;
-    background-color: #1a1a1a;
-    color: #fff;
-    padding: 1rem;
-    font-family: monospace;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    border-radius: 4px;
+    padding: 10px;
+    font-size: 0.9rem;
 }
 
-.log-entry {
-    margin-bottom: 0.5rem;
-    padding: 0.25rem 0;
-    border-bottom: 1px solid #333;
+.log-line {
+    margin-bottom: 3px;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
-.log-entry.info {
-    color: #fff;
+.log-level-info {
+    color: #0dcaf0;
 }
 
-.log-entry.warn {
+.log-level-warn {
     color: #ffc107;
 }
 
-.log-entry.error {
+.log-level-error {
     color: #dc3545;
 }
 
-/* Cards and Tables */
-.card {
-    margin-bottom: 1rem;
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+/* Trades styling */
+.trade-card {
+    margin-bottom: 15px;
 }
 
-.card-body {
-    padding: 1.5rem;
+.profit {
+    color: #198754;
 }
 
-.table {
-    margin-bottom: 0;
+.loss {
+    color: #dc3545;
 }
 
-/* Form Controls */
-.form-control:disabled {
-    background-color: #e9ecef;
-    opacity: 0.65;
+/* Config form */
+.config-section {
+    margin-bottom: 30px;
 }
 
-/* Wallet Balance Cards */
-.wallet-balance {
-    font-size: 0.875rem;
-}
-
-.wallet-balance .address {
-    font-family: monospace;
-    word-break: break-all;
-}
-
-/* Dashboard Stats */
-#dashboard .card {
-    transition: transform 0.2s;
-}
-
-#dashboard .card:hover {
-    transform: translateY(-2px);
-}
-
-#dashboard .card-title {
-    color: #6c757d;
-    font-size: 0.875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-#dashboard h2 {
-    margin: 0;
-    color: #212529;
-    font-size: 1.75rem;
+.config-section-title {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
 }

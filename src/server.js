@@ -27,11 +27,6 @@ const io = socketIO(server, {
     }
 });
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
 // Global state
 let securityManager = null;
 let configManager = null;
@@ -53,8 +48,11 @@ async function initialize() {
         app.use(session({
             secret: securityManager.getSessionSecret(),
             resave: false,
-            saveUninitialized: true,
-            cookie: { secure: false } // Set to true if using HTTPS
+            saveUninitialized: false, // Changed to false to prevent empty sessions
+            cookie: { 
+                secure: false, // Set to true if using HTTPS
+                maxAge: 24 * 60 * 60 * 1000 // 24 hours
+            }
         }));
 
         // Initialize config manager
@@ -73,6 +71,9 @@ async function initialize() {
             // Continue anyway, with limited functionality
         }
         
+        // Set up middleware
+        setupMiddleware();
+        
         // Set up routes
         setupRoutes();
         
@@ -86,27 +87,27 @@ async function initialize() {
     }
 }
 
+// Set up middleware
+function setupMiddleware() {
+    // CORS middleware
+    app.use(cors({
+        origin: true,
+        credentials: true
+    }));
+    
+    // Body parser middleware
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    
+    // Logging middleware
+    app.use((req, res, next) => {
+        logger.info(`${req.method} ${req.path}`);
+        next();
+    });
+}
+
 // Set up API and UI routes
 function setupRoutes() {
-    // Serve static files from 'public' directory
-    app.use(express.static(path.join(__dirname, '..', 'public')));
-    
-    // Set up authentication check middleware - IMPORTANT: This needs to be after static file serving
-    // but before API routes to prevent redirect loops
-    app.use('/api', (req, res, next) => {
-        // Skip auth check for these specific endpoints
-        if (req.path === '/auth/login' || req.path === '/status') {
-            return next();
-        }
-
-        // Check session authentication for API routes
-        if (req.session.authenticated) {
-            return next();
-        } else {
-            return res.status(401).json({ success: false, message: 'Authentication required' });
-        }
-    });
-    
     // API Routes - Auth
     app.post('/api/auth/login', (req, res) => {
         const { password } = req.body;
@@ -118,16 +119,25 @@ function setupRoutes() {
         if (securityManager.verifyPassword(password)) {
             req.session.authenticated = true;
             authenticated = true;
-            res.json({ success: true, message: 'Login successful' });
+            logger.info('User authenticated successfully');
+            return res.json({ success: true, message: 'Login successful' });
         } else {
-            res.status(401).json({ success: false, message: 'Invalid password' });
+            logger.warn('Authentication failed - incorrect password');
+            return res.status(401).json({ success: false, message: 'Invalid password' });
         }
     });
     
     app.post('/api/auth/logout', (req, res) => {
-        req.session.destroy();
+        req.session.authenticated = false;
         authenticated = false;
-        res.json({ success: true, message: 'Logout successful' });
+        req.session.destroy(err => {
+            if (err) {
+                logger.error('Error destroying session', err);
+                return res.status(500).json({ success: false, message: 'Failed to logout' });
+            }
+            logger.info('User logged out');
+            res.json({ success: true, message: 'Logout successful' });
+        });
     });
     
     app.get('/api/auth/status', (req, res) => {
@@ -136,6 +146,22 @@ function setupRoutes() {
             initialized: !!tradingEngine,
             running: tradingEngine ? tradingEngine.isRunning() : false
         });
+    });
+    
+    // Authentication middleware for protected API routes
+    app.use('/api', (req, res, next) => {
+        // Skip auth check for these specific endpoints
+        if (req.path === '/auth/login' || req.path === '/auth/status') {
+            return next();
+        }
+
+        // Check session authentication for API routes
+        if (req.session.authenticated) {
+            return next();
+        } else {
+            logger.warn('Unauthorized API access attempt');
+            return res.status(401).json({ success: false, message: 'Authentication required' });
+        }
     });
     
     // API Routes - Configuration
@@ -254,6 +280,9 @@ function setupRoutes() {
             stats 
         });
     });
+
+    // Serve static files from 'public' directory - AFTER API routes
+    app.use(express.static(path.join(__dirname, '..', 'public')));
     
     // Catch-all route to serve React app for any path not matched
     app.get('*', (req, res) => {
