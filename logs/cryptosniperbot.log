@@ -2153,3 +2153,64 @@
 {"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.274Z"}
 {"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.274Z"}
 {"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T14:30:48.274Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T15:20:12.688Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T15:20:12.694Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T15:20:12.694Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T15:20:12.696Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-28T15:20:12.698Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T15:20:25.101Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T15:20:25.107Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T15:20:25.107Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T15:20:25.109Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-28T15:20:25.111Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-28T15:20:25.124Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-28T15:20:25.113Z"}
+{"level":"info","message":"Initializing enhanced token scanner","module":"TokenScanner","timestamp":"2025-02-28T15:20:25.116Z"}
+{"level":"warn","message":"No exchange configuration provided","module":"TradingEngine","timestamp":"2025-02-28T15:20:25.114Z"}
+{"level":"warn","message":"No strategy configuration provided","module":"TradingEngine","timestamp":"2025-02-28T15:20:25.114Z"}
+{"level":"info","message":"Token scanner initialized","module":"TradingEngine","timestamp":"2025-02-28T15:20:25.118Z"}
+{"level":"info","message":"Loaded 0 historical trades","module":"TradingEngine","timestamp":"2025-02-28T15:20:25.119Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-28T15:20:25.119Z"}
+{"level":"info","message":"No providers or factories initialized, trying parent initialization","module":"TokenScanner","timestamp":"2025-02-28T15:20:25.117Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T15:20:25.117Z"}
+{"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T15:20:25.117Z"}
+{"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T15:20:25.117Z"}
+{"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T15:20:25.118Z"}
+{"level":"info","message":"GET /","module":"Server","timestamp":"2025-02-28T15:20:28.280Z"}
+{"level":"info","message":"GET /css/styles.css","module":"Server","timestamp":"2025-02-28T15:20:28.296Z"}
+{"level":"info","message":"GET /","module":"Server","timestamp":"2025-02-28T15:20:36.725Z"}
+{"level":"info","message":"GET /css/styles.css","module":"Server","timestamp":"2025-02-28T15:20:36.745Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T15:21:04.897Z"}
+{"level":"info","message":"Generated new encryption key","module":"SecurityManager","timestamp":"2025-02-28T15:21:04.904Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T15:21:04.905Z"}
+{"error":{"error":"Password is required","stack":"Error: Password is required\n    at Setup.setupPassword (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\scripts\\setup.js:45:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Setup.run (C:\\Users\\Test\\Desktop\\NO API\\DeFiSniperMain\\src\\scripts\\setup.js:25:13)"},"level":"error","message":"Setup failed:","module":"Setup","timestamp":"2025-02-28T15:21:07.164Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T15:21:11.432Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T15:21:11.439Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T15:21:11.440Z"}
+{"level":"info","message":"Admin password set successfully","module":"Setup","timestamp":"2025-02-28T15:21:13.406Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T15:21:13.407Z"}
+{"level":"info","message":"Config file not found, creating with default configuration","module":"ConfigManager","timestamp":"2025-02-28T15:21:13.409Z"}
+{"level":"info","message":"Configuration saved successfully","module":"ConfigManager","timestamp":"2025-02-28T15:21:13.413Z"}
+{"level":"info","message":"Default configuration created successfully","module":"Setup","timestamp":"2025-02-28T15:21:13.413Z"}
+{"level":"info","message":"Initializing security manager","module":"SecurityManager","timestamp":"2025-02-28T15:21:19.300Z"}
+{"level":"info","message":"Loaded existing encryption key","module":"SecurityManager","timestamp":"2025-02-28T15:21:19.306Z"}
+{"level":"info","message":"Security manager initialized","module":"SecurityManager","timestamp":"2025-02-28T15:21:19.307Z"}
+{"level":"info","message":"Initializing configuration manager","module":"ConfigManager","timestamp":"2025-02-28T15:21:19.309Z"}
+{"level":"info","message":"Configuration loaded successfully","module":"ConfigManager","timestamp":"2025-02-28T15:21:19.310Z"}
+{"level":"info","message":"CryptoSniperBot server running on port 3000","module":"Server","timestamp":"2025-02-28T15:21:19.323Z"}
+{"level":"info","message":"Initializing trading engine","module":"TradingEngine","timestamp":"2025-02-28T15:21:19.312Z"}
+{"level":"info","message":"Initializing enhanced token scanner","module":"TokenScanner","timestamp":"2025-02-28T15:21:19.315Z"}
+{"level":"warn","message":"No exchange configuration provided","module":"TradingEngine","timestamp":"2025-02-28T15:21:19.313Z"}
+{"level":"info","message":"No providers or factories initialized, trying parent initialization","module":"TokenScanner","timestamp":"2025-02-28T15:21:19.316Z"}
+{"level":"warn","message":"No strategy configuration provided","module":"TradingEngine","timestamp":"2025-02-28T15:21:19.313Z"}
+{"level":"info","message":"Token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T15:21:19.316Z"}
+{"level":"info","message":"Token scanner initialized","module":"TradingEngine","timestamp":"2025-02-28T15:21:19.317Z"}
+{"level":"info","message":"Providers initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T15:21:19.316Z"}
+{"level":"info","message":"Loaded 0 historical trades","module":"TradingEngine","timestamp":"2025-02-28T15:21:19.318Z"}
+{"level":"info","message":"Factories initialized: 0 ()","module":"TokenScanner","timestamp":"2025-02-28T15:21:19.316Z"}
+{"level":"info","message":"Trading engine initialized successfully","module":"TradingEngine","timestamp":"2025-02-28T15:21:19.318Z"}
+{"level":"info","message":"Enhanced token scanner initialized successfully","module":"TokenScanner","timestamp":"2025-02-28T15:21:19.317Z"}
+{"level":"info","message":"GET /","module":"Server","timestamp":"2025-02-28T15:21:22.257Z"}
+{"level":"info","message":"GET /css/styles.css","module":"Server","timestamp":"2025-02-28T15:21:22.270Z"}
+{"level":"info","message":"GET /","module":"Server","timestamp":"2025-02-28T15:21:26.204Z"}
+{"level":"info","message":"GET /css/styles.css","module":"Server","timestamp":"2025-02-28T15:21:26.220Z"}
