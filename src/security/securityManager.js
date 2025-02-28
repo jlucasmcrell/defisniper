@@ -10,7 +10,6 @@ class SecurityManager {
         this.passwordPath = path.join(process.cwd(), 'secure-config', 'password.hash');
         this.encryptionKey = null;
         this.passwordHash = null;
-        this.algorithm = 'aes-128-gcm'; // Changed from aes-256-gcm
     }
 
     async initialize() {
@@ -30,8 +29,10 @@ class SecurityManager {
                 await fs.access(this.keyPath);
                 return false;
             } catch (error) {
-                this.encryptionKey = crypto.randomBytes(16); // Changed from 32 to 16 bytes
-                await fs.writeFile(this.keyPath, this.encryptionKey);
+                // Generate a 32-byte (256-bit) key
+                const key = crypto.randomBytes(32);
+                await fs.writeFile(this.keyPath, key);
+                this.encryptionKey = key;
                 return true;
             }
         } catch (error) {
@@ -95,19 +96,18 @@ class SecurityManager {
 
     encryptConfig(config) {
         try {
-            const iv = crypto.randomBytes(12);
-            const cipher = crypto.createCipheriv(this.algorithm, this.encryptionKey, iv);
+            // Use key derivation to get a proper length key
+            const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
+            const iv = crypto.randomBytes(16);
+            const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
             
             const jsonStr = JSON.stringify(config);
             let encrypted = cipher.update(jsonStr, 'utf8', 'hex');
             encrypted += cipher.final('hex');
             
-            const authTag = cipher.getAuthTag();
-            
             return {
                 iv: iv.toString('hex'),
-                data: encrypted,
-                authTag: authTag.toString('hex')
+                data: encrypted
             };
         } catch (error) {
             this.logger.error('Failed to encrypt config', error);
@@ -117,14 +117,11 @@ class SecurityManager {
 
     decryptConfig(encryptedConfig) {
         try {
+            const key = crypto.scryptSync(this.encryptionKey, 'salt', 32);
             const iv = Buffer.from(encryptedConfig.iv, 'hex');
-            const encrypted = Buffer.from(encryptedConfig.data, 'hex');
-            const authTag = Buffer.from(encryptedConfig.authTag, 'hex');
+            const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
             
-            const decipher = crypto.createDecipheriv(this.algorithm, this.encryptionKey, iv);
-            decipher.setAuthTag(authTag);
-            
-            let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+            let decrypted = decipher.update(encryptedConfig.data, 'hex', 'utf8');
             decrypted += decipher.final('utf8');
             
             return JSON.parse(decrypted);
