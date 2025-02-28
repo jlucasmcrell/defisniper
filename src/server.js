@@ -133,6 +133,28 @@ async function initialize() {
             }
         });
 
+        // Password change route
+        app.post('/auth/change-password', authenticate, async (req, res) => {
+            const { currentPassword, newPassword } = req.body;
+            
+            if (!securityManager.verifyPassword(currentPassword)) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Current password is incorrect'
+                });
+            }
+
+            try {
+                await securityManager.setPassword(newPassword);
+                res.json({ success: true, message: 'Password changed successfully' });
+            } catch (error) {
+                res.status(500).json({
+                    success: false,
+                    message: 'Failed to change password'
+                });
+            }
+        });
+
         app.post('/auth/logout', (req, res) => {
             req.session.destroy();
             res.json({ success: true });
@@ -166,7 +188,6 @@ async function initialize() {
                 global.tradingEngine = new TradingEngine(configManager, securityManager, io);
                 await global.tradingEngine.initialize().catch(error => {
                     logger.error('Failed to initialize trading engine', error);
-                    // Don't throw - allow server to start without trading functionality
                 });
                 
                 if (global.tradingEngine && config.trading?.autoStart) {
@@ -211,4 +232,25 @@ async function initialize() {
 
 // Graceful shutdown
 process.on('SIGINT', async () => {
-    logger.info('Shutting down server..
+    logger.info('Shutting down server gracefully...');
+    
+    if (global.tradingEngine) {
+        try {
+            await global.tradingEngine.stop();
+            logger.info('Trading engine stopped');
+        } catch (error) {
+            logger.error('Error stopping trading engine', error);
+        }
+    }
+    
+    server.close(() => {
+        logger.info('Server shut down complete');
+        process.exit(0);
+    });
+});
+
+// Start the server
+initialize().catch(error => {
+    logger.error('Failed to initialize server', error);
+    process.exit(1);
+});
