@@ -4,28 +4,28 @@
   "ethereum": {
     "enabled": "on",
     "network": "mainnet",
-    "privateKey": "534e2c1649490044d9b42e03:410ee50e29c7274c3e09167df989c3fa:ed34917166cdaaaa29f80a54a8d0fe904ac3a4fd09",
-    "infuraId": "4823819c4e7688aad737547b:1945f4ef2b7d00ac1855be8de960daea:3aa0fd9126b577f6a4b3a574382be7b4d7dec493f4cdb1c3cbe48fbc3e7e69c5",
+    "privateKey": "20c43010d85ebeaa60ba798e:138941239a1100faca5129c1150dae00:680539dc19b1e60c27436006a417b131f18f2035da",
+    "infuraId": "ea45e8b2bcde94cf1c06079d:6298c717da99a870520e13c5c1da8757:291ed5c6f1b20bc879e9826fd0551e4d41fbf93cd484b1e0997966b878b4fdb1",
     "alchemyKey": "",
     "uniswapFactoryAddress": 5.275853591037655e+47,
     "uniswapRouterAddress": 6.973231634015965e+47
   },
   "bnbChain": {
     "enabled": "on",
-    "privateKey": "58bba25575a5376d48f9a688:1b213aac99d1fe7fb81d401fdea0825c:f9bb20177003e404dabe166165960312ddaee02261",
+    "privateKey": "",
     "pancakeFactoryAddress": 1.1536674546553155e+48,
     "pancakeRouterAddress": 9.663503321707144e+46
   },
   "exchanges": {
     "binanceUS": {
       "enabled": "on",
-      "apiKey": "84fc2ca781b97ecb1e0312ad:ef781945bc8c0a731f6cfabdc07ee292:30e8ec774f536ecb38946c9eb1b01762e012d697a6982ea8d1101062175cc96eecdb969019fea14c1c419c499a3e34c0281c0b9f63b43fed6fd8d5cd54d0d5ad",
-      "apiSecret": "61917b40f10788f24b554ce3:e5896be06ee051bf9830ad5224b35801:8a9976f750439743c7fe23573851f1881a3d1d48f4b6bb73c09a8f71b1e81d6f1d2c7ef82836679a3c59428326966a2ab0d22ff36f123572a2c2e7caab5730de"
+      "apiKey": "5dfac87b5ebb28fe865ba4d1:8bcadfda153aec6bbcdce72f57c5f6ec:4e6dfcacbf2a9c566622469a20e9643852327d8cb2370b804a1e6143cd13d981facb3432290d7198e87f01fe61ad0b340ac6f17d843075a33604f893df5bf920",
+      "apiSecret": "1a3b89a74db6646d7f5f2f65:9cfeec1102a826c6d26de43456d4f268:95314ef70f2be3f66b37508dd630e491c1fc2b7a747920155a0257ed6c0741ae23074f09fe1ae49abdb27b449b1949846bf2bba2a6fea5179ef24e436d84175f"
     },
     "cryptoCom": {
       "enabled": "on",
-      "apiKey": "b6821422acf5f78c14afed21:1c0beb5dcf914b93bc3b86681fa63683:0fcfba2ef61e02efe2421050552a8cca1aec7dbc3a72",
-      "apiSecret": "818a1e8b03f0ca47f4d92eff:5e7974b01690529f60c2246cbb688519:46d1396345f70794712aee67849943e76036d1694123"
+      "apiKey": "",
+      "apiSecret": ""
     }
   },
   "tokens": {},
