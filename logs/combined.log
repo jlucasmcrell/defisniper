@@ -9,3 +9,13 @@
 {"level":"info","message":"Starting trading on crypto-com","timestamp":"2025-03-01T01:25:30.604Z"}
 {"level":"info","message":"Trading bot started successfully","timestamp":"2025-03-01T01:25:30.605Z"}
 {"level":"info","message":"Bot started successfully","timestamp":"2025-03-01T01:25:30.605Z"}
+{"level":"info","message":"Trading bot initialized with existing exchange connectors","timestamp":"2025-03-01T08:39:14.848Z"}
+{"level":"info","message":"Starting trading on binance-us","timestamp":"2025-03-01T08:39:14.851Z"}
+{"level":"info","message":"Starting trading on crypto-com","timestamp":"2025-03-01T08:39:14.851Z"}
+{"level":"info","message":"Trading bot started successfully","timestamp":"2025-03-01T08:39:14.851Z"}
+{"level":"info","message":"Bot started successfully","timestamp":"2025-03-01T08:39:14.851Z"}
+{"level":"info","message":"Trading bot initialized with existing exchange connectors","timestamp":"2025-03-01T08:40:34.817Z"}
+{"level":"info","message":"Starting trading on binance-us","timestamp":"2025-03-01T08:40:34.820Z"}
+{"level":"info","message":"Starting trading on crypto-com","timestamp":"2025-03-01T08:40:34.820Z"}
+{"level":"info","message":"Trading bot started successfully","timestamp":"2025-03-01T08:40:34.820Z"}
+{"level":"info","message":"Bot started successfully","timestamp":"2025-03-01T08:40:34.820Z"}
