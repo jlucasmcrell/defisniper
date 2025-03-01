@@ -8,7 +8,10 @@
     "start-server": "node src/server.js",
     "start-ui": "start http://localhost:3000",
     "test": "jest",
-    "lint": "eslint src/**/*.js"
+    "lint": "eslint src/**/*.js",
+    "server": "node server/index.js",
+    "client": "node scripts/start-client.js",
+    "init-db": "node scripts/init-db.js"
   },
   "dependencies": {
     "@uniswap/sdk": "^3.0.3",
