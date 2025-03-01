@@ -22,12 +22,15 @@ if not exist "secure-config\master.key" (
 
 REM Start the backend server
 echo Starting backend server...
-npm start > backend.log 2>&1 &
+start "Backend Server" cmd /k "npm start > backend.log 2>&1"
+
+REM Wait to ensure the backend has started
+timeout /t 5 /nobreak > nul
 
 REM Start the frontend server
 echo Starting frontend server...
 cd frontend
-serve -s build > frontend.log 2>&1 &
+start "Frontend Server" cmd /k "serve -s build > frontend.log 2>&1"
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error: Failed to start frontend. See frontend.log for details.
