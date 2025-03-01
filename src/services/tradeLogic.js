@@ -1,46 +1,13 @@
 import { logger } from '../utils/logger.js';
 import { fetchGasFees } from './realtimeGasFees.js';
 import { getNewsSentiment } from './newsSentiment.js';
-import { getBinancePrice, getCryptoComPrice } from '../exchangeServices.js'; // Import exchange services
+import { getBinancePrice, getCryptoComPrice, getHistoricalData } from '../exchangeServices.js'; // Import exchange services
+import { calculateRSI, calculateMACD, getFibonacciLevels } from '../technicalIndicators.js'; // Import technical indicators
+import { loadConfig } from '../configManager.js';
+import Binance from 'node-binance-api';
+import ccxt from 'ccxt';
 
-// Placeholder for fetching moving averages - replace with actual implementation
-async function fetchMovingAverages(symbol, shortPeriod, longPeriod) {
-    try {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 50));
-        // This is a placeholder - replace with actual API call to get moving averages
-        // For example, you might use a library like 'technicalindicators' or an exchange API
-        // that provides moving average data.
-        logger.warn('fetchMovingAverages is a placeholder - replace with actual implementation!');
-        return {
-            shortSMA: 10,  // Replace with actual short SMA
-            longSMA: 20   // Replace with actual long SMA
-        };
-    } catch (error) {
-        logger.error('Error fetching moving averages (using default values):', error);
-        return {
-            shortSMA: 10,
-            longSMA: 20
-        };
-    }
-}
-
-// Placeholder for fetching Average True Range (ATR) - replace with actual implementation
-async function fetchATR(symbol, period) {
-    try {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 50));
-
-        // This is a placeholder - replace with actual API call to get ATR data
-        // You might use a library like 'technicalindicators' or an exchange API
-        // that provides ATR data.
-        logger.warn('fetchATR is a placeholder - replace with actual implementation!');
-        return 0.05; // Replace with actual ATR value (e.g., 0.05 for 5% volatility)
-    } catch (error) {
-        logger.error('Error fetching ATR (using default value):', error);
-        return 0.05;
-    }
-}
+const config = loadConfig();
 
 // Function to execute trades
 async function executeTrade(exchange, symbol, side, amount, price) {
@@ -104,54 +71,6 @@ export async function executeTrades() {
             tradeModifier = 1.2;
         }
 
-        // Gas fee optimization
-        let gasPriceToUse = gasFees.fast;
-        if (gasFees.fast > 100 && gasFees.average <= 80) {
-            logger.info('Fast gas fees are high, using average gas price.');
-            gasPriceToUse = gasFees.average;
-        } else if (gasFees.fast > 100 && gasFees.safeLow <= 50) {
-            logger.info('Fast gas fees are high, using safeLow gas price.');
-            gasPriceToUse = gasFees.safeLow;
-        } else if (gasFees.fast > 150) {
-            logger.info('Gas fees are too high, postponing trade execution.');
-            return;
-        }
-
-        // Fetch moving averages (replace 'ETH/USD' with your trading pair)
-        const { shortSMA, longSMA } = await fetchMovingAverages('ETH/USD', 10, 50);
-        logger.info(`Short SMA: ${shortSMA}, Long SMA: ${longSMA}`);
-
-        // Basic trend detection using moving averages
-        let trend = 'neutral';
-        if (shortSMA > longSMA) {
-            trend = 'uptrend';
-            logger.info('Short-term SMA is above long-term SMA: Uptrend detected.');
-        } else if (shortSMA < longSMA) {
-            trend = 'downtrend';
-            logger.info('Short-term SMA is below long-term SMA: Downtrend detected.');
-        } else {
-            logger.info('No clear trend detected based on moving averages.');
-        }
-
-        // Fetch Average True Range (ATR)
-        const atr = await fetchATR('ETH/USD', 14); // 14-period ATR
-        logger.info(`Current ATR: ${atr}`);
-
-        // Volatility-based position sizing
-        let volatilityModifier = 1;
-        if (atr > 0.05) {
-            logger.info('High volatility detected, reducing trade size.');
-            volatilityModifier = 0.7; // Reduce trade size by 30%
-        } else if (atr < 0.02) {
-            logger.info('Low volatility detected, increasing trade size.');
-            volatilityModifier = 1.3; // Increase trade size by 30%
-        }
-
-        // Combine all modifiers
-        const finalTradeModifier = tradeModifier * volatilityModifier;
-
-        logger.info(`Executing trade with final modifier: ${finalTradeModifier}, Gas Price: ${gasPriceToUse}, Trend: ${trend}`);
-
         // Fetch current prices from exchanges
         const binancePrice = await getBinancePrice('ETHUSDT'); // Replace 'ETHUSDT' with your trading pair
         const cryptoComPrice = await getCryptoComPrice('ETH_USDT'); // Replace 'ETH_USDT' with your trading pair
@@ -167,13 +86,123 @@ export async function executeTrades() {
 
         // Define trade parameters
         const symbol = 'ETHUSDT'; // Replace with your trading pair
-        const side = trend === 'uptrend' ? 'buy' : 'sell';
+
+        // Calculate RSI
+        const rsi = await calculateRSI(symbol, 14);
+        logger.info(`Current RSI: ${rsi}`);
+
+        // Calculate MACD
+        const macd = await calculateMACD(symbol);
+        logger.info(`Current MACD: ${JSON.stringify(macd)}`);
+
+        // Get Fibonacci retracement levels
+        const fibLevels = await getFibonacciLevels(symbol);
+        logger.info(`Fibonacci Retracement Levels: ${JSON.stringify(fibLevels)}`);
+
+        // Basic trend detection using moving averages
+        let trend = 'neutral';
+
+        // Advanced trend detection using moving averages (replace 'ETH/USD' with your trading pair)
+        const shortPeriod = 10;
+        const longPeriod = 50;
+        const historicalData = await getHistoricalData(symbol, longPeriod);
+
+        if (historicalData && historicalData.length >= longPeriod) {
+            const shortSMA = historicalData.slice(-shortPeriod).reduce((sum, dataPoint) => sum + dataPoint.close, 0) / shortPeriod;
+            const longSMA = historicalData.reduce((sum, dataPoint) => sum + dataPoint.close, 0) / longPeriod;
+
+            if (shortSMA > longSMA) {
+                trend = 'uptrend';
+                logger.info('Short-term SMA is above long-term SMA: Uptrend detected.');
+            } else if (shortSMA < longSMA) {
+                trend = 'downtrend';
+                logger.info('Short-term SMA is below long-term SMA: Downtrend detected.');
+            } else {
+                logger.info('No clear trend detected based on moving averages.');
+            }
+        } else {
+            logger.warn('Not enough historical data to calculate moving averages.');
+        }
+
+        // Fetch Average True Range (ATR)
+        const atr = await calculateATR(symbol, 14); // 14-period ATR
+        logger.info(`Current ATR: ${atr}`);
+
+        // Volatility-based position sizing
+        let volatilityModifier = 1;
+        if (atr > 0.05) {
+            logger.info('High volatility detected, reducing trade size.');
+            volatilityModifier = 0.7; // Reduce trade size by 30%
+        } else if (atr < 0.02) {
+            logger.info('Low volatility detected, increasing trade size.');
+            volatilityModifier = 1.3; // Increase trade size by 30%
+        }
+
+        // Combine all modifiers
+        const finalTradeModifier = tradeModifier * volatilityModifier;
+
+        // Trading signals based on technical indicators
+        let side = 'neutral';
+        if (rsi < 30 && trend === 'uptrend') {
+            side = 'buy';
+            logger.info('Oversold RSI and Uptrend: BUY signal');
+        } else if (rsi > 70 && trend === 'downtrend') {
+            side = 'sell';
+            logger.info('Overbought RSI and Downtrend: SELL signal');
+        } else {
+            logger.info('No clear trading signal based on technical indicators.');
+        }
+
+        // Dynamic Stop-Loss and Take-Profit Orders (Example)
+        let stopLossPrice = currentPrice * (1 - 0.02); // 2% below current price
+        let takeProfitPrice = currentPrice * (1 + 0.05); // 5% above current price
+
+        logger.info(`Stop-Loss Price: ${stopLossPrice}, Take-Profit Price: ${takeProfitPrice}`);
+
+        logger.info(`Executing trade with final modifier: ${finalTradeModifier}, Gas Price: ${gasPriceToUse}, Trend: ${trend}`);
+
         const amount = 0.01 * finalTradeModifier; // Example trade size
 
-        // Execute the trade
-        await executeTrade(selectedExchange, symbol, side, amount, currentPrice);
+        if (side !== 'neutral') {
+            // Execute the trade
+            await executeTrade(selectedExchange, symbol, side, amount, currentPrice);
+        } else {
+            logger.info('No trade executed due to neutral signal.');
+        }
 
     } catch (error) {
         logger.error('Error executing trades:', error);
+    }
+}
+
+// Function to calculate Average True Range (ATR)
+async function calculateATR(symbol, period = 14) {
+    try {
+        const historicalData = await getHistoricalData(symbol, period);
+        if (!historicalData || historicalData.length === 0) {
+            logger.warn('No historical data available for ATR calculation.');
+            return null;
+        }
+
+        let trSum = 0;
+        for (let i = 1; i < historicalData.length; i++) {
+            const high = historicalData[i].high;
+            const low = historicalData[i].low;
+            const closePrev = historicalData[i - 1].close;
+
+            const tr = Math.max(
+                (high - low),
+                Math.abs(high - closePrev),
+                Math.abs(low - closePrev)
+            );
+            trSum += tr;
+        }
+
+        const atr = trSum / period;
+        return atr;
+
+    } catch (error) {
+        logger.error('Error calculating ATR:', error);
+        return null;
     }
 }
