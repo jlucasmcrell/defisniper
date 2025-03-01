@@ -1,59 +1,24 @@
 import { secureConfig } from './js/secure-config/manager';
-import { events } from './js/events';
-import { errors } from './js/errors';
+import { TradingBot } from './trading/TradingBot';
+import { logger } from './utils/logger';
 
-class TradingBot {
-    constructor() {
-        this.initialized = false;
-    }
-
-    async initialize() {
-        try {
-            // Initialize core systems
-            await secureConfig.initialize();
-            await events.initialize();
-            await errors.initialize();
-
-            // Load configurations
-            const configs = secureConfig.getAllConfigs();
-            
-            // Initialize exchange connections
-            if (configs['binance-us']) {
-                await this.initializeBinanceUS(configs['binance-us']);
-            }
-            
-            if (configs['crypto-com']) {
-                await this.initializeCryptoCom(configs['crypto-com']);
-            }
-
-            // Initialize Web3 providers
-            if (configs['infura']) {
-                await this.initializeWeb3(configs['infura']);
-            }
-
-            this.initialized = true;
-            console.log('Trading bot initialized successfully');
-            return true;
-        } catch (error) {
-            console.error('Failed to initialize trading bot:', error);
-            return false;
-        }
-    }
-
-    async start() {
-        if (!this.initialized) {
-            throw new Error('Bot must be initialized before starting');
-        }
-
-        // Start trading strategies
-        // TODO: Implement trading strategies
-    }
-
-    async stop() {
-        // Cleanup and stop trading
-        // TODO: Implement cleanup
+async function main() {
+    try {
+        // Initialize secure configuration
+        await secureConfig.initialize();
+        
+        // Create and initialize bot instance
+        const bot = new TradingBot();
+        await bot.initialize();
+        
+        // Start the bot
+        await bot.start();
+        
+        logger.info('Bot started successfully');
+    } catch (error) {
+        logger.error('Failed to start bot:', error);
+        process.exit(1);
     }
 }
 
-// Create and export bot instance
-export const bot = new TradingBot();
+main();

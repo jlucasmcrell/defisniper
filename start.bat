@@ -1,13 +1,21 @@
 @echo off
-echo Starting CryptoSniperBot...
-echo.
+echo Starting trading bot...
 
-cd /d %~dp0
-node src/server.js
+REM Check if setup has been completed
+if not exist "secure-config\master.key" (
+    echo Error: Bot has not been set up. Please run setup.bat first.
+    pause
+    exit /b 1
+)
+
+REM Start the bot
+node scripts/start.js
 
 if %ERRORLEVEL% NEQ 0 (
-  echo.
-  echo Server failed to start. Please check the error messages above.
-  pause
-  exit /b 1
+    echo Error: Failed to start bot.
+    pause
+    exit /b 1
 )
+
+echo Bot is running. Press Ctrl+C to stop.
+pause
