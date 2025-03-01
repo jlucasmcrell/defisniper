@@ -183,4 +183,26 @@ class LogManager {
         }
     }
 
-    exportToCs
+    exportToCsv() {
+        // Implement CSV export logic here
+        let csvContent = "data:text/csv;charset=utf-8,";
+
+        // Add headers
+        const headers = Object.keys(this.logs[0] || {timestamp: '', level: '', message: '', data: ''});
+        csvContent += headers.join(",") + "\r\n";
+
+        // Add rows
+        this.logs.forEach(item => {
+            const values = headers.map(header => {
+                let value = item[header];
+                if (typeof value === 'object') {
+                    value = JSON.stringify(value); // Stringify object data
+                }
+                return value;
+            });
+            csvContent += values.join(",") + "\r\n";
+        });
+
+        return encodeURI(csvContent);
+    }
+}
