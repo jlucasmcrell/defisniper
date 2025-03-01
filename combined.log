@@ -2854,3 +2854,16 @@
 2025-03-01T14:23:21.495Z warn: Binance.US API keys not configured.
 2025-03-01T14:23:21.495Z warn: Crypto.com API keys not configured.
 2025-03-01T14:23:21.495Z info: Infura credentials not provided, skipping Infura initialization.
+2025-03-01T14:23:51.495Z info: Performing periodic market analysis...
+2025-03-01T14:24:21.509Z info: Scheduled trade execution triggered.
+2025-03-01T14:24:21.556Z info: Performing periodic market analysis...
+2025-03-01T14:24:22.229Z error: Error fetching Binance price for ETHUSDT:
+2025-03-01T14:24:22.229Z error: Error fetching Crypto.com price for ETH_USDT: ccxt.cryptoCom is not a constructor
+2025-03-01T14:24:22.231Z error: Error fetching historical data for ETHUSDT: Cannot read properties of undefined (reading 'map')
+2025-03-01T14:24:22.231Z warn: No historical data available for RSI calculation.
+2025-03-01T14:24:22.232Z error: Error fetching historical data for ETHUSDT: Cannot read properties of undefined (reading 'map')
+2025-03-01T14:24:22.232Z warn: Not enough historical data available for MACD calculation.
+2025-03-01T14:24:22.233Z error: Error fetching historical data for ETHUSDT: Cannot read properties of undefined (reading 'map')
+2025-03-01T14:24:22.233Z warn: No historical data available for Fibonacci levels calculation.
+2025-03-01T14:24:22.234Z error: Error fetching historical data for ETHUSDT: Cannot read properties of undefined (reading 'map')
+2025-03-01T14:24:22.234Z error: Error fetching historical data for ETHUSDT: Cannot read properties of undefined (reading 'map')

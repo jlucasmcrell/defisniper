@@ -1,99 +1,133 @@
-import React, { useState } from 'react';
-import SettingsForm from './components/SettingsForm.js';
+import React, { useState, useEffect } from 'react';
+import Dashboard from './components/Dashboard';
+import Settings from './components/Settings';
+import TradeHistory from './components/TradeHistory';
+import Logs from './components/Logs';
 
 function App() {
-  const [activeTab, setActiveTab] = useState("Dashboard");
+  const [activeTab, setActiveTab] = useState('Dashboard');
   const [botRunning, setBotRunning] = useState(false);
+  const [settings, setSettings] = useState({});
 
-  const handleStart = () => {
-    // TODO: Add logic to trigger backend to start live trading
-    setBotRunning(true);
-  };
+  useEffect(() => {
+    // Fetch initial bot status from backend
+    const fetchBotStatus = async () => {
+      try {
+        const response = await fetch('/api/bot/status');
+        if (response.ok) {
+          const data = await response.json();
+          setBotRunning(data.running);
+        } else {
+          console.error('Failed to fetch bot status');
+        }
+      } catch (error) {
+        console.error('Error fetching bot status:', error);
+      }
+    };
 
-  const handleStop = () => {
-    // TODO: Add logic to trigger backend to stop live trading gracefully
-    setBotRunning(false);
-  };
+    fetchBotStatus();
+  }, []);
 
-  const renderContent = () => {
-    switch(activeTab) {
-      case "Dashboard":
-        return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold text-white">Live Dashboard</h2>
-            <p className="text-gray-300 mt-2">Displaying trades, balances, and live status.</p>
-            {/* Additional UI elements, charts, and live data integrations go here */}
-          </div>
-        );
-      case "Trades":
-        return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold text-white">Trade History</h2>
-            <p className="text-gray-300 mt-2">List of executed trades and performance summaries.</p>
-            {/* Trading history list/table goes here */}
-          </div>
-        );
-      case "Settings":
-        return <SettingsForm />;
-      case "Logs":
-        return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold text-white">Live Logs</h2>
-            <p className="text-gray-300 mt-2">View real-time logs for successful and failed trades.</p>
-            {/* Live logging area to display status and error messages */}
-          </div>
-        );
-      case "Wallet":
-        return (
-          <div className="p-4">
-            <h2 className="text-2xl font-bold text-white">Wallet Information</h2>
-            <p className="text-gray-300 mt-2">Current balances and wallet details.</p>
-            {/* UI elements to display wallet balance, profit reassignment, or auto-swap results */}
-          </div>
-        );
-      default:
-        return null;
+  const handleStart = async () => {
+    try {
+      const response = await fetch('/api/bot/start', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings),
+      });
+      if (response.ok) {
+        setBotRunning(true);
+      } else {
+        console.error('Failed to start bot');
+        alert('Failed to start bot');
+      }
+    } catch (error) {
+      console.error('Error starting bot:', error);
+      alert('Error starting bot');
     }
   };
 
+  const handleStop = async () => {
+    try {
+      const response = await fetch('/api/bot/stop', {
+        method: 'POST',
+      });
+      if (response.ok) {
+        setBotRunning(false);
+      } else {
+        console.error('Failed to stop bot');
+        alert('Failed to stop bot');
+      }
+    } catch (error) {
+      console.error('Error stopping bot:', error);
+      alert('Error stopping bot');
+    }
+  };
+
+  const handleSettingsChange = (newSettings) => {
+    setSettings(newSettings);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-900">
-      <header className="bg-gray-800 p-4 shadow">
+    <div className="min-h-screen bg-dark-bg text-dark-text">
+      <header className="bg-dark-surface p-4 shadow">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-xl text-white font-bold">Welcome to DeFi Sniper</h1>
+          <h1 className="text-xl font-bold">DeFi Sniper</h1>
           <div>
-            <button 
-              onClick={handleStart} 
-              disabled={botRunning} 
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 mr-2 rounded"
+            <button
+              onClick={handleStart}
+              disabled={botRunning}
+              className="bg-status-success hover:bg-status-success/80 text-white font-bold py-2 px-4 rounded mr-2"
             >
               Start Bot
             </button>
-            <button 
-              onClick={handleStop} 
-              disabled={!botRunning} 
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+            <button
+              onClick={handleStop}
+              disabled={!botRunning}
+              className="bg-status-danger hover:bg-status-danger/80 text-white font-bold py-2 px-4 rounded"
             >
               Stop Bot
             </button>
           </div>
         </div>
       </header>
-      <nav className="bg-gray-700 p-4">
+
+      <nav className="bg-dark-surface p-4">
         <div className="container mx-auto flex space-x-4">
-          {["Dashboard", "Trades", "Settings", "Logs", "Wallet"].map(tab => (
-            <button 
-              key={tab} 
-              onClick={() => setActiveTab(tab)}
-              className={`text-white font-medium px-3 py-2 rounded ${activeTab === tab ? 'bg-gray-600' : 'hover:bg-gray-600'}`}
-            >
-              {tab}
-            </button>
-          ))}
+          <button
+            onClick={() => setActiveTab('Dashboard')}
+            className={`px-3 py-2 rounded ${activeTab === 'Dashboard' ? 'bg-brand-primary text-dark-bg' : 'hover:bg-dark-bg/50'}`}
+          >
+            Dashboard
+          </button>
+          <button
+            onClick={() => setActiveTab('Settings')}
+            className={`px-3 py-2 rounded ${activeTab === 'Settings' ? 'bg-brand-primary text-dark-bg' : 'hover:bg-dark-bg/50'}`}
+          >
+            Settings
+          </button>
+          <button
+            onClick={() => setActiveTab('TradeHistory')}
+            className={`px-3 py-2 rounded ${activeTab === 'TradeHistory' ? 'bg-brand-primary text-dark-bg' : 'hover:bg-dark-bg/50'}`}
+          >
+            Trade History
+          </button>
+          <button
+            onClick={() => setActiveTab('Logs')}
+            className={`px-3 py-2 rounded ${activeTab === 'Logs' ? 'bg-brand-primary text-dark-bg' : 'hover:bg-dark-bg/50'}`}
+          >
+            Logs
+          </button>
         </div>
       </nav>
-      <main className="container mx-auto mt-4">
-        {renderContent()}
+
+      <main className="container mx-auto mt-4 p-4">
+        {activeTab === 'Dashboard' && <Dashboard />}
+        {activeTab === 'Settings' && <Settings onSettingsChange={handleSettingsChange} />}
+        {activeTab === 'TradeHistory' && <TradeHistory />}
+        {activeTab === 'Logs' && <Logs />}
       </main>
     </div>
   );
