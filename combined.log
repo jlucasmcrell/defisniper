@@ -1,0 +1,2809 @@
+2025-03-01T13:45:06.241Z info: Original code line: 0
+2025-03-01T13:45:06.244Z info: Original code line: 1
+2025-03-01T13:45:06.244Z info: Original code line: 2
+2025-03-01T13:45:06.244Z info: Original code line: 3
+2025-03-01T13:45:06.244Z info: Original code line: 4
+2025-03-01T13:45:06.244Z info: Original code line: 5
+2025-03-01T13:45:06.245Z info: Original code line: 6
+2025-03-01T13:45:06.245Z info: Original code line: 7
+2025-03-01T13:45:06.245Z info: Original code line: 8
+2025-03-01T13:45:06.245Z info: Original code line: 9
+2025-03-01T13:45:06.245Z info: Original code line: 10
+2025-03-01T13:45:06.245Z info: Original code line: 11
+2025-03-01T13:45:06.245Z info: Original code line: 12
+2025-03-01T13:45:06.246Z info: Original code line: 13
+2025-03-01T13:45:06.246Z info: Original code line: 14
+2025-03-01T13:45:06.246Z info: Original code line: 15
+2025-03-01T13:45:06.246Z info: Original code line: 16
+2025-03-01T13:45:06.246Z info: Original code line: 17
+2025-03-01T13:45:06.246Z info: Original code line: 18
+2025-03-01T13:45:06.246Z info: Original code line: 19
+2025-03-01T13:45:06.246Z info: Original code line: 20
+2025-03-01T13:45:06.246Z info: Original code line: 21
+2025-03-01T13:45:06.246Z info: Original code line: 22
+2025-03-01T13:45:06.246Z info: Original code line: 23
+2025-03-01T13:45:06.246Z info: Original code line: 24
+2025-03-01T13:45:06.246Z info: Original code line: 25
+2025-03-01T13:45:06.246Z info: Original code line: 26
+2025-03-01T13:45:06.246Z info: Original code line: 27
+2025-03-01T13:45:06.246Z info: Original code line: 28
+2025-03-01T13:45:06.247Z info: Original code line: 29
+2025-03-01T13:45:06.247Z info: Original code line: 30
+2025-03-01T13:45:06.247Z info: Original code line: 31
+2025-03-01T13:45:06.247Z info: Original code line: 32
+2025-03-01T13:45:06.247Z info: Original code line: 33
+2025-03-01T13:45:06.247Z info: Original code line: 34
+2025-03-01T13:45:06.247Z info: Original code line: 35
+2025-03-01T13:45:06.247Z info: Original code line: 36
+2025-03-01T13:45:06.247Z info: Original code line: 37
+2025-03-01T13:45:06.247Z info: Original code line: 38
+2025-03-01T13:45:06.247Z info: Original code line: 39
+2025-03-01T13:45:06.247Z info: Original code line: 40
+2025-03-01T13:45:06.247Z info: Original code line: 41
+2025-03-01T13:45:06.247Z info: Original code line: 42
+2025-03-01T13:45:06.247Z info: Original code line: 43
+2025-03-01T13:45:06.247Z info: Original code line: 44
+2025-03-01T13:45:06.247Z info: Original code line: 45
+2025-03-01T13:45:06.248Z info: Original code line: 46
+2025-03-01T13:45:06.248Z info: Original code line: 47
+2025-03-01T13:45:06.248Z info: Original code line: 48
+2025-03-01T13:45:06.248Z info: Original code line: 49
+2025-03-01T13:45:06.248Z info: Original code line: 50
+2025-03-01T13:45:06.248Z info: Original code line: 51
+2025-03-01T13:45:06.248Z info: Original code line: 52
+2025-03-01T13:45:06.248Z info: Original code line: 53
+2025-03-01T13:45:06.248Z info: Original code line: 54
+2025-03-01T13:45:06.248Z info: Original code line: 55
+2025-03-01T13:45:06.248Z info: Original code line: 56
+2025-03-01T13:45:06.248Z info: Original code line: 57
+2025-03-01T13:45:06.248Z info: Original code line: 58
+2025-03-01T13:45:06.248Z info: Original code line: 59
+2025-03-01T13:45:06.248Z info: Original code line: 60
+2025-03-01T13:45:06.248Z info: Original code line: 61
+2025-03-01T13:45:06.248Z info: Original code line: 62
+2025-03-01T13:45:06.248Z info: Original code line: 63
+2025-03-01T13:45:06.249Z info: Original code line: 64
+2025-03-01T13:45:06.249Z info: Original code line: 65
+2025-03-01T13:45:06.249Z info: Original code line: 66
+2025-03-01T13:45:06.249Z info: Original code line: 67
+2025-03-01T13:45:06.249Z info: Original code line: 68
+2025-03-01T13:45:06.249Z info: Original code line: 69
+2025-03-01T13:45:06.249Z info: Original code line: 70
+2025-03-01T13:45:06.249Z info: Original code line: 71
+2025-03-01T13:45:06.249Z info: Original code line: 72
+2025-03-01T13:45:06.249Z info: Original code line: 73
+2025-03-01T13:45:06.249Z info: Original code line: 74
+2025-03-01T13:45:06.249Z info: Original code line: 75
+2025-03-01T13:45:06.249Z info: Original code line: 76
+2025-03-01T13:45:06.249Z info: Original code line: 77
+2025-03-01T13:45:06.249Z info: Original code line: 78
+2025-03-01T13:45:06.249Z info: Original code line: 79
+2025-03-01T13:45:06.249Z info: Original code line: 80
+2025-03-01T13:45:06.249Z info: Original code line: 81
+2025-03-01T13:45:06.249Z info: Original code line: 82
+2025-03-01T13:45:06.250Z info: Original code line: 83
+2025-03-01T13:45:06.250Z info: Original code line: 84
+2025-03-01T13:45:06.250Z info: Original code line: 85
+2025-03-01T13:45:06.250Z info: Original code line: 86
+2025-03-01T13:45:06.250Z info: Original code line: 87
+2025-03-01T13:45:06.250Z info: Original code line: 88
+2025-03-01T13:45:06.250Z info: Original code line: 89
+2025-03-01T13:45:06.250Z info: Original code line: 90
+2025-03-01T13:45:06.250Z info: Original code line: 91
+2025-03-01T13:45:06.250Z info: Original code line: 92
+2025-03-01T13:45:06.250Z info: Original code line: 93
+2025-03-01T13:45:06.251Z info: Original code line: 94
+2025-03-01T13:45:06.251Z info: Original code line: 95
+2025-03-01T13:45:06.251Z info: Original code line: 96
+2025-03-01T13:45:06.251Z info: Original code line: 97
+2025-03-01T13:45:06.251Z info: Original code line: 98
+2025-03-01T13:45:06.251Z info: Original code line: 99
+2025-03-01T13:45:06.251Z info: Original code line: 100
+2025-03-01T13:45:06.251Z info: Original code line: 101
+2025-03-01T13:45:06.251Z info: Original code line: 102
+2025-03-01T13:45:06.251Z info: Original code line: 103
+2025-03-01T13:45:06.251Z info: Original code line: 104
+2025-03-01T13:45:06.251Z info: Original code line: 105
+2025-03-01T13:45:06.251Z info: Original code line: 106
+2025-03-01T13:45:06.251Z info: Original code line: 107
+2025-03-01T13:45:06.251Z info: Original code line: 108
+2025-03-01T13:45:06.251Z info: Original code line: 109
+2025-03-01T13:45:06.251Z info: Original code line: 110
+2025-03-01T13:45:06.252Z info: Original code line: 111
+2025-03-01T13:45:06.252Z info: Original code line: 112
+2025-03-01T13:45:06.252Z info: Original code line: 113
+2025-03-01T13:45:06.252Z info: Original code line: 114
+2025-03-01T13:45:06.252Z info: Original code line: 115
+2025-03-01T13:45:06.252Z info: Original code line: 116
+2025-03-01T13:45:06.252Z info: Original code line: 117
+2025-03-01T13:45:06.252Z info: Original code line: 118
+2025-03-01T13:45:06.252Z info: Original code line: 119
+2025-03-01T13:45:06.252Z info: Original code line: 120
+2025-03-01T13:45:06.252Z info: Original code line: 121
+2025-03-01T13:45:06.252Z info: Original code line: 122
+2025-03-01T13:45:06.252Z info: Original code line: 123
+2025-03-01T13:45:06.252Z info: Original code line: 124
+2025-03-01T13:45:06.252Z info: Original code line: 125
+2025-03-01T13:45:06.252Z info: Original code line: 126
+2025-03-01T13:45:06.252Z info: Original code line: 127
+2025-03-01T13:45:06.252Z info: Original code line: 128
+2025-03-01T13:45:06.252Z info: Original code line: 129
+2025-03-01T13:45:06.253Z info: Original code line: 130
+2025-03-01T13:45:06.253Z info: Original code line: 131
+2025-03-01T13:45:06.253Z info: Original code line: 132
+2025-03-01T13:45:06.253Z info: Original code line: 133
+2025-03-01T13:45:06.253Z info: Original code line: 134
+2025-03-01T13:45:06.253Z info: Original code line: 135
+2025-03-01T13:45:06.253Z info: Original code line: 136
+2025-03-01T13:45:06.253Z info: Original code line: 137
+2025-03-01T13:45:06.253Z info: Original code line: 138
+2025-03-01T13:45:06.253Z info: Original code line: 139
+2025-03-01T13:45:06.253Z info: Original code line: 140
+2025-03-01T13:45:06.253Z info: Original code line: 141
+2025-03-01T13:45:06.253Z info: Original code line: 142
+2025-03-01T13:45:06.253Z info: Original code line: 143
+2025-03-01T13:45:06.253Z info: Original code line: 144
+2025-03-01T13:45:06.253Z info: Original code line: 145
+2025-03-01T13:45:06.253Z info: Original code line: 146
+2025-03-01T13:45:06.253Z info: Original code line: 147
+2025-03-01T13:45:06.253Z info: Original code line: 148
+2025-03-01T13:45:06.254Z info: Original code line: 149
+2025-03-01T13:45:06.254Z info: Original code line: 150
+2025-03-01T13:45:06.254Z info: Original code line: 151
+2025-03-01T13:45:06.254Z info: Original code line: 152
+2025-03-01T13:45:06.254Z info: Original code line: 153
+2025-03-01T13:45:06.254Z info: Original code line: 154
+2025-03-01T13:45:06.254Z info: Original code line: 155
+2025-03-01T13:45:06.254Z info: Original code line: 156
+2025-03-01T13:45:06.254Z info: Original code line: 157
+2025-03-01T13:45:06.254Z info: Original code line: 158
+2025-03-01T13:45:06.254Z info: Original code line: 159
+2025-03-01T13:45:06.255Z info: Original code line: 160
+2025-03-01T13:45:06.255Z info: Original code line: 161
+2025-03-01T13:45:06.255Z info: Original code line: 162
+2025-03-01T13:45:06.255Z info: Original code line: 163
+2025-03-01T13:45:06.255Z info: Original code line: 164
+2025-03-01T13:45:06.255Z info: Original code line: 165
+2025-03-01T13:45:06.255Z info: Original code line: 166
+2025-03-01T13:45:06.255Z info: Original code line: 167
+2025-03-01T13:45:06.255Z info: Original code line: 168
+2025-03-01T13:45:06.255Z info: Original code line: 169
+2025-03-01T13:45:06.255Z info: Original code line: 170
+2025-03-01T13:45:06.255Z info: Original code line: 171
+2025-03-01T13:45:06.255Z info: Original code line: 172
+2025-03-01T13:45:06.255Z info: Original code line: 173
+2025-03-01T13:45:06.255Z info: Original code line: 174
+2025-03-01T13:45:06.256Z info: Original code line: 175
+2025-03-01T13:45:06.256Z info: Original code line: 176
+2025-03-01T13:45:06.256Z info: Original code line: 177
+2025-03-01T13:45:06.256Z info: Original code line: 178
+2025-03-01T13:45:06.256Z info: Original code line: 179
+2025-03-01T13:45:06.256Z info: Original code line: 180
+2025-03-01T13:45:06.256Z info: Original code line: 181
+2025-03-01T13:45:06.256Z info: Original code line: 182
+2025-03-01T13:45:06.256Z info: Original code line: 183
+2025-03-01T13:45:06.256Z info: Original code line: 184
+2025-03-01T13:45:06.256Z info: Original code line: 185
+2025-03-01T13:45:06.256Z info: Original code line: 186
+2025-03-01T13:45:06.256Z info: Original code line: 187
+2025-03-01T13:45:06.256Z info: Original code line: 188
+2025-03-01T13:45:06.257Z info: Original code line: 189
+2025-03-01T13:45:06.257Z info: Original code line: 190
+2025-03-01T13:45:06.257Z info: Original code line: 191
+2025-03-01T13:45:06.257Z info: Original code line: 192
+2025-03-01T13:45:06.257Z info: Original code line: 193
+2025-03-01T13:45:06.257Z info: Original code line: 194
+2025-03-01T13:45:06.257Z info: Original code line: 195
+2025-03-01T13:45:06.257Z info: Original code line: 196
+2025-03-01T13:45:06.257Z info: Original code line: 197
+2025-03-01T13:45:06.257Z info: Original code line: 198
+2025-03-01T13:45:06.257Z info: Original code line: 199
+2025-03-01T13:45:06.257Z info: Original code line: 200
+2025-03-01T13:45:06.257Z info: Original code line: 201
+2025-03-01T13:45:06.257Z info: Original code line: 202
+2025-03-01T13:45:06.257Z info: Original code line: 203
+2025-03-01T13:45:06.257Z info: Original code line: 204
+2025-03-01T13:45:06.257Z info: Original code line: 205
+2025-03-01T13:45:06.257Z info: Original code line: 206
+2025-03-01T13:45:06.257Z info: Original code line: 207
+2025-03-01T13:45:06.258Z info: Original code line: 208
+2025-03-01T13:45:06.258Z info: Original code line: 209
+2025-03-01T13:45:06.258Z info: Original code line: 210
+2025-03-01T13:45:06.258Z info: Original code line: 211
+2025-03-01T13:45:06.258Z info: Original code line: 212
+2025-03-01T13:45:06.258Z info: Original code line: 213
+2025-03-01T13:45:06.258Z info: Original code line: 214
+2025-03-01T13:45:06.258Z info: Original code line: 215
+2025-03-01T13:45:06.258Z info: Original code line: 216
+2025-03-01T13:45:06.258Z info: Original code line: 217
+2025-03-01T13:45:06.258Z info: Original code line: 218
+2025-03-01T13:45:06.258Z info: Original code line: 219
+2025-03-01T13:45:06.258Z info: Original code line: 220
+2025-03-01T13:45:06.258Z info: Original code line: 221
+2025-03-01T13:45:06.258Z info: Original code line: 222
+2025-03-01T13:45:06.258Z info: Original code line: 223
+2025-03-01T13:45:06.258Z info: Original code line: 224
+2025-03-01T13:45:06.258Z info: Original code line: 225
+2025-03-01T13:45:06.258Z info: Original code line: 226
+2025-03-01T13:45:06.259Z info: Original code line: 227
+2025-03-01T13:45:06.259Z info: Original code line: 228
+2025-03-01T13:45:06.259Z info: Original code line: 229
+2025-03-01T13:45:06.259Z info: Original code line: 230
+2025-03-01T13:45:06.259Z info: Original code line: 231
+2025-03-01T13:45:06.259Z info: Original code line: 232
+2025-03-01T13:45:06.259Z info: Original code line: 233
+2025-03-01T13:45:06.259Z info: Original code line: 234
+2025-03-01T13:45:06.259Z info: Original code line: 235
+2025-03-01T13:45:06.259Z info: Original code line: 236
+2025-03-01T13:45:06.259Z info: Original code line: 237
+2025-03-01T13:45:06.259Z info: Original code line: 238
+2025-03-01T13:45:06.259Z info: Original code line: 239
+2025-03-01T13:45:06.259Z info: Original code line: 240
+2025-03-01T13:45:06.259Z info: Original code line: 241
+2025-03-01T13:45:06.259Z info: Original code line: 242
+2025-03-01T13:45:06.259Z info: Original code line: 243
+2025-03-01T13:45:06.259Z info: Original code line: 244
+2025-03-01T13:45:06.259Z info: Original code line: 245
+2025-03-01T13:45:06.260Z info: Original code line: 246
+2025-03-01T13:45:06.260Z info: Original code line: 247
+2025-03-01T13:45:06.260Z info: Original code line: 248
+2025-03-01T13:45:06.260Z info: Original code line: 249
+2025-03-01T13:45:06.260Z info: Original code line: 250
+2025-03-01T13:45:06.260Z info: Original code line: 251
+2025-03-01T13:45:06.260Z info: Original code line: 252
+2025-03-01T13:45:06.260Z info: Original code line: 253
+2025-03-01T13:45:06.260Z info: Original code line: 254
+2025-03-01T13:45:06.260Z info: Original code line: 255
+2025-03-01T13:45:06.260Z info: Original code line: 256
+2025-03-01T13:45:06.260Z info: Original code line: 257
+2025-03-01T13:45:06.260Z info: Original code line: 258
+2025-03-01T13:45:06.260Z info: Original code line: 259
+2025-03-01T13:45:06.260Z info: Original code line: 260
+2025-03-01T13:45:06.260Z info: Original code line: 261
+2025-03-01T13:45:06.260Z info: Original code line: 262
+2025-03-01T13:45:06.260Z info: Original code line: 263
+2025-03-01T13:45:06.260Z info: Original code line: 264
+2025-03-01T13:45:06.260Z info: Original code line: 265
+2025-03-01T13:45:06.261Z info: Original code line: 266
+2025-03-01T13:45:06.261Z info: Original code line: 267
+2025-03-01T13:45:06.261Z info: Original code line: 268
+2025-03-01T13:45:06.261Z info: Original code line: 269
+2025-03-01T13:45:06.261Z info: Original code line: 270
+2025-03-01T13:45:06.261Z info: Original code line: 271
+2025-03-01T13:45:06.261Z info: Original code line: 272
+2025-03-01T13:45:06.261Z info: Original code line: 273
+2025-03-01T13:45:06.261Z info: Original code line: 274
+2025-03-01T13:45:06.261Z info: Original code line: 275
+2025-03-01T13:45:06.261Z info: Original code line: 276
+2025-03-01T13:45:06.261Z info: Original code line: 277
+2025-03-01T13:45:06.261Z info: Original code line: 278
+2025-03-01T13:45:06.261Z info: Original code line: 279
+2025-03-01T13:45:06.261Z info: Original code line: 280
+2025-03-01T13:45:06.261Z info: Original code line: 281
+2025-03-01T13:45:06.261Z info: Original code line: 282
+2025-03-01T13:45:06.261Z info: Original code line: 283
+2025-03-01T13:45:06.261Z info: Original code line: 284
+2025-03-01T13:45:06.262Z info: Original code line: 285
+2025-03-01T13:45:06.262Z info: Original code line: 286
+2025-03-01T13:45:06.262Z info: Original code line: 287
+2025-03-01T13:45:06.262Z info: Original code line: 288
+2025-03-01T13:45:06.262Z info: Original code line: 289
+2025-03-01T13:45:06.262Z info: Original code line: 290
+2025-03-01T13:45:06.262Z info: Original code line: 291
+2025-03-01T13:45:06.262Z info: Original code line: 292
+2025-03-01T13:45:06.262Z info: Original code line: 293
+2025-03-01T13:45:06.262Z info: Original code line: 294
+2025-03-01T13:45:06.262Z info: Original code line: 295
+2025-03-01T13:45:06.262Z info: Original code line: 296
+2025-03-01T13:45:06.262Z info: Original code line: 297
+2025-03-01T13:45:06.262Z info: Original code line: 298
+2025-03-01T13:45:06.262Z info: Original code line: 299
+2025-03-01T13:45:06.262Z info: Original code line: 300
+2025-03-01T13:45:06.262Z info: Original code line: 301
+2025-03-01T13:45:06.263Z info: Original code line: 302
+2025-03-01T13:45:06.263Z info: Original code line: 303
+2025-03-01T13:45:06.263Z info: Original code line: 304
+2025-03-01T13:45:06.263Z info: Original code line: 305
+2025-03-01T13:45:06.263Z info: Original code line: 306
+2025-03-01T13:45:06.263Z info: Original code line: 307
+2025-03-01T13:45:06.263Z info: Original code line: 308
+2025-03-01T13:45:06.263Z info: Original code line: 309
+2025-03-01T13:45:06.263Z info: Original code line: 310
+2025-03-01T13:45:06.263Z info: Original code line: 311
+2025-03-01T13:45:06.263Z info: Original code line: 312
+2025-03-01T13:45:06.263Z info: Original code line: 313
+2025-03-01T13:45:06.263Z info: Original code line: 314
+2025-03-01T13:45:06.263Z info: Original code line: 315
+2025-03-01T13:45:06.263Z info: Original code line: 316
+2025-03-01T13:45:06.263Z info: Original code line: 317
+2025-03-01T13:45:06.263Z info: Original code line: 318
+2025-03-01T13:45:06.263Z info: Original code line: 319
+2025-03-01T13:45:06.263Z info: Original code line: 320
+2025-03-01T13:45:06.264Z info: Original code line: 321
+2025-03-01T13:45:06.264Z info: Original code line: 322
+2025-03-01T13:45:06.264Z info: Original code line: 323
+2025-03-01T13:45:06.264Z info: Original code line: 324
+2025-03-01T13:45:06.264Z info: Original code line: 325
+2025-03-01T13:45:06.264Z info: Original code line: 326
+2025-03-01T13:45:06.264Z info: Original code line: 327
+2025-03-01T13:45:06.264Z info: Original code line: 328
+2025-03-01T13:45:06.264Z info: Original code line: 329
+2025-03-01T13:45:06.264Z info: Original code line: 330
+2025-03-01T13:45:06.264Z info: Original code line: 331
+2025-03-01T13:45:06.264Z info: Original code line: 332
+2025-03-01T13:45:06.264Z info: Original code line: 333
+2025-03-01T13:45:06.264Z info: Original code line: 334
+2025-03-01T13:45:06.264Z info: Original code line: 335
+2025-03-01T13:45:06.264Z info: Original code line: 336
+2025-03-01T13:45:06.265Z info: Original code line: 337
+2025-03-01T13:45:06.265Z info: Original code line: 338
+2025-03-01T13:45:06.265Z info: Original code line: 339
+2025-03-01T13:45:06.265Z info: Original code line: 340
+2025-03-01T13:45:06.265Z info: Original code line: 341
+2025-03-01T13:45:06.265Z info: Original code line: 342
+2025-03-01T13:45:06.265Z info: Original code line: 343
+2025-03-01T13:45:06.265Z info: Original code line: 344
+2025-03-01T13:45:06.265Z info: Original code line: 345
+2025-03-01T13:45:06.265Z info: Original code line: 346
+2025-03-01T13:45:06.265Z info: Original code line: 347
+2025-03-01T13:45:06.265Z info: Original code line: 348
+2025-03-01T13:45:06.265Z info: Original code line: 349
+2025-03-01T13:45:06.265Z info: Original code line: 350
+2025-03-01T13:45:06.265Z info: Original code line: 351
+2025-03-01T13:45:06.265Z info: Original code line: 352
+2025-03-01T13:45:06.265Z info: Original code line: 353
+2025-03-01T13:45:06.265Z info: Original code line: 354
+2025-03-01T13:45:06.265Z info: Original code line: 355
+2025-03-01T13:45:06.265Z info: Original code line: 356
+2025-03-01T13:45:06.265Z info: Original code line: 357
+2025-03-01T13:45:06.266Z info: Original code line: 358
+2025-03-01T13:45:06.266Z info: Original code line: 359
+2025-03-01T13:45:06.266Z info: Original code line: 360
+2025-03-01T13:45:06.266Z info: Original code line: 361
+2025-03-01T13:45:06.266Z info: Original code line: 362
+2025-03-01T13:45:06.266Z info: Original code line: 363
+2025-03-01T13:45:06.266Z info: Original code line: 364
+2025-03-01T13:45:06.266Z info: Original code line: 365
+2025-03-01T13:45:06.266Z info: Original code line: 366
+2025-03-01T13:45:06.266Z info: Original code line: 367
+2025-03-01T13:45:06.266Z info: Original code line: 368
+2025-03-01T13:45:06.266Z info: Original code line: 369
+2025-03-01T13:45:06.266Z info: Original code line: 370
+2025-03-01T13:45:06.266Z info: Original code line: 371
+2025-03-01T13:45:06.266Z info: Original code line: 372
+2025-03-01T13:45:06.266Z info: Original code line: 373
+2025-03-01T13:45:06.266Z info: Original code line: 374
+2025-03-01T13:45:06.266Z info: Original code line: 375
+2025-03-01T13:45:06.266Z info: Original code line: 376
+2025-03-01T13:45:06.266Z info: Original code line: 377
+2025-03-01T13:45:06.267Z info: Original code line: 378
+2025-03-01T13:45:06.267Z info: Original code line: 379
+2025-03-01T13:45:06.267Z info: Original code line: 380
+2025-03-01T13:45:06.267Z info: Original code line: 381
+2025-03-01T13:45:06.267Z info: Original code line: 382
+2025-03-01T13:45:06.267Z info: Original code line: 383
+2025-03-01T13:45:06.267Z info: Original code line: 384
+2025-03-01T13:45:06.267Z info: Original code line: 385
+2025-03-01T13:45:06.267Z info: Original code line: 386
+2025-03-01T13:45:06.267Z info: Original code line: 387
+2025-03-01T13:45:06.267Z info: Original code line: 388
+2025-03-01T13:45:06.267Z info: Original code line: 389
+2025-03-01T13:45:06.267Z info: Original code line: 390
+2025-03-01T13:45:06.267Z info: Original code line: 391
+2025-03-01T13:45:06.267Z info: Original code line: 392
+2025-03-01T13:45:06.267Z info: Original code line: 393
+2025-03-01T13:45:06.267Z info: Original code line: 394
+2025-03-01T13:45:06.267Z info: Original code line: 395
+2025-03-01T13:45:06.267Z info: Original code line: 396
+2025-03-01T13:45:06.267Z info: Original code line: 397
+2025-03-01T13:45:06.268Z info: Original code line: 398
+2025-03-01T13:45:06.268Z info: Original code line: 399
+2025-03-01T13:45:06.268Z info: Additional original logic line: 400
+2025-03-01T13:45:06.268Z info: Additional original logic line: 401
+2025-03-01T13:45:06.268Z info: Additional original logic line: 402
+2025-03-01T13:45:06.268Z info: Additional original logic line: 403
+2025-03-01T13:45:06.268Z info: Additional original logic line: 404
+2025-03-01T13:45:06.268Z info: Additional original logic line: 405
+2025-03-01T13:45:06.268Z info: Additional original logic line: 406
+2025-03-01T13:45:06.268Z info: Additional original logic line: 407
+2025-03-01T13:45:06.268Z info: Additional original logic line: 408
+2025-03-01T13:45:06.268Z info: Additional original logic line: 409
+2025-03-01T13:45:06.268Z info: Additional original logic line: 410
+2025-03-01T13:45:06.268Z info: Additional original logic line: 411
+2025-03-01T13:45:06.268Z info: Additional original logic line: 412
+2025-03-01T13:45:06.268Z info: Additional original logic line: 413
+2025-03-01T13:45:06.268Z info: Additional original logic line: 414
+2025-03-01T13:45:06.268Z info: Additional original logic line: 415
+2025-03-01T13:45:06.268Z info: Additional original logic line: 416
+2025-03-01T13:45:06.268Z info: Additional original logic line: 417
+2025-03-01T13:45:06.269Z info: Additional original logic line: 418
+2025-03-01T13:45:06.269Z info: Additional original logic line: 419
+2025-03-01T13:45:06.269Z info: Additional original logic line: 420
+2025-03-01T13:45:06.269Z info: Additional original logic line: 421
+2025-03-01T13:45:06.269Z info: Additional original logic line: 422
+2025-03-01T13:45:06.269Z info: Additional original logic line: 423
+2025-03-01T13:45:06.269Z info: Additional original logic line: 424
+2025-03-01T13:45:06.269Z info: Additional original logic line: 425
+2025-03-01T13:45:06.269Z info: Additional original logic line: 426
+2025-03-01T13:45:06.269Z info: Additional original logic line: 427
+2025-03-01T13:45:06.269Z info: Additional original logic line: 428
+2025-03-01T13:45:06.269Z info: Additional original logic line: 429
+2025-03-01T13:45:06.269Z info: Additional original logic line: 430
+2025-03-01T13:45:06.269Z info: Additional original logic line: 431
+2025-03-01T13:45:06.269Z info: Additional original logic line: 432
+2025-03-01T13:45:06.269Z info: Additional original logic line: 433
+2025-03-01T13:45:06.269Z info: Additional original logic line: 434
+2025-03-01T13:45:06.269Z info: Additional original logic line: 435
+2025-03-01T13:45:06.269Z info: Additional original logic line: 436
+2025-03-01T13:45:06.269Z info: Additional original logic line: 437
+2025-03-01T13:45:06.270Z info: Additional original logic line: 438
+2025-03-01T13:45:06.270Z info: Additional original logic line: 439
+2025-03-01T13:45:06.270Z info: Additional original logic line: 440
+2025-03-01T13:45:06.270Z info: Additional original logic line: 441
+2025-03-01T13:45:06.270Z info: Additional original logic line: 442
+2025-03-01T13:45:06.270Z info: Additional original logic line: 443
+2025-03-01T13:45:06.270Z info: Additional original logic line: 444
+2025-03-01T13:45:06.270Z info: Additional original logic line: 445
+2025-03-01T13:45:06.270Z info: Additional original logic line: 446
+2025-03-01T13:45:06.270Z info: Additional original logic line: 447
+2025-03-01T13:45:06.270Z info: Additional original logic line: 448
+2025-03-01T13:45:06.270Z info: Additional original logic line: 449
+2025-03-01T13:45:06.270Z info: Additional original logic line: 450
+2025-03-01T13:45:06.270Z info: Additional original logic line: 451
+2025-03-01T13:45:06.270Z info: Additional original logic line: 452
+2025-03-01T13:45:06.270Z info: Additional original logic line: 453
+2025-03-01T13:45:06.270Z info: Additional original logic line: 454
+2025-03-01T13:45:06.270Z info: Additional original logic line: 455
+2025-03-01T13:45:06.270Z info: Additional original logic line: 456
+2025-03-01T13:45:06.270Z info: Additional original logic line: 457
+2025-03-01T13:45:06.270Z info: Additional original logic line: 458
+2025-03-01T13:45:06.271Z info: Additional original logic line: 459
+2025-03-01T13:45:06.271Z info: Additional original logic line: 460
+2025-03-01T13:45:06.271Z info: Additional original logic line: 461
+2025-03-01T13:45:06.271Z info: Additional original logic line: 462
+2025-03-01T13:45:06.271Z info: Additional original logic line: 463
+2025-03-01T13:45:06.271Z info: Additional original logic line: 464
+2025-03-01T13:45:06.271Z info: Additional original logic line: 465
+2025-03-01T13:45:06.271Z info: Additional original logic line: 466
+2025-03-01T13:45:06.271Z info: Additional original logic line: 467
+2025-03-01T13:45:06.271Z info: Additional original logic line: 468
+2025-03-01T13:45:06.271Z info: Additional original logic line: 469
+2025-03-01T13:45:06.271Z info: Additional original logic line: 470
+2025-03-01T13:45:06.271Z info: Additional original logic line: 471
+2025-03-01T13:45:06.271Z info: Additional original logic line: 472
+2025-03-01T13:45:06.271Z info: Additional original logic line: 473
+2025-03-01T13:45:06.271Z info: Additional original logic line: 474
+2025-03-01T13:45:06.271Z info: Additional original logic line: 475
+2025-03-01T13:45:06.271Z info: Additional original logic line: 476
+2025-03-01T13:45:06.271Z info: Additional original logic line: 477
+2025-03-01T13:45:06.271Z info: Additional original logic line: 478
+2025-03-01T13:45:06.272Z info: Additional original logic line: 479
+2025-03-01T13:45:06.272Z info: Additional original logic line: 480
+2025-03-01T13:45:06.272Z info: Additional original logic line: 481
+2025-03-01T13:45:06.272Z info: Additional original logic line: 482
+2025-03-01T13:45:06.272Z info: Additional original logic line: 483
+2025-03-01T13:45:06.272Z info: Additional original logic line: 484
+2025-03-01T13:45:06.272Z info: Additional original logic line: 485
+2025-03-01T13:45:06.272Z info: Additional original logic line: 486
+2025-03-01T13:45:06.272Z info: Additional original logic line: 487
+2025-03-01T13:45:06.272Z info: Additional original logic line: 488
+2025-03-01T13:45:06.272Z info: Additional original logic line: 489
+2025-03-01T13:45:06.272Z info: Additional original logic line: 490
+2025-03-01T13:45:06.272Z info: Additional original logic line: 491
+2025-03-01T13:45:06.272Z info: Additional original logic line: 492
+2025-03-01T13:45:06.272Z info: Additional original logic line: 493
+2025-03-01T13:45:06.272Z info: Additional original logic line: 494
+2025-03-01T13:45:06.272Z info: Additional original logic line: 495
+2025-03-01T13:45:06.272Z info: Additional original logic line: 496
+2025-03-01T13:45:06.272Z info: Additional original logic line: 497
+2025-03-01T13:45:06.272Z info: Additional original logic line: 498
+2025-03-01T13:45:06.272Z info: Additional original logic line: 499
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 500
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 501
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 502
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 503
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 504
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 505
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 506
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 507
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 508
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 509
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 510
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 511
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 512
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 513
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 514
+2025-03-01T13:45:06.275Z info: End-of-file original placeholder: 515
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 516
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 517
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 518
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 519
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 520
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 521
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 522
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 523
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 524
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 525
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 526
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 527
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 528
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 529
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 530
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 531
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 532
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 533
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 534
+2025-03-01T13:45:06.276Z info: End-of-file original placeholder: 535
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 536
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 537
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 538
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 539
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 540
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 541
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 542
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 543
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 544
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 545
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 546
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 547
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 548
+2025-03-01T13:45:06.277Z info: End-of-file original placeholder: 549
+2025-03-01T13:45:06.279Z info: Server is running on port 5000
+2025-03-01T13:45:06.279Z info: Initializing Trading Bot with enhanced features
+2025-03-01T13:45:06.279Z warn: Binance.US API keys not configured.
+2025-03-01T13:45:06.279Z warn: Crypto.com API keys not configured.
+2025-03-01T13:45:06.279Z info: Infura credentials not provided, skipping Infura initialization.
+2025-03-01T13:45:36.289Z info: Performing periodic market analysis...
+2025-03-01T13:46:06.281Z info: Scheduled trade execution triggered.
+2025-03-01T13:46:06.329Z info: Performing periodic market analysis...
+2025-03-01T13:48:38.997Z info: Original code line: 0
+2025-03-01T13:48:38.999Z info: Original code line: 1
+2025-03-01T13:48:38.999Z info: Original code line: 2
+2025-03-01T13:48:38.999Z info: Original code line: 3
+2025-03-01T13:48:38.999Z info: Original code line: 4
+2025-03-01T13:48:39.000Z info: Original code line: 5
+2025-03-01T13:48:39.000Z info: Original code line: 6
+2025-03-01T13:48:39.000Z info: Original code line: 7
+2025-03-01T13:48:39.000Z info: Original code line: 8
+2025-03-01T13:48:39.000Z info: Original code line: 9
+2025-03-01T13:48:39.000Z info: Original code line: 10
+2025-03-01T13:48:39.001Z info: Original code line: 11
+2025-03-01T13:48:39.001Z info: Original code line: 12
+2025-03-01T13:48:39.001Z info: Original code line: 13
+2025-03-01T13:48:39.001Z info: Original code line: 14
+2025-03-01T13:48:39.001Z info: Original code line: 15
+2025-03-01T13:48:39.001Z info: Original code line: 16
+2025-03-01T13:48:39.001Z info: Original code line: 17
+2025-03-01T13:48:39.001Z info: Original code line: 18
+2025-03-01T13:48:39.001Z info: Original code line: 19
+2025-03-01T13:48:39.001Z info: Original code line: 20
+2025-03-01T13:48:39.001Z info: Original code line: 21
+2025-03-01T13:48:39.001Z info: Original code line: 22
+2025-03-01T13:48:39.001Z info: Original code line: 23
+2025-03-01T13:48:39.001Z info: Original code line: 24
+2025-03-01T13:48:39.001Z info: Original code line: 25
+2025-03-01T13:48:39.001Z info: Original code line: 26
+2025-03-01T13:48:39.001Z info: Original code line: 27
+2025-03-01T13:48:39.001Z info: Original code line: 28
+2025-03-01T13:48:39.002Z info: Original code line: 29
+2025-03-01T13:48:39.002Z info: Original code line: 30
+2025-03-01T13:48:39.002Z info: Original code line: 31
+2025-03-01T13:48:39.002Z info: Original code line: 32
+2025-03-01T13:48:39.002Z info: Original code line: 33
+2025-03-01T13:48:39.002Z info: Original code line: 34
+2025-03-01T13:48:39.002Z info: Original code line: 35
+2025-03-01T13:48:39.002Z info: Original code line: 36
+2025-03-01T13:48:39.002Z info: Original code line: 37
+2025-03-01T13:48:39.002Z info: Original code line: 38
+2025-03-01T13:48:39.002Z info: Original code line: 39
+2025-03-01T13:48:39.002Z info: Original code line: 40
+2025-03-01T13:48:39.002Z info: Original code line: 41
+2025-03-01T13:48:39.002Z info: Original code line: 42
+2025-03-01T13:48:39.002Z info: Original code line: 43
+2025-03-01T13:48:39.002Z info: Original code line: 44
+2025-03-01T13:48:39.002Z info: Original code line: 45
+2025-03-01T13:48:39.002Z info: Original code line: 46
+2025-03-01T13:48:39.003Z info: Original code line: 47
+2025-03-01T13:48:39.003Z info: Original code line: 48
+2025-03-01T13:48:39.003Z info: Original code line: 49
+2025-03-01T13:48:39.003Z info: Original code line: 50
+2025-03-01T13:48:39.003Z info: Original code line: 51
+2025-03-01T13:48:39.003Z info: Original code line: 52
+2025-03-01T13:48:39.003Z info: Original code line: 53
+2025-03-01T13:48:39.003Z info: Original code line: 54
+2025-03-01T13:48:39.003Z info: Original code line: 55
+2025-03-01T13:48:39.003Z info: Original code line: 56
+2025-03-01T13:48:39.003Z info: Original code line: 57
+2025-03-01T13:48:39.003Z info: Original code line: 58
+2025-03-01T13:48:39.003Z info: Original code line: 59
+2025-03-01T13:48:39.003Z info: Original code line: 60
+2025-03-01T13:48:39.003Z info: Original code line: 61
+2025-03-01T13:48:39.004Z info: Original code line: 62
+2025-03-01T13:48:39.004Z info: Original code line: 63
+2025-03-01T13:48:39.004Z info: Original code line: 64
+2025-03-01T13:48:39.004Z info: Original code line: 65
+2025-03-01T13:48:39.004Z info: Original code line: 66
+2025-03-01T13:48:39.004Z info: Original code line: 67
+2025-03-01T13:48:39.004Z info: Original code line: 68
+2025-03-01T13:48:39.004Z info: Original code line: 69
+2025-03-01T13:48:39.004Z info: Original code line: 70
+2025-03-01T13:48:39.004Z info: Original code line: 71
+2025-03-01T13:48:39.004Z info: Original code line: 72
+2025-03-01T13:48:39.004Z info: Original code line: 73
+2025-03-01T13:48:39.004Z info: Original code line: 74
+2025-03-01T13:48:39.004Z info: Original code line: 75
+2025-03-01T13:48:39.005Z info: Original code line: 76
+2025-03-01T13:48:39.005Z info: Original code line: 77
+2025-03-01T13:48:39.005Z info: Original code line: 78
+2025-03-01T13:48:39.005Z info: Original code line: 79
+2025-03-01T13:48:39.005Z info: Original code line: 80
+2025-03-01T13:48:39.005Z info: Original code line: 81
+2025-03-01T13:48:39.005Z info: Original code line: 82
+2025-03-01T13:48:39.005Z info: Original code line: 83
+2025-03-01T13:48:39.005Z info: Original code line: 84
+2025-03-01T13:48:39.005Z info: Original code line: 85
+2025-03-01T13:48:39.005Z info: Original code line: 86
+2025-03-01T13:48:39.005Z info: Original code line: 87
+2025-03-01T13:48:39.005Z info: Original code line: 88
+2025-03-01T13:48:39.005Z info: Original code line: 89
+2025-03-01T13:48:39.005Z info: Original code line: 90
+2025-03-01T13:48:39.005Z info: Original code line: 91
+2025-03-01T13:48:39.005Z info: Original code line: 92
+2025-03-01T13:48:39.006Z info: Original code line: 93
+2025-03-01T13:48:39.006Z info: Original code line: 94
+2025-03-01T13:48:39.006Z info: Original code line: 95
+2025-03-01T13:48:39.006Z info: Original code line: 96
+2025-03-01T13:48:39.006Z info: Original code line: 97
+2025-03-01T13:48:39.006Z info: Original code line: 98
+2025-03-01T13:48:39.006Z info: Original code line: 99
+2025-03-01T13:48:39.006Z info: Original code line: 100
+2025-03-01T13:48:39.006Z info: Original code line: 101
+2025-03-01T13:48:39.006Z info: Original code line: 102
+2025-03-01T13:48:39.006Z info: Original code line: 103
+2025-03-01T13:48:39.006Z info: Original code line: 104
+2025-03-01T13:48:39.006Z info: Original code line: 105
+2025-03-01T13:48:39.006Z info: Original code line: 106
+2025-03-01T13:48:39.006Z info: Original code line: 107
+2025-03-01T13:48:39.007Z info: Original code line: 108
+2025-03-01T13:48:39.007Z info: Original code line: 109
+2025-03-01T13:48:39.007Z info: Original code line: 110
+2025-03-01T13:48:39.007Z info: Original code line: 111
+2025-03-01T13:48:39.007Z info: Original code line: 112
+2025-03-01T13:48:39.007Z info: Original code line: 113
+2025-03-01T13:48:39.007Z info: Original code line: 114
+2025-03-01T13:48:39.007Z info: Original code line: 115
+2025-03-01T13:48:39.007Z info: Original code line: 116
+2025-03-01T13:48:39.007Z info: Original code line: 117
+2025-03-01T13:48:39.007Z info: Original code line: 118
+2025-03-01T13:48:39.007Z info: Original code line: 119
+2025-03-01T13:48:39.007Z info: Original code line: 120
+2025-03-01T13:48:39.008Z info: Original code line: 121
+2025-03-01T13:48:39.008Z info: Original code line: 122
+2025-03-01T13:48:39.008Z info: Original code line: 123
+2025-03-01T13:48:39.008Z info: Original code line: 124
+2025-03-01T13:48:39.008Z info: Original code line: 125
+2025-03-01T13:48:39.008Z info: Original code line: 126
+2025-03-01T13:48:39.008Z info: Original code line: 127
+2025-03-01T13:48:39.008Z info: Original code line: 128
+2025-03-01T13:48:39.008Z info: Original code line: 129
+2025-03-01T13:48:39.008Z info: Original code line: 130
+2025-03-01T13:48:39.008Z info: Original code line: 131
+2025-03-01T13:48:39.008Z info: Original code line: 132
+2025-03-01T13:48:39.008Z info: Original code line: 133
+2025-03-01T13:48:39.008Z info: Original code line: 134
+2025-03-01T13:48:39.008Z info: Original code line: 135
+2025-03-01T13:48:39.008Z info: Original code line: 136
+2025-03-01T13:48:39.008Z info: Original code line: 137
+2025-03-01T13:48:39.008Z info: Original code line: 138
+2025-03-01T13:48:39.008Z info: Original code line: 139
+2025-03-01T13:48:39.009Z info: Original code line: 140
+2025-03-01T13:48:39.009Z info: Original code line: 141
+2025-03-01T13:48:39.009Z info: Original code line: 142
+2025-03-01T13:48:39.009Z info: Original code line: 143
+2025-03-01T13:48:39.009Z info: Original code line: 144
+2025-03-01T13:48:39.009Z info: Original code line: 145
+2025-03-01T13:48:39.009Z info: Original code line: 146
+2025-03-01T13:48:39.009Z info: Original code line: 147
+2025-03-01T13:48:39.009Z info: Original code line: 148
+2025-03-01T13:48:39.009Z info: Original code line: 149
+2025-03-01T13:48:39.009Z info: Original code line: 150
+2025-03-01T13:48:39.009Z info: Original code line: 151
+2025-03-01T13:48:39.009Z info: Original code line: 152
+2025-03-01T13:48:39.009Z info: Original code line: 153
+2025-03-01T13:48:39.009Z info: Original code line: 154
+2025-03-01T13:48:39.009Z info: Original code line: 155
+2025-03-01T13:48:39.009Z info: Original code line: 156
+2025-03-01T13:48:39.009Z info: Original code line: 157
+2025-03-01T13:48:39.009Z info: Original code line: 158
+2025-03-01T13:48:39.010Z info: Original code line: 159
+2025-03-01T13:48:39.010Z info: Original code line: 160
+2025-03-01T13:48:39.010Z info: Original code line: 161
+2025-03-01T13:48:39.010Z info: Original code line: 162
+2025-03-01T13:48:39.010Z info: Original code line: 163
+2025-03-01T13:48:39.010Z info: Original code line: 164
+2025-03-01T13:48:39.010Z info: Original code line: 165
+2025-03-01T13:48:39.010Z info: Original code line: 166
+2025-03-01T13:48:39.010Z info: Original code line: 167
+2025-03-01T13:48:39.010Z info: Original code line: 168
+2025-03-01T13:48:39.010Z info: Original code line: 169
+2025-03-01T13:48:39.010Z info: Original code line: 170
+2025-03-01T13:48:39.010Z info: Original code line: 171
+2025-03-01T13:48:39.010Z info: Original code line: 172
+2025-03-01T13:48:39.010Z info: Original code line: 173
+2025-03-01T13:48:39.010Z info: Original code line: 174
+2025-03-01T13:48:39.010Z info: Original code line: 175
+2025-03-01T13:48:39.010Z info: Original code line: 176
+2025-03-01T13:48:39.011Z info: Original code line: 177
+2025-03-01T13:48:39.011Z info: Original code line: 178
+2025-03-01T13:48:39.011Z info: Original code line: 179
+2025-03-01T13:48:39.011Z info: Original code line: 180
+2025-03-01T13:48:39.011Z info: Original code line: 181
+2025-03-01T13:48:39.011Z info: Original code line: 182
+2025-03-01T13:48:39.011Z info: Original code line: 183
+2025-03-01T13:48:39.011Z info: Original code line: 184
+2025-03-01T13:48:39.011Z info: Original code line: 185
+2025-03-01T13:48:39.011Z info: Original code line: 186
+2025-03-01T13:48:39.011Z info: Original code line: 187
+2025-03-01T13:48:39.011Z info: Original code line: 188
+2025-03-01T13:48:39.011Z info: Original code line: 189
+2025-03-01T13:48:39.011Z info: Original code line: 190
+2025-03-01T13:48:39.012Z info: Original code line: 191
+2025-03-01T13:48:39.012Z info: Original code line: 192
+2025-03-01T13:48:39.012Z info: Original code line: 193
+2025-03-01T13:48:39.012Z info: Original code line: 194
+2025-03-01T13:48:39.012Z info: Original code line: 195
+2025-03-01T13:48:39.012Z info: Original code line: 196
+2025-03-01T13:48:39.012Z info: Original code line: 197
+2025-03-01T13:48:39.012Z info: Original code line: 198
+2025-03-01T13:48:39.012Z info: Original code line: 199
+2025-03-01T13:48:39.012Z info: Original code line: 200
+2025-03-01T13:48:39.012Z info: Original code line: 201
+2025-03-01T13:48:39.012Z info: Original code line: 202
+2025-03-01T13:48:39.012Z info: Original code line: 203
+2025-03-01T13:48:39.012Z info: Original code line: 204
+2025-03-01T13:48:39.012Z info: Original code line: 205
+2025-03-01T13:48:39.012Z info: Original code line: 206
+2025-03-01T13:48:39.012Z info: Original code line: 207
+2025-03-01T13:48:39.013Z info: Original code line: 208
+2025-03-01T13:48:39.013Z info: Original code line: 209
+2025-03-01T13:48:39.013Z info: Original code line: 210
+2025-03-01T13:48:39.013Z info: Original code line: 211
+2025-03-01T13:48:39.013Z info: Original code line: 212
+2025-03-01T13:48:39.013Z info: Original code line: 213
+2025-03-01T13:48:39.013Z info: Original code line: 214
+2025-03-01T13:48:39.013Z info: Original code line: 215
+2025-03-01T13:48:39.013Z info: Original code line: 216
+2025-03-01T13:48:39.013Z info: Original code line: 217
+2025-03-01T13:48:39.013Z info: Original code line: 218
+2025-03-01T13:48:39.013Z info: Original code line: 219
+2025-03-01T13:48:39.013Z info: Original code line: 220
+2025-03-01T13:48:39.013Z info: Original code line: 221
+2025-03-01T13:48:39.013Z info: Original code line: 222
+2025-03-01T13:48:39.013Z info: Original code line: 223
+2025-03-01T13:48:39.013Z info: Original code line: 224
+2025-03-01T13:48:39.013Z info: Original code line: 225
+2025-03-01T13:48:39.013Z info: Original code line: 226
+2025-03-01T13:48:39.013Z info: Original code line: 227
+2025-03-01T13:48:39.014Z info: Original code line: 228
+2025-03-01T13:48:39.014Z info: Original code line: 229
+2025-03-01T13:48:39.014Z info: Original code line: 230
+2025-03-01T13:48:39.014Z info: Original code line: 231
+2025-03-01T13:48:39.014Z info: Original code line: 232
+2025-03-01T13:48:39.014Z info: Original code line: 233
+2025-03-01T13:48:39.014Z info: Original code line: 234
+2025-03-01T13:48:39.014Z info: Original code line: 235
+2025-03-01T13:48:39.014Z info: Original code line: 236
+2025-03-01T13:48:39.014Z info: Original code line: 237
+2025-03-01T13:48:39.014Z info: Original code line: 238
+2025-03-01T13:48:39.014Z info: Original code line: 239
+2025-03-01T13:48:39.014Z info: Original code line: 240
+2025-03-01T13:48:39.014Z info: Original code line: 241
+2025-03-01T13:48:39.014Z info: Original code line: 242
+2025-03-01T13:48:39.014Z info: Original code line: 243
+2025-03-01T13:48:39.014Z info: Original code line: 244
+2025-03-01T13:48:39.015Z info: Original code line: 245
+2025-03-01T13:48:39.015Z info: Original code line: 246
+2025-03-01T13:48:39.015Z info: Original code line: 247
+2025-03-01T13:48:39.015Z info: Original code line: 248
+2025-03-01T13:48:39.015Z info: Original code line: 249
+2025-03-01T13:48:39.015Z info: Original code line: 250
+2025-03-01T13:48:39.015Z info: Original code line: 251
+2025-03-01T13:48:39.015Z info: Original code line: 252
+2025-03-01T13:48:39.015Z info: Original code line: 253
+2025-03-01T13:48:39.015Z info: Original code line: 254
+2025-03-01T13:48:39.015Z info: Original code line: 255
+2025-03-01T13:48:39.015Z info: Original code line: 256
+2025-03-01T13:48:39.015Z info: Original code line: 257
+2025-03-01T13:48:39.015Z info: Original code line: 258
+2025-03-01T13:48:39.015Z info: Original code line: 259
+2025-03-01T13:48:39.015Z info: Original code line: 260
+2025-03-01T13:48:39.015Z info: Original code line: 261
+2025-03-01T13:48:39.015Z info: Original code line: 262
+2025-03-01T13:48:39.015Z info: Original code line: 263
+2025-03-01T13:48:39.016Z info: Original code line: 264
+2025-03-01T13:48:39.016Z info: Original code line: 265
+2025-03-01T13:48:39.016Z info: Original code line: 266
+2025-03-01T13:48:39.016Z info: Original code line: 267
+2025-03-01T13:48:39.016Z info: Original code line: 268
+2025-03-01T13:48:39.016Z info: Original code line: 269
+2025-03-01T13:48:39.016Z info: Original code line: 270
+2025-03-01T13:48:39.016Z info: Original code line: 271
+2025-03-01T13:48:39.016Z info: Original code line: 272
+2025-03-01T13:48:39.016Z info: Original code line: 273
+2025-03-01T13:48:39.016Z info: Original code line: 274
+2025-03-01T13:48:39.016Z info: Original code line: 275
+2025-03-01T13:48:39.016Z info: Original code line: 276
+2025-03-01T13:48:39.016Z info: Original code line: 277
+2025-03-01T13:48:39.016Z info: Original code line: 278
+2025-03-01T13:48:39.016Z info: Original code line: 279
+2025-03-01T13:48:39.016Z info: Original code line: 280
+2025-03-01T13:48:39.016Z info: Original code line: 281
+2025-03-01T13:48:39.017Z info: Original code line: 282
+2025-03-01T13:48:39.017Z info: Original code line: 283
+2025-03-01T13:48:39.017Z info: Original code line: 284
+2025-03-01T13:48:39.017Z info: Original code line: 285
+2025-03-01T13:48:39.017Z info: Original code line: 286
+2025-03-01T13:48:39.017Z info: Original code line: 287
+2025-03-01T13:48:39.017Z info: Original code line: 288
+2025-03-01T13:48:39.017Z info: Original code line: 289
+2025-03-01T13:48:39.017Z info: Original code line: 290
+2025-03-01T13:48:39.017Z info: Original code line: 291
+2025-03-01T13:48:39.017Z info: Original code line: 292
+2025-03-01T13:48:39.017Z info: Original code line: 293
+2025-03-01T13:48:39.017Z info: Original code line: 294
+2025-03-01T13:48:39.017Z info: Original code line: 295
+2025-03-01T13:48:39.017Z info: Original code line: 296
+2025-03-01T13:48:39.017Z info: Original code line: 297
+2025-03-01T13:48:39.017Z info: Original code line: 298
+2025-03-01T13:48:39.017Z info: Original code line: 299
+2025-03-01T13:48:39.018Z info: Original code line: 300
+2025-03-01T13:48:39.018Z info: Original code line: 301
+2025-03-01T13:48:39.018Z info: Original code line: 302
+2025-03-01T13:48:39.018Z info: Original code line: 303
+2025-03-01T13:48:39.018Z info: Original code line: 304
+2025-03-01T13:48:39.018Z info: Original code line: 305
+2025-03-01T13:48:39.018Z info: Original code line: 306
+2025-03-01T13:48:39.018Z info: Original code line: 307
+2025-03-01T13:48:39.018Z info: Original code line: 308
+2025-03-01T13:48:39.018Z info: Original code line: 309
+2025-03-01T13:48:39.018Z info: Original code line: 310
+2025-03-01T13:48:39.018Z info: Original code line: 311
+2025-03-01T13:48:39.018Z info: Original code line: 312
+2025-03-01T13:48:39.018Z info: Original code line: 313
+2025-03-01T13:48:39.018Z info: Original code line: 314
+2025-03-01T13:48:39.018Z info: Original code line: 315
+2025-03-01T13:48:39.018Z info: Original code line: 316
+2025-03-01T13:48:39.018Z info: Original code line: 317
+2025-03-01T13:48:39.018Z info: Original code line: 318
+2025-03-01T13:48:39.018Z info: Original code line: 319
+2025-03-01T13:48:39.019Z info: Original code line: 320
+2025-03-01T13:48:39.019Z info: Original code line: 321
+2025-03-01T13:48:39.019Z info: Original code line: 322
+2025-03-01T13:48:39.019Z info: Original code line: 323
+2025-03-01T13:48:39.019Z info: Original code line: 324
+2025-03-01T13:48:39.019Z info: Original code line: 325
+2025-03-01T13:48:39.019Z info: Original code line: 326
+2025-03-01T13:48:39.019Z info: Original code line: 327
+2025-03-01T13:48:39.019Z info: Original code line: 328
+2025-03-01T13:48:39.019Z info: Original code line: 329
+2025-03-01T13:48:39.019Z info: Original code line: 330
+2025-03-01T13:48:39.019Z info: Original code line: 331
+2025-03-01T13:48:39.019Z info: Original code line: 332
+2025-03-01T13:48:39.019Z info: Original code line: 333
+2025-03-01T13:48:39.019Z info: Original code line: 334
+2025-03-01T13:48:39.019Z info: Original code line: 335
+2025-03-01T13:48:39.019Z info: Original code line: 336
+2025-03-01T13:48:39.019Z info: Original code line: 337
+2025-03-01T13:48:39.019Z info: Original code line: 338
+2025-03-01T13:48:39.019Z info: Original code line: 339
+2025-03-01T13:48:39.020Z info: Original code line: 340
+2025-03-01T13:48:39.020Z info: Original code line: 341
+2025-03-01T13:48:39.020Z info: Original code line: 342
+2025-03-01T13:48:39.020Z info: Original code line: 343
+2025-03-01T13:48:39.020Z info: Original code line: 344
+2025-03-01T13:48:39.020Z info: Original code line: 345
+2025-03-01T13:48:39.020Z info: Original code line: 346
+2025-03-01T13:48:39.020Z info: Original code line: 347
+2025-03-01T13:48:39.020Z info: Original code line: 348
+2025-03-01T13:48:39.020Z info: Original code line: 349
+2025-03-01T13:48:39.020Z info: Original code line: 350
+2025-03-01T13:48:39.020Z info: Original code line: 351
+2025-03-01T13:48:39.020Z info: Original code line: 352
+2025-03-01T13:48:39.020Z info: Original code line: 353
+2025-03-01T13:48:39.020Z info: Original code line: 354
+2025-03-01T13:48:39.020Z info: Original code line: 355
+2025-03-01T13:48:39.020Z info: Original code line: 356
+2025-03-01T13:48:39.020Z info: Original code line: 357
+2025-03-01T13:48:39.020Z info: Original code line: 358
+2025-03-01T13:48:39.020Z info: Original code line: 359
+2025-03-01T13:48:39.020Z info: Original code line: 360
+2025-03-01T13:48:39.021Z info: Original code line: 361
+2025-03-01T13:48:39.021Z info: Original code line: 362
+2025-03-01T13:48:39.021Z info: Original code line: 363
+2025-03-01T13:48:39.021Z info: Original code line: 364
+2025-03-01T13:48:39.021Z info: Original code line: 365
+2025-03-01T13:48:39.021Z info: Original code line: 366
+2025-03-01T13:48:39.021Z info: Original code line: 367
+2025-03-01T13:48:39.021Z info: Original code line: 368
+2025-03-01T13:48:39.021Z info: Original code line: 369
+2025-03-01T13:48:39.021Z info: Original code line: 370
+2025-03-01T13:48:39.021Z info: Original code line: 371
+2025-03-01T13:48:39.021Z info: Original code line: 372
+2025-03-01T13:48:39.021Z info: Original code line: 373
+2025-03-01T13:48:39.021Z info: Original code line: 374
+2025-03-01T13:48:39.021Z info: Original code line: 375
+2025-03-01T13:48:39.021Z info: Original code line: 376
+2025-03-01T13:48:39.021Z info: Original code line: 377
+2025-03-01T13:48:39.021Z info: Original code line: 378
+2025-03-01T13:48:39.021Z info: Original code line: 379
+2025-03-01T13:48:39.021Z info: Original code line: 380
+2025-03-01T13:48:39.022Z info: Original code line: 381
+2025-03-01T13:48:39.022Z info: Original code line: 382
+2025-03-01T13:48:39.022Z info: Original code line: 383
+2025-03-01T13:48:39.022Z info: Original code line: 384
+2025-03-01T13:48:39.022Z info: Original code line: 385
+2025-03-01T13:48:39.022Z info: Original code line: 386
+2025-03-01T13:48:39.022Z info: Original code line: 387
+2025-03-01T13:48:39.022Z info: Original code line: 388
+2025-03-01T13:48:39.022Z info: Original code line: 389
+2025-03-01T13:48:39.022Z info: Original code line: 390
+2025-03-01T13:48:39.022Z info: Original code line: 391
+2025-03-01T13:48:39.022Z info: Original code line: 392
+2025-03-01T13:48:39.022Z info: Original code line: 393
+2025-03-01T13:48:39.022Z info: Original code line: 394
+2025-03-01T13:48:39.022Z info: Original code line: 395
+2025-03-01T13:48:39.022Z info: Original code line: 396
+2025-03-01T13:48:39.022Z info: Original code line: 397
+2025-03-01T13:48:39.022Z info: Original code line: 398
+2025-03-01T13:48:39.022Z info: Original code line: 399
+2025-03-01T13:48:39.022Z info: Additional original logic line: 400
+2025-03-01T13:48:39.023Z info: Additional original logic line: 401
+2025-03-01T13:48:39.023Z info: Additional original logic line: 402
+2025-03-01T13:48:39.023Z info: Additional original logic line: 403
+2025-03-01T13:48:39.023Z info: Additional original logic line: 404
+2025-03-01T13:48:39.023Z info: Additional original logic line: 405
+2025-03-01T13:48:39.023Z info: Additional original logic line: 406
+2025-03-01T13:48:39.023Z info: Additional original logic line: 407
+2025-03-01T13:48:39.023Z info: Additional original logic line: 408
+2025-03-01T13:48:39.023Z info: Additional original logic line: 409
+2025-03-01T13:48:39.023Z info: Additional original logic line: 410
+2025-03-01T13:48:39.023Z info: Additional original logic line: 411
+2025-03-01T13:48:39.023Z info: Additional original logic line: 412
+2025-03-01T13:48:39.023Z info: Additional original logic line: 413
+2025-03-01T13:48:39.023Z info: Additional original logic line: 414
+2025-03-01T13:48:39.023Z info: Additional original logic line: 415
+2025-03-01T13:48:39.023Z info: Additional original logic line: 416
+2025-03-01T13:48:39.023Z info: Additional original logic line: 417
+2025-03-01T13:48:39.023Z info: Additional original logic line: 418
+2025-03-01T13:48:39.023Z info: Additional original logic line: 419
+2025-03-01T13:48:39.024Z info: Additional original logic line: 420
+2025-03-01T13:48:39.024Z info: Additional original logic line: 421
+2025-03-01T13:48:39.024Z info: Additional original logic line: 422
+2025-03-01T13:48:39.024Z info: Additional original logic line: 423
+2025-03-01T13:48:39.024Z info: Additional original logic line: 424
+2025-03-01T13:48:39.024Z info: Additional original logic line: 425
+2025-03-01T13:48:39.024Z info: Additional original logic line: 426
+2025-03-01T13:48:39.024Z info: Additional original logic line: 427
+2025-03-01T13:48:39.024Z info: Additional original logic line: 428
+2025-03-01T13:48:39.024Z info: Additional original logic line: 429
+2025-03-01T13:48:39.024Z info: Additional original logic line: 430
+2025-03-01T13:48:39.024Z info: Additional original logic line: 431
+2025-03-01T13:48:39.024Z info: Additional original logic line: 432
+2025-03-01T13:48:39.024Z info: Additional original logic line: 433
+2025-03-01T13:48:39.024Z info: Additional original logic line: 434
+2025-03-01T13:48:39.024Z info: Additional original logic line: 435
+2025-03-01T13:48:39.024Z info: Additional original logic line: 436
+2025-03-01T13:48:39.024Z info: Additional original logic line: 437
+2025-03-01T13:48:39.024Z info: Additional original logic line: 438
+2025-03-01T13:48:39.024Z info: Additional original logic line: 439
+2025-03-01T13:48:39.024Z info: Additional original logic line: 440
+2025-03-01T13:48:39.025Z info: Additional original logic line: 441
+2025-03-01T13:48:39.025Z info: Additional original logic line: 442
+2025-03-01T13:48:39.025Z info: Additional original logic line: 443
+2025-03-01T13:48:39.025Z info: Additional original logic line: 444
+2025-03-01T13:48:39.025Z info: Additional original logic line: 445
+2025-03-01T13:48:39.025Z info: Additional original logic line: 446
+2025-03-01T13:48:39.025Z info: Additional original logic line: 447
+2025-03-01T13:48:39.025Z info: Additional original logic line: 448
+2025-03-01T13:48:39.025Z info: Additional original logic line: 449
+2025-03-01T13:48:39.025Z info: Additional original logic line: 450
+2025-03-01T13:48:39.025Z info: Additional original logic line: 451
+2025-03-01T13:48:39.025Z info: Additional original logic line: 452
+2025-03-01T13:48:39.025Z info: Additional original logic line: 453
+2025-03-01T13:48:39.025Z info: Additional original logic line: 454
+2025-03-01T13:48:39.025Z info: Additional original logic line: 455
+2025-03-01T13:48:39.025Z info: Additional original logic line: 456
+2025-03-01T13:48:39.025Z info: Additional original logic line: 457
+2025-03-01T13:48:39.025Z info: Additional original logic line: 458
+2025-03-01T13:48:39.025Z info: Additional original logic line: 459
+2025-03-01T13:48:39.025Z info: Additional original logic line: 460
+2025-03-01T13:48:39.026Z info: Additional original logic line: 461
+2025-03-01T13:48:39.026Z info: Additional original logic line: 462
+2025-03-01T13:48:39.026Z info: Additional original logic line: 463
+2025-03-01T13:48:39.026Z info: Additional original logic line: 464
+2025-03-01T13:48:39.026Z info: Additional original logic line: 465
+2025-03-01T13:48:39.026Z info: Additional original logic line: 466
+2025-03-01T13:48:39.026Z info: Additional original logic line: 467
+2025-03-01T13:48:39.026Z info: Additional original logic line: 468
+2025-03-01T13:48:39.026Z info: Additional original logic line: 469
+2025-03-01T13:48:39.026Z info: Additional original logic line: 470
+2025-03-01T13:48:39.026Z info: Additional original logic line: 471
+2025-03-01T13:48:39.026Z info: Additional original logic line: 472
+2025-03-01T13:48:39.026Z info: Additional original logic line: 473
+2025-03-01T13:48:39.026Z info: Additional original logic line: 474
+2025-03-01T13:48:39.026Z info: Additional original logic line: 475
+2025-03-01T13:48:39.026Z info: Additional original logic line: 476
+2025-03-01T13:48:39.026Z info: Additional original logic line: 477
+2025-03-01T13:48:39.026Z info: Additional original logic line: 478
+2025-03-01T13:48:39.026Z info: Additional original logic line: 479
+2025-03-01T13:48:39.027Z info: Additional original logic line: 480
+2025-03-01T13:48:39.027Z info: Additional original logic line: 481
+2025-03-01T13:48:39.027Z info: Additional original logic line: 482
+2025-03-01T13:48:39.027Z info: Additional original logic line: 483
+2025-03-01T13:48:39.027Z info: Additional original logic line: 484
+2025-03-01T13:48:39.027Z info: Additional original logic line: 485
+2025-03-01T13:48:39.027Z info: Additional original logic line: 486
+2025-03-01T13:48:39.027Z info: Additional original logic line: 487
+2025-03-01T13:48:39.027Z info: Additional original logic line: 488
+2025-03-01T13:48:39.027Z info: Additional original logic line: 489
+2025-03-01T13:48:39.027Z info: Additional original logic line: 490
+2025-03-01T13:48:39.027Z info: Additional original logic line: 491
+2025-03-01T13:48:39.027Z info: Additional original logic line: 492
+2025-03-01T13:48:39.027Z info: Additional original logic line: 493
+2025-03-01T13:48:39.027Z info: Additional original logic line: 494
+2025-03-01T13:48:39.027Z info: Additional original logic line: 495
+2025-03-01T13:48:39.027Z info: Additional original logic line: 496
+2025-03-01T13:48:39.027Z info: Additional original logic line: 497
+2025-03-01T13:48:39.028Z info: Additional original logic line: 498
+2025-03-01T13:48:39.028Z info: Additional original logic line: 499
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 500
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 501
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 502
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 503
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 504
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 505
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 506
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 507
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 508
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 509
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 510
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 511
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 512
+2025-03-01T13:48:39.030Z info: End-of-file original placeholder: 513
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 514
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 515
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 516
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 517
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 518
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 519
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 520
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 521
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 522
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 523
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 524
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 525
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 526
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 527
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 528
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 529
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 530
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 531
+2025-03-01T13:48:39.031Z info: End-of-file original placeholder: 532
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 533
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 534
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 535
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 536
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 537
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 538
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 539
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 540
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 541
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 542
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 543
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 544
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 545
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 546
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 547
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 548
+2025-03-01T13:48:39.032Z info: End-of-file original placeholder: 549
+2025-03-01T13:48:39.034Z info: Server is running on port 5000
+2025-03-01T13:48:39.034Z info: Initializing Trading Bot with enhanced features
+2025-03-01T13:48:39.034Z warn: Binance.US API keys not configured.
+2025-03-01T13:48:39.034Z warn: Crypto.com API keys not configured.
+2025-03-01T13:48:39.034Z info: Infura credentials not provided, skipping Infura initialization.
+2025-03-01T13:49:09.052Z info: Performing periodic market analysis...
+2025-03-01T13:49:39.039Z info: Scheduled trade execution triggered.
+2025-03-01T13:49:39.087Z info: Performing periodic market analysis...
+2025-03-01T13:50:09.094Z info: Performing periodic market analysis...
+2025-03-01T13:50:39.044Z info: Scheduled trade execution triggered.
+2025-03-01T13:50:39.107Z info: Performing periodic market analysis...
+2025-03-01T13:51:19.177Z info: Original code line: 0
+2025-03-01T13:51:19.179Z info: Original code line: 1
+2025-03-01T13:51:19.179Z info: Original code line: 2
+2025-03-01T13:51:19.180Z info: Original code line: 3
+2025-03-01T13:51:19.180Z info: Original code line: 4
+2025-03-01T13:51:19.180Z info: Original code line: 5
+2025-03-01T13:51:19.180Z info: Original code line: 6
+2025-03-01T13:51:19.180Z info: Original code line: 7
+2025-03-01T13:51:19.180Z info: Original code line: 8
+2025-03-01T13:51:19.180Z info: Original code line: 9
+2025-03-01T13:51:19.181Z info: Original code line: 10
+2025-03-01T13:51:19.181Z info: Original code line: 11
+2025-03-01T13:51:19.181Z info: Original code line: 12
+2025-03-01T13:51:19.181Z info: Original code line: 13
+2025-03-01T13:51:19.181Z info: Original code line: 14
+2025-03-01T13:51:19.181Z info: Original code line: 15
+2025-03-01T13:51:19.181Z info: Original code line: 16
+2025-03-01T13:51:19.181Z info: Original code line: 17
+2025-03-01T13:51:19.181Z info: Original code line: 18
+2025-03-01T13:51:19.181Z info: Original code line: 19
+2025-03-01T13:51:19.181Z info: Original code line: 20
+2025-03-01T13:51:19.181Z info: Original code line: 21
+2025-03-01T13:51:19.181Z info: Original code line: 22
+2025-03-01T13:51:19.181Z info: Original code line: 23
+2025-03-01T13:51:19.182Z info: Original code line: 24
+2025-03-01T13:51:19.182Z info: Original code line: 25
+2025-03-01T13:51:19.182Z info: Original code line: 26
+2025-03-01T13:51:19.182Z info: Original code line: 27
+2025-03-01T13:51:19.182Z info: Original code line: 28
+2025-03-01T13:51:19.182Z info: Original code line: 29
+2025-03-01T13:51:19.182Z info: Original code line: 30
+2025-03-01T13:51:19.182Z info: Original code line: 31
+2025-03-01T13:51:19.182Z info: Original code line: 32
+2025-03-01T13:51:19.182Z info: Original code line: 33
+2025-03-01T13:51:19.182Z info: Original code line: 34
+2025-03-01T13:51:19.182Z info: Original code line: 35
+2025-03-01T13:51:19.182Z info: Original code line: 36
+2025-03-01T13:51:19.182Z info: Original code line: 37
+2025-03-01T13:51:19.182Z info: Original code line: 38
+2025-03-01T13:51:19.182Z info: Original code line: 39
+2025-03-01T13:51:19.182Z info: Original code line: 40
+2025-03-01T13:51:19.183Z info: Original code line: 41
+2025-03-01T13:51:19.183Z info: Original code line: 42
+2025-03-01T13:51:19.183Z info: Original code line: 43
+2025-03-01T13:51:19.183Z info: Original code line: 44
+2025-03-01T13:51:19.183Z info: Original code line: 45
+2025-03-01T13:51:19.183Z info: Original code line: 46
+2025-03-01T13:51:19.183Z info: Original code line: 47
+2025-03-01T13:51:19.183Z info: Original code line: 48
+2025-03-01T13:51:19.183Z info: Original code line: 49
+2025-03-01T13:51:19.183Z info: Original code line: 50
+2025-03-01T13:51:19.183Z info: Original code line: 51
+2025-03-01T13:51:19.183Z info: Original code line: 52
+2025-03-01T13:51:19.183Z info: Original code line: 53
+2025-03-01T13:51:19.183Z info: Original code line: 54
+2025-03-01T13:51:19.183Z info: Original code line: 55
+2025-03-01T13:51:19.183Z info: Original code line: 56
+2025-03-01T13:51:19.183Z info: Original code line: 57
+2025-03-01T13:51:19.183Z info: Original code line: 58
+2025-03-01T13:51:19.184Z info: Original code line: 59
+2025-03-01T13:51:19.184Z info: Original code line: 60
+2025-03-01T13:51:19.184Z info: Original code line: 61
+2025-03-01T13:51:19.184Z info: Original code line: 62
+2025-03-01T13:51:19.184Z info: Original code line: 63
+2025-03-01T13:51:19.184Z info: Original code line: 64
+2025-03-01T13:51:19.184Z info: Original code line: 65
+2025-03-01T13:51:19.184Z info: Original code line: 66
+2025-03-01T13:51:19.184Z info: Original code line: 67
+2025-03-01T13:51:19.184Z info: Original code line: 68
+2025-03-01T13:51:19.184Z info: Original code line: 69
+2025-03-01T13:51:19.184Z info: Original code line: 70
+2025-03-01T13:51:19.184Z info: Original code line: 71
+2025-03-01T13:51:19.184Z info: Original code line: 72
+2025-03-01T13:51:19.184Z info: Original code line: 73
+2025-03-01T13:51:19.184Z info: Original code line: 74
+2025-03-01T13:51:19.184Z info: Original code line: 75
+2025-03-01T13:51:19.184Z info: Original code line: 76
+2025-03-01T13:51:19.185Z info: Original code line: 77
+2025-03-01T13:51:19.185Z info: Original code line: 78
+2025-03-01T13:51:19.185Z info: Original code line: 79
+2025-03-01T13:51:19.185Z info: Original code line: 80
+2025-03-01T13:51:19.185Z info: Original code line: 81
+2025-03-01T13:51:19.185Z info: Original code line: 82
+2025-03-01T13:51:19.185Z info: Original code line: 83
+2025-03-01T13:51:19.185Z info: Original code line: 84
+2025-03-01T13:51:19.186Z info: Original code line: 85
+2025-03-01T13:51:19.186Z info: Original code line: 86
+2025-03-01T13:51:19.186Z info: Original code line: 87
+2025-03-01T13:51:19.186Z info: Original code line: 88
+2025-03-01T13:51:19.186Z info: Original code line: 89
+2025-03-01T13:51:19.186Z info: Original code line: 90
+2025-03-01T13:51:19.186Z info: Original code line: 91
+2025-03-01T13:51:19.186Z info: Original code line: 92
+2025-03-01T13:51:19.186Z info: Original code line: 93
+2025-03-01T13:51:19.186Z info: Original code line: 94
+2025-03-01T13:51:19.186Z info: Original code line: 95
+2025-03-01T13:51:19.186Z info: Original code line: 96
+2025-03-01T13:51:19.186Z info: Original code line: 97
+2025-03-01T13:51:19.186Z info: Original code line: 98
+2025-03-01T13:51:19.186Z info: Original code line: 99
+2025-03-01T13:51:19.186Z info: Original code line: 100
+2025-03-01T13:51:19.186Z info: Original code line: 101
+2025-03-01T13:51:19.186Z info: Original code line: 102
+2025-03-01T13:51:19.186Z info: Original code line: 103
+2025-03-01T13:51:19.187Z info: Original code line: 104
+2025-03-01T13:51:19.187Z info: Original code line: 105
+2025-03-01T13:51:19.187Z info: Original code line: 106
+2025-03-01T13:51:19.187Z info: Original code line: 107
+2025-03-01T13:51:19.187Z info: Original code line: 108
+2025-03-01T13:51:19.187Z info: Original code line: 109
+2025-03-01T13:51:19.187Z info: Original code line: 110
+2025-03-01T13:51:19.187Z info: Original code line: 111
+2025-03-01T13:51:19.187Z info: Original code line: 112
+2025-03-01T13:51:19.187Z info: Original code line: 113
+2025-03-01T13:51:19.187Z info: Original code line: 114
+2025-03-01T13:51:19.187Z info: Original code line: 115
+2025-03-01T13:51:19.187Z info: Original code line: 116
+2025-03-01T13:51:19.187Z info: Original code line: 117
+2025-03-01T13:51:19.187Z info: Original code line: 118
+2025-03-01T13:51:19.187Z info: Original code line: 119
+2025-03-01T13:51:19.187Z info: Original code line: 120
+2025-03-01T13:51:19.187Z info: Original code line: 121
+2025-03-01T13:51:19.188Z info: Original code line: 122
+2025-03-01T13:51:19.188Z info: Original code line: 123
+2025-03-01T13:51:19.188Z info: Original code line: 124
+2025-03-01T13:51:19.188Z info: Original code line: 125
+2025-03-01T13:51:19.188Z info: Original code line: 126
+2025-03-01T13:51:19.188Z info: Original code line: 127
+2025-03-01T13:51:19.188Z info: Original code line: 128
+2025-03-01T13:51:19.188Z info: Original code line: 129
+2025-03-01T13:51:19.188Z info: Original code line: 130
+2025-03-01T13:51:19.188Z info: Original code line: 131
+2025-03-01T13:51:19.188Z info: Original code line: 132
+2025-03-01T13:51:19.188Z info: Original code line: 133
+2025-03-01T13:51:19.188Z info: Original code line: 134
+2025-03-01T13:51:19.188Z info: Original code line: 135
+2025-03-01T13:51:19.188Z info: Original code line: 136
+2025-03-01T13:51:19.188Z info: Original code line: 137
+2025-03-01T13:51:19.188Z info: Original code line: 138
+2025-03-01T13:51:19.188Z info: Original code line: 139
+2025-03-01T13:51:19.188Z info: Original code line: 140
+2025-03-01T13:51:19.189Z info: Original code line: 141
+2025-03-01T13:51:19.189Z info: Original code line: 142
+2025-03-01T13:51:19.189Z info: Original code line: 143
+2025-03-01T13:51:19.189Z info: Original code line: 144
+2025-03-01T13:51:19.189Z info: Original code line: 145
+2025-03-01T13:51:19.189Z info: Original code line: 146
+2025-03-01T13:51:19.189Z info: Original code line: 147
+2025-03-01T13:51:19.189Z info: Original code line: 148
+2025-03-01T13:51:19.189Z info: Original code line: 149
+2025-03-01T13:51:19.189Z info: Original code line: 150
+2025-03-01T13:51:19.189Z info: Original code line: 151
+2025-03-01T13:51:19.189Z info: Original code line: 152
+2025-03-01T13:51:19.189Z info: Original code line: 153
+2025-03-01T13:51:19.189Z info: Original code line: 154
+2025-03-01T13:51:19.189Z info: Original code line: 155
+2025-03-01T13:51:19.189Z info: Original code line: 156
+2025-03-01T13:51:19.189Z info: Original code line: 157
+2025-03-01T13:51:19.189Z info: Original code line: 158
+2025-03-01T13:51:19.189Z info: Original code line: 159
+2025-03-01T13:51:19.190Z info: Original code line: 160
+2025-03-01T13:51:19.190Z info: Original code line: 161
+2025-03-01T13:51:19.190Z info: Original code line: 162
+2025-03-01T13:51:19.190Z info: Original code line: 163
+2025-03-01T13:51:19.190Z info: Original code line: 164
+2025-03-01T13:51:19.190Z info: Original code line: 165
+2025-03-01T13:51:19.190Z info: Original code line: 166
+2025-03-01T13:51:19.190Z info: Original code line: 167
+2025-03-01T13:51:19.190Z info: Original code line: 168
+2025-03-01T13:51:19.190Z info: Original code line: 169
+2025-03-01T13:51:19.190Z info: Original code line: 170
+2025-03-01T13:51:19.190Z info: Original code line: 171
+2025-03-01T13:51:19.190Z info: Original code line: 172
+2025-03-01T13:51:19.190Z info: Original code line: 173
+2025-03-01T13:51:19.190Z info: Original code line: 174
+2025-03-01T13:51:19.191Z info: Original code line: 175
+2025-03-01T13:51:19.191Z info: Original code line: 176
+2025-03-01T13:51:19.191Z info: Original code line: 177
+2025-03-01T13:51:19.191Z info: Original code line: 178
+2025-03-01T13:51:19.191Z info: Original code line: 179
+2025-03-01T13:51:19.191Z info: Original code line: 180
+2025-03-01T13:51:19.191Z info: Original code line: 181
+2025-03-01T13:51:19.191Z info: Original code line: 182
+2025-03-01T13:51:19.191Z info: Original code line: 183
+2025-03-01T13:51:19.191Z info: Original code line: 184
+2025-03-01T13:51:19.191Z info: Original code line: 185
+2025-03-01T13:51:19.191Z info: Original code line: 186
+2025-03-01T13:51:19.191Z info: Original code line: 187
+2025-03-01T13:51:19.191Z info: Original code line: 188
+2025-03-01T13:51:19.192Z info: Original code line: 189
+2025-03-01T13:51:19.192Z info: Original code line: 190
+2025-03-01T13:51:19.192Z info: Original code line: 191
+2025-03-01T13:51:19.192Z info: Original code line: 192
+2025-03-01T13:51:19.192Z info: Original code line: 193
+2025-03-01T13:51:19.192Z info: Original code line: 194
+2025-03-01T13:51:19.192Z info: Original code line: 195
+2025-03-01T13:51:19.192Z info: Original code line: 196
+2025-03-01T13:51:19.192Z info: Original code line: 197
+2025-03-01T13:51:19.192Z info: Original code line: 198
+2025-03-01T13:51:19.192Z info: Original code line: 199
+2025-03-01T13:51:19.192Z info: Original code line: 200
+2025-03-01T13:51:19.192Z info: Original code line: 201
+2025-03-01T13:51:19.192Z info: Original code line: 202
+2025-03-01T13:51:19.193Z info: Original code line: 203
+2025-03-01T13:51:19.193Z info: Original code line: 204
+2025-03-01T13:51:19.193Z info: Original code line: 205
+2025-03-01T13:51:19.193Z info: Original code line: 206
+2025-03-01T13:51:19.193Z info: Original code line: 207
+2025-03-01T13:51:19.193Z info: Original code line: 208
+2025-03-01T13:51:19.193Z info: Original code line: 209
+2025-03-01T13:51:19.193Z info: Original code line: 210
+2025-03-01T13:51:19.193Z info: Original code line: 211
+2025-03-01T13:51:19.193Z info: Original code line: 212
+2025-03-01T13:51:19.193Z info: Original code line: 213
+2025-03-01T13:51:19.193Z info: Original code line: 214
+2025-03-01T13:51:19.193Z info: Original code line: 215
+2025-03-01T13:51:19.194Z info: Original code line: 216
+2025-03-01T13:51:19.194Z info: Original code line: 217
+2025-03-01T13:51:19.194Z info: Original code line: 218
+2025-03-01T13:51:19.194Z info: Original code line: 219
+2025-03-01T13:51:19.194Z info: Original code line: 220
+2025-03-01T13:51:19.194Z info: Original code line: 221
+2025-03-01T13:51:19.194Z info: Original code line: 222
+2025-03-01T13:51:19.194Z info: Original code line: 223
+2025-03-01T13:51:19.194Z info: Original code line: 224
+2025-03-01T13:51:19.194Z info: Original code line: 225
+2025-03-01T13:51:19.194Z info: Original code line: 226
+2025-03-01T13:51:19.194Z info: Original code line: 227
+2025-03-01T13:51:19.194Z info: Original code line: 228
+2025-03-01T13:51:19.194Z info: Original code line: 229
+2025-03-01T13:51:19.194Z info: Original code line: 230
+2025-03-01T13:51:19.194Z info: Original code line: 231
+2025-03-01T13:51:19.194Z info: Original code line: 232
+2025-03-01T13:51:19.194Z info: Original code line: 233
+2025-03-01T13:51:19.195Z info: Original code line: 234
+2025-03-01T13:51:19.195Z info: Original code line: 235
+2025-03-01T13:51:19.195Z info: Original code line: 236
+2025-03-01T13:51:19.195Z info: Original code line: 237
+2025-03-01T13:51:19.195Z info: Original code line: 238
+2025-03-01T13:51:19.195Z info: Original code line: 239
+2025-03-01T13:51:19.195Z info: Original code line: 240
+2025-03-01T13:51:19.195Z info: Original code line: 241
+2025-03-01T13:51:19.195Z info: Original code line: 242
+2025-03-01T13:51:19.195Z info: Original code line: 243
+2025-03-01T13:51:19.195Z info: Original code line: 244
+2025-03-01T13:51:19.195Z info: Original code line: 245
+2025-03-01T13:51:19.195Z info: Original code line: 246
+2025-03-01T13:51:19.195Z info: Original code line: 247
+2025-03-01T13:51:19.195Z info: Original code line: 248
+2025-03-01T13:51:19.195Z info: Original code line: 249
+2025-03-01T13:51:19.195Z info: Original code line: 250
+2025-03-01T13:51:19.195Z info: Original code line: 251
+2025-03-01T13:51:19.195Z info: Original code line: 252
+2025-03-01T13:51:19.196Z info: Original code line: 253
+2025-03-01T13:51:19.196Z info: Original code line: 254
+2025-03-01T13:51:19.196Z info: Original code line: 255
+2025-03-01T13:51:19.196Z info: Original code line: 256
+2025-03-01T13:51:19.196Z info: Original code line: 257
+2025-03-01T13:51:19.196Z info: Original code line: 258
+2025-03-01T13:51:19.196Z info: Original code line: 259
+2025-03-01T13:51:19.196Z info: Original code line: 260
+2025-03-01T13:51:19.196Z info: Original code line: 261
+2025-03-01T13:51:19.196Z info: Original code line: 262
+2025-03-01T13:51:19.196Z info: Original code line: 263
+2025-03-01T13:51:19.196Z info: Original code line: 264
+2025-03-01T13:51:19.196Z info: Original code line: 265
+2025-03-01T13:51:19.197Z info: Original code line: 266
+2025-03-01T13:51:19.197Z info: Original code line: 267
+2025-03-01T13:51:19.197Z info: Original code line: 268
+2025-03-01T13:51:19.197Z info: Original code line: 269
+2025-03-01T13:51:19.197Z info: Original code line: 270
+2025-03-01T13:51:19.197Z info: Original code line: 271
+2025-03-01T13:51:19.197Z info: Original code line: 272
+2025-03-01T13:51:19.197Z info: Original code line: 273
+2025-03-01T13:51:19.197Z info: Original code line: 274
+2025-03-01T13:51:19.197Z info: Original code line: 275
+2025-03-01T13:51:19.197Z info: Original code line: 276
+2025-03-01T13:51:19.197Z info: Original code line: 277
+2025-03-01T13:51:19.197Z info: Original code line: 278
+2025-03-01T13:51:19.197Z info: Original code line: 279
+2025-03-01T13:51:19.197Z info: Original code line: 280
+2025-03-01T13:51:19.197Z info: Original code line: 281
+2025-03-01T13:51:19.197Z info: Original code line: 282
+2025-03-01T13:51:19.198Z info: Original code line: 283
+2025-03-01T13:51:19.198Z info: Original code line: 284
+2025-03-01T13:51:19.198Z info: Original code line: 285
+2025-03-01T13:51:19.198Z info: Original code line: 286
+2025-03-01T13:51:19.198Z info: Original code line: 287
+2025-03-01T13:51:19.198Z info: Original code line: 288
+2025-03-01T13:51:19.198Z info: Original code line: 289
+2025-03-01T13:51:19.198Z info: Original code line: 290
+2025-03-01T13:51:19.198Z info: Original code line: 291
+2025-03-01T13:51:19.198Z info: Original code line: 292
+2025-03-01T13:51:19.198Z info: Original code line: 293
+2025-03-01T13:51:19.198Z info: Original code line: 294
+2025-03-01T13:51:19.198Z info: Original code line: 295
+2025-03-01T13:51:19.198Z info: Original code line: 296
+2025-03-01T13:51:19.198Z info: Original code line: 297
+2025-03-01T13:51:19.198Z info: Original code line: 298
+2025-03-01T13:51:19.198Z info: Original code line: 299
+2025-03-01T13:51:19.198Z info: Original code line: 300
+2025-03-01T13:51:19.198Z info: Original code line: 301
+2025-03-01T13:51:19.199Z info: Original code line: 302
+2025-03-01T13:51:19.199Z info: Original code line: 303
+2025-03-01T13:51:19.199Z info: Original code line: 304
+2025-03-01T13:51:19.199Z info: Original code line: 305
+2025-03-01T13:51:19.199Z info: Original code line: 306
+2025-03-01T13:51:19.199Z info: Original code line: 307
+2025-03-01T13:51:19.199Z info: Original code line: 308
+2025-03-01T13:51:19.199Z info: Original code line: 309
+2025-03-01T13:51:19.199Z info: Original code line: 310
+2025-03-01T13:51:19.199Z info: Original code line: 311
+2025-03-01T13:51:19.199Z info: Original code line: 312
+2025-03-01T13:51:19.199Z info: Original code line: 313
+2025-03-01T13:51:19.199Z info: Original code line: 314
+2025-03-01T13:51:19.199Z info: Original code line: 315
+2025-03-01T13:51:19.199Z info: Original code line: 316
+2025-03-01T13:51:19.199Z info: Original code line: 317
+2025-03-01T13:51:19.199Z info: Original code line: 318
+2025-03-01T13:51:19.199Z info: Original code line: 319
+2025-03-01T13:51:19.199Z info: Original code line: 320
+2025-03-01T13:51:19.199Z info: Original code line: 321
+2025-03-01T13:51:19.199Z info: Original code line: 322
+2025-03-01T13:51:19.200Z info: Original code line: 323
+2025-03-01T13:51:19.200Z info: Original code line: 324
+2025-03-01T13:51:19.200Z info: Original code line: 325
+2025-03-01T13:51:19.200Z info: Original code line: 326
+2025-03-01T13:51:19.200Z info: Original code line: 327
+2025-03-01T13:51:19.200Z info: Original code line: 328
+2025-03-01T13:51:19.200Z info: Original code line: 329
+2025-03-01T13:51:19.200Z info: Original code line: 330
+2025-03-01T13:51:19.200Z info: Original code line: 331
+2025-03-01T13:51:19.200Z info: Original code line: 332
+2025-03-01T13:51:19.200Z info: Original code line: 333
+2025-03-01T13:51:19.200Z info: Original code line: 334
+2025-03-01T13:51:19.200Z info: Original code line: 335
+2025-03-01T13:51:19.200Z info: Original code line: 336
+2025-03-01T13:51:19.200Z info: Original code line: 337
+2025-03-01T13:51:19.200Z info: Original code line: 338
+2025-03-01T13:51:19.200Z info: Original code line: 339
+2025-03-01T13:51:19.200Z info: Original code line: 340
+2025-03-01T13:51:19.200Z info: Original code line: 341
+2025-03-01T13:51:19.200Z info: Original code line: 342
+2025-03-01T13:51:19.200Z info: Original code line: 343
+2025-03-01T13:51:19.201Z info: Original code line: 344
+2025-03-01T13:51:19.201Z info: Original code line: 345
+2025-03-01T13:51:19.201Z info: Original code line: 346
+2025-03-01T13:51:19.201Z info: Original code line: 347
+2025-03-01T13:51:19.201Z info: Original code line: 348
+2025-03-01T13:51:19.201Z info: Original code line: 349
+2025-03-01T13:51:19.201Z info: Original code line: 350
+2025-03-01T13:51:19.201Z info: Original code line: 351
+2025-03-01T13:51:19.201Z info: Original code line: 352
+2025-03-01T13:51:19.201Z info: Original code line: 353
+2025-03-01T13:51:19.201Z info: Original code line: 354
+2025-03-01T13:51:19.201Z info: Original code line: 355
+2025-03-01T13:51:19.201Z info: Original code line: 356
+2025-03-01T13:51:19.201Z info: Original code line: 357
+2025-03-01T13:51:19.201Z info: Original code line: 358
+2025-03-01T13:51:19.201Z info: Original code line: 359
+2025-03-01T13:51:19.201Z info: Original code line: 360
+2025-03-01T13:51:19.201Z info: Original code line: 361
+2025-03-01T13:51:19.201Z info: Original code line: 362
+2025-03-01T13:51:19.201Z info: Original code line: 363
+2025-03-01T13:51:19.202Z info: Original code line: 364
+2025-03-01T13:51:19.202Z info: Original code line: 365
+2025-03-01T13:51:19.202Z info: Original code line: 366
+2025-03-01T13:51:19.202Z info: Original code line: 367
+2025-03-01T13:51:19.202Z info: Original code line: 368
+2025-03-01T13:51:19.202Z info: Original code line: 369
+2025-03-01T13:51:19.202Z info: Original code line: 370
+2025-03-01T13:51:19.202Z info: Original code line: 371
+2025-03-01T13:51:19.202Z info: Original code line: 372
+2025-03-01T13:51:19.202Z info: Original code line: 373
+2025-03-01T13:51:19.202Z info: Original code line: 374
+2025-03-01T13:51:19.202Z info: Original code line: 375
+2025-03-01T13:51:19.202Z info: Original code line: 376
+2025-03-01T13:51:19.202Z info: Original code line: 377
+2025-03-01T13:51:19.202Z info: Original code line: 378
+2025-03-01T13:51:19.202Z info: Original code line: 379
+2025-03-01T13:51:19.202Z info: Original code line: 380
+2025-03-01T13:51:19.202Z info: Original code line: 381
+2025-03-01T13:51:19.202Z info: Original code line: 382
+2025-03-01T13:51:19.202Z info: Original code line: 383
+2025-03-01T13:51:19.203Z info: Original code line: 384
+2025-03-01T13:51:19.203Z info: Original code line: 385
+2025-03-01T13:51:19.203Z info: Original code line: 386
+2025-03-01T13:51:19.203Z info: Original code line: 387
+2025-03-01T13:51:19.203Z info: Original code line: 388
+2025-03-01T13:51:19.203Z info: Original code line: 389
+2025-03-01T13:51:19.203Z info: Original code line: 390
+2025-03-01T13:51:19.203Z info: Original code line: 391
+2025-03-01T13:51:19.203Z info: Original code line: 392
+2025-03-01T13:51:19.203Z info: Original code line: 393
+2025-03-01T13:51:19.203Z info: Original code line: 394
+2025-03-01T13:51:19.203Z info: Original code line: 395
+2025-03-01T13:51:19.203Z info: Original code line: 396
+2025-03-01T13:51:19.203Z info: Original code line: 397
+2025-03-01T13:51:19.203Z info: Original code line: 398
+2025-03-01T13:51:19.203Z info: Original code line: 399
+2025-03-01T13:51:19.203Z info: Additional original logic line: 400
+2025-03-01T13:51:19.203Z info: Additional original logic line: 401
+2025-03-01T13:51:19.203Z info: Additional original logic line: 402
+2025-03-01T13:51:19.203Z info: Additional original logic line: 403
+2025-03-01T13:51:19.203Z info: Additional original logic line: 404
+2025-03-01T13:51:19.204Z info: Additional original logic line: 405
+2025-03-01T13:51:19.204Z info: Additional original logic line: 406
+2025-03-01T13:51:19.204Z info: Additional original logic line: 407
+2025-03-01T13:51:19.204Z info: Additional original logic line: 408
+2025-03-01T13:51:19.204Z info: Additional original logic line: 409
+2025-03-01T13:51:19.204Z info: Additional original logic line: 410
+2025-03-01T13:51:19.204Z info: Additional original logic line: 411
+2025-03-01T13:51:19.204Z info: Additional original logic line: 412
+2025-03-01T13:51:19.204Z info: Additional original logic line: 413
+2025-03-01T13:51:19.204Z info: Additional original logic line: 414
+2025-03-01T13:51:19.204Z info: Additional original logic line: 415
+2025-03-01T13:51:19.204Z info: Additional original logic line: 416
+2025-03-01T13:51:19.204Z info: Additional original logic line: 417
+2025-03-01T13:51:19.204Z info: Additional original logic line: 418
+2025-03-01T13:51:19.204Z info: Additional original logic line: 419
+2025-03-01T13:51:19.204Z info: Additional original logic line: 420
+2025-03-01T13:51:19.204Z info: Additional original logic line: 421
+2025-03-01T13:51:19.204Z info: Additional original logic line: 422
+2025-03-01T13:51:19.204Z info: Additional original logic line: 423
+2025-03-01T13:51:19.204Z info: Additional original logic line: 424
+2025-03-01T13:51:19.204Z info: Additional original logic line: 425
+2025-03-01T13:51:19.205Z info: Additional original logic line: 426
+2025-03-01T13:51:19.205Z info: Additional original logic line: 427
+2025-03-01T13:51:19.205Z info: Additional original logic line: 428
+2025-03-01T13:51:19.205Z info: Additional original logic line: 429
+2025-03-01T13:51:19.205Z info: Additional original logic line: 430
+2025-03-01T13:51:19.205Z info: Additional original logic line: 431
+2025-03-01T13:51:19.205Z info: Additional original logic line: 432
+2025-03-01T13:51:19.205Z info: Additional original logic line: 433
+2025-03-01T13:51:19.205Z info: Additional original logic line: 434
+2025-03-01T13:51:19.205Z info: Additional original logic line: 435
+2025-03-01T13:51:19.205Z info: Additional original logic line: 436
+2025-03-01T13:51:19.205Z info: Additional original logic line: 437
+2025-03-01T13:51:19.205Z info: Additional original logic line: 438
+2025-03-01T13:51:19.205Z info: Additional original logic line: 439
+2025-03-01T13:51:19.205Z info: Additional original logic line: 440
+2025-03-01T13:51:19.205Z info: Additional original logic line: 441
+2025-03-01T13:51:19.205Z info: Additional original logic line: 442
+2025-03-01T13:51:19.205Z info: Additional original logic line: 443
+2025-03-01T13:51:19.205Z info: Additional original logic line: 444
+2025-03-01T13:51:19.205Z info: Additional original logic line: 445
+2025-03-01T13:51:19.205Z info: Additional original logic line: 446
+2025-03-01T13:51:19.206Z info: Additional original logic line: 447
+2025-03-01T13:51:19.206Z info: Additional original logic line: 448
+2025-03-01T13:51:19.206Z info: Additional original logic line: 449
+2025-03-01T13:51:19.206Z info: Additional original logic line: 450
+2025-03-01T13:51:19.206Z info: Additional original logic line: 451
+2025-03-01T13:51:19.206Z info: Additional original logic line: 452
+2025-03-01T13:51:19.206Z info: Additional original logic line: 453
+2025-03-01T13:51:19.206Z info: Additional original logic line: 454
+2025-03-01T13:51:19.206Z info: Additional original logic line: 455
+2025-03-01T13:51:19.206Z info: Additional original logic line: 456
+2025-03-01T13:51:19.206Z info: Additional original logic line: 457
+2025-03-01T13:51:19.206Z info: Additional original logic line: 458
+2025-03-01T13:51:19.206Z info: Additional original logic line: 459
+2025-03-01T13:51:19.206Z info: Additional original logic line: 460
+2025-03-01T13:51:19.206Z info: Additional original logic line: 461
+2025-03-01T13:51:19.206Z info: Additional original logic line: 462
+2025-03-01T13:51:19.206Z info: Additional original logic line: 463
+2025-03-01T13:51:19.206Z info: Additional original logic line: 464
+2025-03-01T13:51:19.206Z info: Additional original logic line: 465
+2025-03-01T13:51:19.206Z info: Additional original logic line: 466
+2025-03-01T13:51:19.206Z info: Additional original logic line: 467
+2025-03-01T13:51:19.206Z info: Additional original logic line: 468
+2025-03-01T13:51:19.207Z info: Additional original logic line: 469
+2025-03-01T13:51:19.207Z info: Additional original logic line: 470
+2025-03-01T13:51:19.207Z info: Additional original logic line: 471
+2025-03-01T13:51:19.207Z info: Additional original logic line: 472
+2025-03-01T13:51:19.207Z info: Additional original logic line: 473
+2025-03-01T13:51:19.207Z info: Additional original logic line: 474
+2025-03-01T13:51:19.207Z info: Additional original logic line: 475
+2025-03-01T13:51:19.207Z info: Additional original logic line: 476
+2025-03-01T13:51:19.207Z info: Additional original logic line: 477
+2025-03-01T13:51:19.207Z info: Additional original logic line: 478
+2025-03-01T13:51:19.207Z info: Additional original logic line: 479
+2025-03-01T13:51:19.207Z info: Additional original logic line: 480
+2025-03-01T13:51:19.207Z info: Additional original logic line: 481
+2025-03-01T13:51:19.207Z info: Additional original logic line: 482
+2025-03-01T13:51:19.207Z info: Additional original logic line: 483
+2025-03-01T13:51:19.207Z info: Additional original logic line: 484
+2025-03-01T13:51:19.207Z info: Additional original logic line: 485
+2025-03-01T13:51:19.207Z info: Additional original logic line: 486
+2025-03-01T13:51:19.207Z info: Additional original logic line: 487
+2025-03-01T13:51:19.207Z info: Additional original logic line: 488
+2025-03-01T13:51:19.207Z info: Additional original logic line: 489
+2025-03-01T13:51:19.208Z info: Additional original logic line: 490
+2025-03-01T13:51:19.208Z info: Additional original logic line: 491
+2025-03-01T13:51:19.208Z info: Additional original logic line: 492
+2025-03-01T13:51:19.208Z info: Additional original logic line: 493
+2025-03-01T13:51:19.208Z info: Additional original logic line: 494
+2025-03-01T13:51:19.208Z info: Additional original logic line: 495
+2025-03-01T13:51:19.208Z info: Additional original logic line: 496
+2025-03-01T13:51:19.208Z info: Additional original logic line: 497
+2025-03-01T13:51:19.208Z info: Additional original logic line: 498
+2025-03-01T13:51:19.208Z info: Additional original logic line: 499
+2025-03-01T13:51:19.210Z info: End-of-file original placeholder: 500
+2025-03-01T13:51:19.210Z info: End-of-file original placeholder: 501
+2025-03-01T13:51:19.210Z info: End-of-file original placeholder: 502
+2025-03-01T13:51:19.210Z info: End-of-file original placeholder: 503
+2025-03-01T13:51:19.210Z info: End-of-file original placeholder: 504
+2025-03-01T13:51:19.210Z info: End-of-file original placeholder: 505
+2025-03-01T13:51:19.210Z info: End-of-file original placeholder: 506
+2025-03-01T13:51:19.210Z info: End-of-file original placeholder: 507
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 508
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 509
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 510
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 511
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 512
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 513
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 514
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 515
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 516
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 517
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 518
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 519
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 520
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 521
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 522
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 523
+2025-03-01T13:51:19.211Z info: End-of-file original placeholder: 524
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 525
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 526
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 527
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 528
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 529
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 530
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 531
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 532
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 533
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 534
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 535
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 536
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 537
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 538
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 539
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 540
+2025-03-01T13:51:19.212Z info: End-of-file original placeholder: 541
+2025-03-01T13:51:19.213Z info: End-of-file original placeholder: 542
+2025-03-01T13:51:19.213Z info: End-of-file original placeholder: 543
+2025-03-01T13:51:19.213Z info: End-of-file original placeholder: 544
+2025-03-01T13:51:19.213Z info: End-of-file original placeholder: 545
+2025-03-01T13:51:19.213Z info: End-of-file original placeholder: 546
+2025-03-01T13:51:19.213Z info: End-of-file original placeholder: 547
+2025-03-01T13:51:19.213Z info: End-of-file original placeholder: 548
+2025-03-01T13:51:19.213Z info: End-of-file original placeholder: 549
+2025-03-01T13:51:19.215Z info: Server is running on port 5000
+2025-03-01T13:51:19.215Z info: Initializing Trading Bot with enhanced features
+2025-03-01T13:51:19.215Z warn: Binance.US API keys not configured.
+2025-03-01T13:51:19.215Z warn: Crypto.com API keys not configured.
+2025-03-01T13:51:19.215Z info: Infura credentials not provided, skipping Infura initialization.
+2025-03-01T13:51:49.217Z info: Performing periodic market analysis...
+2025-03-01T13:52:19.217Z info: Scheduled trade execution triggered.
+2025-03-01T13:52:19.264Z info: Performing periodic market analysis...
+2025-03-01T13:52:49.272Z info: Performing periodic market analysis...
+2025-03-01T13:53:19.222Z info: Scheduled trade execution triggered.
+2025-03-01T13:53:19.271Z info: Performing periodic market analysis...
+2025-03-01T13:53:49.287Z info: Performing periodic market analysis...
+2025-03-01T13:54:24.768Z info: Original code line: 0
+2025-03-01T13:54:24.770Z info: Original code line: 1
+2025-03-01T13:54:24.770Z info: Original code line: 2
+2025-03-01T13:54:24.770Z info: Original code line: 3
+2025-03-01T13:54:24.771Z info: Original code line: 4
+2025-03-01T13:54:24.771Z info: Original code line: 5
+2025-03-01T13:54:24.771Z info: Original code line: 6
+2025-03-01T13:54:24.771Z info: Original code line: 7
+2025-03-01T13:54:24.771Z info: Original code line: 8
+2025-03-01T13:54:24.771Z info: Original code line: 9
+2025-03-01T13:54:24.772Z info: Original code line: 10
+2025-03-01T13:54:24.772Z info: Original code line: 11
+2025-03-01T13:54:24.772Z info: Original code line: 12
+2025-03-01T13:54:24.772Z info: Original code line: 13
+2025-03-01T13:54:24.772Z info: Original code line: 14
+2025-03-01T13:54:24.772Z info: Original code line: 15
+2025-03-01T13:54:24.772Z info: Original code line: 16
+2025-03-01T13:54:24.772Z info: Original code line: 17
+2025-03-01T13:54:24.772Z info: Original code line: 18
+2025-03-01T13:54:24.772Z info: Original code line: 19
+2025-03-01T13:54:24.772Z info: Original code line: 20
+2025-03-01T13:54:24.772Z info: Original code line: 21
+2025-03-01T13:54:24.772Z info: Original code line: 22
+2025-03-01T13:54:24.772Z info: Original code line: 23
+2025-03-01T13:54:24.772Z info: Original code line: 24
+2025-03-01T13:54:24.772Z info: Original code line: 25
+2025-03-01T13:54:24.773Z info: Original code line: 26
+2025-03-01T13:54:24.773Z info: Original code line: 27
+2025-03-01T13:54:24.773Z info: Original code line: 28
+2025-03-01T13:54:24.773Z info: Original code line: 29
+2025-03-01T13:54:24.773Z info: Original code line: 30
+2025-03-01T13:54:24.773Z info: Original code line: 31
+2025-03-01T13:54:24.773Z info: Original code line: 32
+2025-03-01T13:54:24.773Z info: Original code line: 33
+2025-03-01T13:54:24.773Z info: Original code line: 34
+2025-03-01T13:54:24.773Z info: Original code line: 35
+2025-03-01T13:54:24.773Z info: Original code line: 36
+2025-03-01T13:54:24.773Z info: Original code line: 37
+2025-03-01T13:54:24.773Z info: Original code line: 38
+2025-03-01T13:54:24.773Z info: Original code line: 39
+2025-03-01T13:54:24.773Z info: Original code line: 40
+2025-03-01T13:54:24.773Z info: Original code line: 41
+2025-03-01T13:54:24.773Z info: Original code line: 42
+2025-03-01T13:54:24.774Z info: Original code line: 43
+2025-03-01T13:54:24.774Z info: Original code line: 44
+2025-03-01T13:54:24.774Z info: Original code line: 45
+2025-03-01T13:54:24.774Z info: Original code line: 46
+2025-03-01T13:54:24.774Z info: Original code line: 47
+2025-03-01T13:54:24.774Z info: Original code line: 48
+2025-03-01T13:54:24.774Z info: Original code line: 49
+2025-03-01T13:54:24.774Z info: Original code line: 50
+2025-03-01T13:54:24.774Z info: Original code line: 51
+2025-03-01T13:54:24.774Z info: Original code line: 52
+2025-03-01T13:54:24.774Z info: Original code line: 53
+2025-03-01T13:54:24.774Z info: Original code line: 54
+2025-03-01T13:54:24.774Z info: Original code line: 55
+2025-03-01T13:54:24.774Z info: Original code line: 56
+2025-03-01T13:54:24.774Z info: Original code line: 57
+2025-03-01T13:54:24.774Z info: Original code line: 58
+2025-03-01T13:54:24.774Z info: Original code line: 59
+2025-03-01T13:54:24.774Z info: Original code line: 60
+2025-03-01T13:54:24.774Z info: Original code line: 61
+2025-03-01T13:54:24.775Z info: Original code line: 62
+2025-03-01T13:54:24.775Z info: Original code line: 63
+2025-03-01T13:54:24.775Z info: Original code line: 64
+2025-03-01T13:54:24.775Z info: Original code line: 65
+2025-03-01T13:54:24.775Z info: Original code line: 66
+2025-03-01T13:54:24.775Z info: Original code line: 67
+2025-03-01T13:54:24.775Z info: Original code line: 68
+2025-03-01T13:54:24.775Z info: Original code line: 69
+2025-03-01T13:54:24.775Z info: Original code line: 70
+2025-03-01T13:54:24.775Z info: Original code line: 71
+2025-03-01T13:54:24.775Z info: Original code line: 72
+2025-03-01T13:54:24.775Z info: Original code line: 73
+2025-03-01T13:54:24.775Z info: Original code line: 74
+2025-03-01T13:54:24.775Z info: Original code line: 75
+2025-03-01T13:54:24.775Z info: Original code line: 76
+2025-03-01T13:54:24.775Z info: Original code line: 77
+2025-03-01T13:54:24.775Z info: Original code line: 78
+2025-03-01T13:54:24.775Z info: Original code line: 79
+2025-03-01T13:54:24.776Z info: Original code line: 80
+2025-03-01T13:54:24.776Z info: Original code line: 81
+2025-03-01T13:54:24.776Z info: Original code line: 82
+2025-03-01T13:54:24.776Z info: Original code line: 83
+2025-03-01T13:54:24.776Z info: Original code line: 84
+2025-03-01T13:54:24.776Z info: Original code line: 85
+2025-03-01T13:54:24.776Z info: Original code line: 86
+2025-03-01T13:54:24.776Z info: Original code line: 87
+2025-03-01T13:54:24.776Z info: Original code line: 88
+2025-03-01T13:54:24.776Z info: Original code line: 89
+2025-03-01T13:54:24.776Z info: Original code line: 90
+2025-03-01T13:54:24.776Z info: Original code line: 91
+2025-03-01T13:54:24.776Z info: Original code line: 92
+2025-03-01T13:54:24.776Z info: Original code line: 93
+2025-03-01T13:54:24.776Z info: Original code line: 94
+2025-03-01T13:54:24.776Z info: Original code line: 95
+2025-03-01T13:54:24.776Z info: Original code line: 96
+2025-03-01T13:54:24.776Z info: Original code line: 97
+2025-03-01T13:54:24.777Z info: Original code line: 98
+2025-03-01T13:54:24.777Z info: Original code line: 99
+2025-03-01T13:54:24.777Z info: Original code line: 100
+2025-03-01T13:54:24.777Z info: Original code line: 101
+2025-03-01T13:54:24.777Z info: Original code line: 102
+2025-03-01T13:54:24.777Z info: Original code line: 103
+2025-03-01T13:54:24.777Z info: Original code line: 104
+2025-03-01T13:54:24.777Z info: Original code line: 105
+2025-03-01T13:54:24.777Z info: Original code line: 106
+2025-03-01T13:54:24.778Z info: Original code line: 107
+2025-03-01T13:54:24.778Z info: Original code line: 108
+2025-03-01T13:54:24.778Z info: Original code line: 109
+2025-03-01T13:54:24.778Z info: Original code line: 110
+2025-03-01T13:54:24.778Z info: Original code line: 111
+2025-03-01T13:54:24.778Z info: Original code line: 112
+2025-03-01T13:54:24.778Z info: Original code line: 113
+2025-03-01T13:54:24.778Z info: Original code line: 114
+2025-03-01T13:54:24.778Z info: Original code line: 115
+2025-03-01T13:54:24.778Z info: Original code line: 116
+2025-03-01T13:54:24.778Z info: Original code line: 117
+2025-03-01T13:54:24.778Z info: Original code line: 118
+2025-03-01T13:54:24.778Z info: Original code line: 119
+2025-03-01T13:54:24.778Z info: Original code line: 120
+2025-03-01T13:54:24.778Z info: Original code line: 121
+2025-03-01T13:54:24.778Z info: Original code line: 122
+2025-03-01T13:54:24.778Z info: Original code line: 123
+2025-03-01T13:54:24.779Z info: Original code line: 124
+2025-03-01T13:54:24.779Z info: Original code line: 125
+2025-03-01T13:54:24.779Z info: Original code line: 126
+2025-03-01T13:54:24.779Z info: Original code line: 127
+2025-03-01T13:54:24.779Z info: Original code line: 128
+2025-03-01T13:54:24.779Z info: Original code line: 129
+2025-03-01T13:54:24.779Z info: Original code line: 130
+2025-03-01T13:54:24.779Z info: Original code line: 131
+2025-03-01T13:54:24.779Z info: Original code line: 132
+2025-03-01T13:54:24.779Z info: Original code line: 133
+2025-03-01T13:54:24.779Z info: Original code line: 134
+2025-03-01T13:54:24.779Z info: Original code line: 135
+2025-03-01T13:54:24.779Z info: Original code line: 136
+2025-03-01T13:54:24.779Z info: Original code line: 137
+2025-03-01T13:54:24.779Z info: Original code line: 138
+2025-03-01T13:54:24.779Z info: Original code line: 139
+2025-03-01T13:54:24.779Z info: Original code line: 140
+2025-03-01T13:54:24.779Z info: Original code line: 141
+2025-03-01T13:54:24.780Z info: Original code line: 142
+2025-03-01T13:54:24.780Z info: Original code line: 143
+2025-03-01T13:54:24.780Z info: Original code line: 144
+2025-03-01T13:54:24.780Z info: Original code line: 145
+2025-03-01T13:54:24.780Z info: Original code line: 146
+2025-03-01T13:54:24.780Z info: Original code line: 147
+2025-03-01T13:54:24.780Z info: Original code line: 148
+2025-03-01T13:54:24.780Z info: Original code line: 149
+2025-03-01T13:54:24.780Z info: Original code line: 150
+2025-03-01T13:54:24.780Z info: Original code line: 151
+2025-03-01T13:54:24.780Z info: Original code line: 152
+2025-03-01T13:54:24.780Z info: Original code line: 153
+2025-03-01T13:54:24.780Z info: Original code line: 154
+2025-03-01T13:54:24.780Z info: Original code line: 155
+2025-03-01T13:54:24.780Z info: Original code line: 156
+2025-03-01T13:54:24.780Z info: Original code line: 157
+2025-03-01T13:54:24.780Z info: Original code line: 158
+2025-03-01T13:54:24.780Z info: Original code line: 159
+2025-03-01T13:54:24.780Z info: Original code line: 160
+2025-03-01T13:54:24.781Z info: Original code line: 161
+2025-03-01T13:54:24.781Z info: Original code line: 162
+2025-03-01T13:54:24.781Z info: Original code line: 163
+2025-03-01T13:54:24.781Z info: Original code line: 164
+2025-03-01T13:54:24.781Z info: Original code line: 165
+2025-03-01T13:54:24.781Z info: Original code line: 166
+2025-03-01T13:54:24.781Z info: Original code line: 167
+2025-03-01T13:54:24.781Z info: Original code line: 168
+2025-03-01T13:54:24.781Z info: Original code line: 169
+2025-03-01T13:54:24.781Z info: Original code line: 170
+2025-03-01T13:54:24.781Z info: Original code line: 171
+2025-03-01T13:54:24.781Z info: Original code line: 172
+2025-03-01T13:54:24.781Z info: Original code line: 173
+2025-03-01T13:54:24.782Z info: Original code line: 174
+2025-03-01T13:54:24.782Z info: Original code line: 175
+2025-03-01T13:54:24.782Z info: Original code line: 176
+2025-03-01T13:54:24.782Z info: Original code line: 177
+2025-03-01T13:54:24.782Z info: Original code line: 178
+2025-03-01T13:54:24.782Z info: Original code line: 179
+2025-03-01T13:54:24.782Z info: Original code line: 180
+2025-03-01T13:54:24.782Z info: Original code line: 181
+2025-03-01T13:54:24.782Z info: Original code line: 182
+2025-03-01T13:54:24.782Z info: Original code line: 183
+2025-03-01T13:54:24.782Z info: Original code line: 184
+2025-03-01T13:54:24.782Z info: Original code line: 185
+2025-03-01T13:54:24.782Z info: Original code line: 186
+2025-03-01T13:54:24.783Z info: Original code line: 187
+2025-03-01T13:54:24.783Z info: Original code line: 188
+2025-03-01T13:54:24.783Z info: Original code line: 189
+2025-03-01T13:54:24.783Z info: Original code line: 190
+2025-03-01T13:54:24.783Z info: Original code line: 191
+2025-03-01T13:54:24.783Z info: Original code line: 192
+2025-03-01T13:54:24.783Z info: Original code line: 193
+2025-03-01T13:54:24.783Z info: Original code line: 194
+2025-03-01T13:54:24.783Z info: Original code line: 195
+2025-03-01T13:54:24.783Z info: Original code line: 196
+2025-03-01T13:54:24.783Z info: Original code line: 197
+2025-03-01T13:54:24.783Z info: Original code line: 198
+2025-03-01T13:54:24.783Z info: Original code line: 199
+2025-03-01T13:54:24.783Z info: Original code line: 200
+2025-03-01T13:54:24.783Z info: Original code line: 201
+2025-03-01T13:54:24.783Z info: Original code line: 202
+2025-03-01T13:54:24.783Z info: Original code line: 203
+2025-03-01T13:54:24.783Z info: Original code line: 204
+2025-03-01T13:54:24.783Z info: Original code line: 205
+2025-03-01T13:54:24.783Z info: Original code line: 206
+2025-03-01T13:54:24.784Z info: Original code line: 207
+2025-03-01T13:54:24.784Z info: Original code line: 208
+2025-03-01T13:54:24.784Z info: Original code line: 209
+2025-03-01T13:54:24.784Z info: Original code line: 210
+2025-03-01T13:54:24.784Z info: Original code line: 211
+2025-03-01T13:54:24.784Z info: Original code line: 212
+2025-03-01T13:54:24.784Z info: Original code line: 213
+2025-03-01T13:54:24.784Z info: Original code line: 214
+2025-03-01T13:54:24.784Z info: Original code line: 215
+2025-03-01T13:54:24.784Z info: Original code line: 216
+2025-03-01T13:54:24.784Z info: Original code line: 217
+2025-03-01T13:54:24.784Z info: Original code line: 218
+2025-03-01T13:54:24.784Z info: Original code line: 219
+2025-03-01T13:54:24.784Z info: Original code line: 220
+2025-03-01T13:54:24.784Z info: Original code line: 221
+2025-03-01T13:54:24.784Z info: Original code line: 222
+2025-03-01T13:54:24.784Z info: Original code line: 223
+2025-03-01T13:54:24.784Z info: Original code line: 224
+2025-03-01T13:54:24.784Z info: Original code line: 225
+2025-03-01T13:54:24.784Z info: Original code line: 226
+2025-03-01T13:54:24.785Z info: Original code line: 227
+2025-03-01T13:54:24.785Z info: Original code line: 228
+2025-03-01T13:54:24.785Z info: Original code line: 229
+2025-03-01T13:54:24.785Z info: Original code line: 230
+2025-03-01T13:54:24.785Z info: Original code line: 231
+2025-03-01T13:54:24.785Z info: Original code line: 232
+2025-03-01T13:54:24.785Z info: Original code line: 233
+2025-03-01T13:54:24.785Z info: Original code line: 234
+2025-03-01T13:54:24.785Z info: Original code line: 235
+2025-03-01T13:54:24.785Z info: Original code line: 236
+2025-03-01T13:54:24.785Z info: Original code line: 237
+2025-03-01T13:54:24.785Z info: Original code line: 238
+2025-03-01T13:54:24.785Z info: Original code line: 239
+2025-03-01T13:54:24.785Z info: Original code line: 240
+2025-03-01T13:54:24.785Z info: Original code line: 241
+2025-03-01T13:54:24.785Z info: Original code line: 242
+2025-03-01T13:54:24.785Z info: Original code line: 243
+2025-03-01T13:54:24.785Z info: Original code line: 244
+2025-03-01T13:54:24.785Z info: Original code line: 245
+2025-03-01T13:54:24.785Z info: Original code line: 246
+2025-03-01T13:54:24.786Z info: Original code line: 247
+2025-03-01T13:54:24.786Z info: Original code line: 248
+2025-03-01T13:54:24.786Z info: Original code line: 249
+2025-03-01T13:54:24.786Z info: Original code line: 250
+2025-03-01T13:54:24.786Z info: Original code line: 251
+2025-03-01T13:54:24.786Z info: Original code line: 252
+2025-03-01T13:54:24.786Z info: Original code line: 253
+2025-03-01T13:54:24.786Z info: Original code line: 254
+2025-03-01T13:54:24.786Z info: Original code line: 255
+2025-03-01T13:54:24.786Z info: Original code line: 256
+2025-03-01T13:54:24.786Z info: Original code line: 257
+2025-03-01T13:54:24.786Z info: Original code line: 258
+2025-03-01T13:54:24.786Z info: Original code line: 259
+2025-03-01T13:54:24.786Z info: Original code line: 260
+2025-03-01T13:54:24.786Z info: Original code line: 261
+2025-03-01T13:54:24.786Z info: Original code line: 262
+2025-03-01T13:54:24.786Z info: Original code line: 263
+2025-03-01T13:54:24.786Z info: Original code line: 264
+2025-03-01T13:54:24.786Z info: Original code line: 265
+2025-03-01T13:54:24.786Z info: Original code line: 266
+2025-03-01T13:54:24.787Z info: Original code line: 267
+2025-03-01T13:54:24.787Z info: Original code line: 268
+2025-03-01T13:54:24.787Z info: Original code line: 269
+2025-03-01T13:54:24.787Z info: Original code line: 270
+2025-03-01T13:54:24.787Z info: Original code line: 271
+2025-03-01T13:54:24.787Z info: Original code line: 272
+2025-03-01T13:54:24.787Z info: Original code line: 273
+2025-03-01T13:54:24.787Z info: Original code line: 274
+2025-03-01T13:54:24.787Z info: Original code line: 275
+2025-03-01T13:54:24.787Z info: Original code line: 276
+2025-03-01T13:54:24.787Z info: Original code line: 277
+2025-03-01T13:54:24.787Z info: Original code line: 278
+2025-03-01T13:54:24.787Z info: Original code line: 279
+2025-03-01T13:54:24.787Z info: Original code line: 280
+2025-03-01T13:54:24.787Z info: Original code line: 281
+2025-03-01T13:54:24.787Z info: Original code line: 282
+2025-03-01T13:54:24.787Z info: Original code line: 283
+2025-03-01T13:54:24.787Z info: Original code line: 284
+2025-03-01T13:54:24.787Z info: Original code line: 285
+2025-03-01T13:54:24.787Z info: Original code line: 286
+2025-03-01T13:54:24.788Z info: Original code line: 287
+2025-03-01T13:54:24.788Z info: Original code line: 288
+2025-03-01T13:54:24.788Z info: Original code line: 289
+2025-03-01T13:54:24.788Z info: Original code line: 290
+2025-03-01T13:54:24.788Z info: Original code line: 291
+2025-03-01T13:54:24.788Z info: Original code line: 292
+2025-03-01T13:54:24.788Z info: Original code line: 293
+2025-03-01T13:54:24.788Z info: Original code line: 294
+2025-03-01T13:54:24.788Z info: Original code line: 295
+2025-03-01T13:54:24.788Z info: Original code line: 296
+2025-03-01T13:54:24.788Z info: Original code line: 297
+2025-03-01T13:54:24.788Z info: Original code line: 298
+2025-03-01T13:54:24.788Z info: Original code line: 299
+2025-03-01T13:54:24.788Z info: Original code line: 300
+2025-03-01T13:54:24.788Z info: Original code line: 301
+2025-03-01T13:54:24.788Z info: Original code line: 302
+2025-03-01T13:54:24.788Z info: Original code line: 303
+2025-03-01T13:54:24.788Z info: Original code line: 304
+2025-03-01T13:54:24.788Z info: Original code line: 305
+2025-03-01T13:54:24.788Z info: Original code line: 306
+2025-03-01T13:54:24.789Z info: Original code line: 307
+2025-03-01T13:54:24.789Z info: Original code line: 308
+2025-03-01T13:54:24.789Z info: Original code line: 309
+2025-03-01T13:54:24.789Z info: Original code line: 310
+2025-03-01T13:54:24.789Z info: Original code line: 311
+2025-03-01T13:54:24.789Z info: Original code line: 312
+2025-03-01T13:54:24.789Z info: Original code line: 313
+2025-03-01T13:54:24.789Z info: Original code line: 314
+2025-03-01T13:54:24.789Z info: Original code line: 315
+2025-03-01T13:54:24.789Z info: Original code line: 316
+2025-03-01T13:54:24.789Z info: Original code line: 317
+2025-03-01T13:54:24.789Z info: Original code line: 318
+2025-03-01T13:54:24.789Z info: Original code line: 319
+2025-03-01T13:54:24.789Z info: Original code line: 320
+2025-03-01T13:54:24.789Z info: Original code line: 321
+2025-03-01T13:54:24.789Z info: Original code line: 322
+2025-03-01T13:54:24.789Z info: Original code line: 323
+2025-03-01T13:54:24.789Z info: Original code line: 324
+2025-03-01T13:54:24.789Z info: Original code line: 325
+2025-03-01T13:54:24.789Z info: Original code line: 326
+2025-03-01T13:54:24.789Z info: Original code line: 327
+2025-03-01T13:54:24.789Z info: Original code line: 328
+2025-03-01T13:54:24.790Z info: Original code line: 329
+2025-03-01T13:54:24.790Z info: Original code line: 330
+2025-03-01T13:54:24.790Z info: Original code line: 331
+2025-03-01T13:54:24.790Z info: Original code line: 332
+2025-03-01T13:54:24.790Z info: Original code line: 333
+2025-03-01T13:54:24.790Z info: Original code line: 334
+2025-03-01T13:54:24.790Z info: Original code line: 335
+2025-03-01T13:54:24.790Z info: Original code line: 336
+2025-03-01T13:54:24.790Z info: Original code line: 337
+2025-03-01T13:54:24.790Z info: Original code line: 338
+2025-03-01T13:54:24.790Z info: Original code line: 339
+2025-03-01T13:54:24.790Z info: Original code line: 340
+2025-03-01T13:54:24.790Z info: Original code line: 341
+2025-03-01T13:54:24.790Z info: Original code line: 342
+2025-03-01T13:54:24.790Z info: Original code line: 343
+2025-03-01T13:54:24.790Z info: Original code line: 344
+2025-03-01T13:54:24.790Z info: Original code line: 345
+2025-03-01T13:54:24.790Z info: Original code line: 346
+2025-03-01T13:54:24.790Z info: Original code line: 347
+2025-03-01T13:54:24.790Z info: Original code line: 348
+2025-03-01T13:54:24.790Z info: Original code line: 349
+2025-03-01T13:54:24.790Z info: Original code line: 350
+2025-03-01T13:54:24.791Z info: Original code line: 351
+2025-03-01T13:54:24.791Z info: Original code line: 352
+2025-03-01T13:54:24.791Z info: Original code line: 353
+2025-03-01T13:54:24.791Z info: Original code line: 354
+2025-03-01T13:54:24.791Z info: Original code line: 355
+2025-03-01T13:54:24.791Z info: Original code line: 356
+2025-03-01T13:54:24.791Z info: Original code line: 357
+2025-03-01T13:54:24.791Z info: Original code line: 358
+2025-03-01T13:54:24.791Z info: Original code line: 359
+2025-03-01T13:54:24.791Z info: Original code line: 360
+2025-03-01T13:54:24.791Z info: Original code line: 361
+2025-03-01T13:54:24.791Z info: Original code line: 362
+2025-03-01T13:54:24.791Z info: Original code line: 363
+2025-03-01T13:54:24.791Z info: Original code line: 364
+2025-03-01T13:54:24.791Z info: Original code line: 365
+2025-03-01T13:54:24.791Z info: Original code line: 366
+2025-03-01T13:54:24.791Z info: Original code line: 367
+2025-03-01T13:54:24.791Z info: Original code line: 368
+2025-03-01T13:54:24.791Z info: Original code line: 369
+2025-03-01T13:54:24.791Z info: Original code line: 370
+2025-03-01T13:54:24.791Z info: Original code line: 371
+2025-03-01T13:54:24.791Z info: Original code line: 372
+2025-03-01T13:54:24.792Z info: Original code line: 373
+2025-03-01T13:54:24.792Z info: Original code line: 374
+2025-03-01T13:54:24.792Z info: Original code line: 375
+2025-03-01T13:54:24.792Z info: Original code line: 376
+2025-03-01T13:54:24.792Z info: Original code line: 377
+2025-03-01T13:54:24.792Z info: Original code line: 378
+2025-03-01T13:54:24.792Z info: Original code line: 379
+2025-03-01T13:54:24.792Z info: Original code line: 380
+2025-03-01T13:54:24.792Z info: Original code line: 381
+2025-03-01T13:54:24.792Z info: Original code line: 382
+2025-03-01T13:54:24.792Z info: Original code line: 383
+2025-03-01T13:54:24.792Z info: Original code line: 384
+2025-03-01T13:54:24.792Z info: Original code line: 385
+2025-03-01T13:54:24.792Z info: Original code line: 386
+2025-03-01T13:54:24.792Z info: Original code line: 387
+2025-03-01T13:54:24.792Z info: Original code line: 388
+2025-03-01T13:54:24.792Z info: Original code line: 389
+2025-03-01T13:54:24.792Z info: Original code line: 390
+2025-03-01T13:54:24.792Z info: Original code line: 391
+2025-03-01T13:54:24.792Z info: Original code line: 392
+2025-03-01T13:54:24.792Z info: Original code line: 393
+2025-03-01T13:54:24.793Z info: Original code line: 394
+2025-03-01T13:54:24.793Z info: Original code line: 395
+2025-03-01T13:54:24.793Z info: Original code line: 396
+2025-03-01T13:54:24.793Z info: Original code line: 397
+2025-03-01T13:54:24.793Z info: Original code line: 398
+2025-03-01T13:54:24.793Z info: Original code line: 399
+2025-03-01T13:54:24.793Z info: Additional original logic line: 400
+2025-03-01T13:54:24.793Z info: Additional original logic line: 401
+2025-03-01T13:54:24.793Z info: Additional original logic line: 402
+2025-03-01T13:54:24.793Z info: Additional original logic line: 403
+2025-03-01T13:54:24.793Z info: Additional original logic line: 404
+2025-03-01T13:54:24.793Z info: Additional original logic line: 405
+2025-03-01T13:54:24.793Z info: Additional original logic line: 406
+2025-03-01T13:54:24.793Z info: Additional original logic line: 407
+2025-03-01T13:54:24.793Z info: Additional original logic line: 408
+2025-03-01T13:54:24.793Z info: Additional original logic line: 409
+2025-03-01T13:54:24.793Z info: Additional original logic line: 410
+2025-03-01T13:54:24.793Z info: Additional original logic line: 411
+2025-03-01T13:54:24.793Z info: Additional original logic line: 412
+2025-03-01T13:54:24.794Z info: Additional original logic line: 413
+2025-03-01T13:54:24.794Z info: Additional original logic line: 414
+2025-03-01T13:54:24.794Z info: Additional original logic line: 415
+2025-03-01T13:54:24.794Z info: Additional original logic line: 416
+2025-03-01T13:54:24.794Z info: Additional original logic line: 417
+2025-03-01T13:54:24.794Z info: Additional original logic line: 418
+2025-03-01T13:54:24.794Z info: Additional original logic line: 419
+2025-03-01T13:54:24.794Z info: Additional original logic line: 420
+2025-03-01T13:54:24.794Z info: Additional original logic line: 421
+2025-03-01T13:54:24.794Z info: Additional original logic line: 422
+2025-03-01T13:54:24.794Z info: Additional original logic line: 423
+2025-03-01T13:54:24.794Z info: Additional original logic line: 424
+2025-03-01T13:54:24.794Z info: Additional original logic line: 425
+2025-03-01T13:54:24.794Z info: Additional original logic line: 426
+2025-03-01T13:54:24.794Z info: Additional original logic line: 427
+2025-03-01T13:54:24.794Z info: Additional original logic line: 428
+2025-03-01T13:54:24.794Z info: Additional original logic line: 429
+2025-03-01T13:54:24.794Z info: Additional original logic line: 430
+2025-03-01T13:54:24.795Z info: Additional original logic line: 431
+2025-03-01T13:54:24.795Z info: Additional original logic line: 432
+2025-03-01T13:54:24.795Z info: Additional original logic line: 433
+2025-03-01T13:54:24.795Z info: Additional original logic line: 434
+2025-03-01T13:54:24.795Z info: Additional original logic line: 435
+2025-03-01T13:54:24.795Z info: Additional original logic line: 436
+2025-03-01T13:54:24.795Z info: Additional original logic line: 437
+2025-03-01T13:54:24.795Z info: Additional original logic line: 438
+2025-03-01T13:54:24.795Z info: Additional original logic line: 439
+2025-03-01T13:54:24.795Z info: Additional original logic line: 440
+2025-03-01T13:54:24.795Z info: Additional original logic line: 441
+2025-03-01T13:54:24.795Z info: Additional original logic line: 442
+2025-03-01T13:54:24.795Z info: Additional original logic line: 443
+2025-03-01T13:54:24.795Z info: Additional original logic line: 444
+2025-03-01T13:54:24.795Z info: Additional original logic line: 445
+2025-03-01T13:54:24.795Z info: Additional original logic line: 446
+2025-03-01T13:54:24.795Z info: Additional original logic line: 447
+2025-03-01T13:54:24.795Z info: Additional original logic line: 448
+2025-03-01T13:54:24.796Z info: Additional original logic line: 449
+2025-03-01T13:54:24.796Z info: Additional original logic line: 450
+2025-03-01T13:54:24.796Z info: Additional original logic line: 451
+2025-03-01T13:54:24.796Z info: Additional original logic line: 452
+2025-03-01T13:54:24.796Z info: Additional original logic line: 453
+2025-03-01T13:54:24.796Z info: Additional original logic line: 454
+2025-03-01T13:54:24.796Z info: Additional original logic line: 455
+2025-03-01T13:54:24.796Z info: Additional original logic line: 456
+2025-03-01T13:54:24.796Z info: Additional original logic line: 457
+2025-03-01T13:54:24.796Z info: Additional original logic line: 458
+2025-03-01T13:54:24.796Z info: Additional original logic line: 459
+2025-03-01T13:54:24.796Z info: Additional original logic line: 460
+2025-03-01T13:54:24.796Z info: Additional original logic line: 461
+2025-03-01T13:54:24.796Z info: Additional original logic line: 462
+2025-03-01T13:54:24.796Z info: Additional original logic line: 463
+2025-03-01T13:54:24.796Z info: Additional original logic line: 464
+2025-03-01T13:54:24.796Z info: Additional original logic line: 465
+2025-03-01T13:54:24.796Z info: Additional original logic line: 466
+2025-03-01T13:54:24.796Z info: Additional original logic line: 467
+2025-03-01T13:54:24.796Z info: Additional original logic line: 468
+2025-03-01T13:54:24.796Z info: Additional original logic line: 469
+2025-03-01T13:54:24.797Z info: Additional original logic line: 470
+2025-03-01T13:54:24.797Z info: Additional original logic line: 471
+2025-03-01T13:54:24.797Z info: Additional original logic line: 472
+2025-03-01T13:54:24.797Z info: Additional original logic line: 473
+2025-03-01T13:54:24.797Z info: Additional original logic line: 474
+2025-03-01T13:54:24.797Z info: Additional original logic line: 475
+2025-03-01T13:54:24.797Z info: Additional original logic line: 476
+2025-03-01T13:54:24.797Z info: Additional original logic line: 477
+2025-03-01T13:54:24.797Z info: Additional original logic line: 478
+2025-03-01T13:54:24.797Z info: Additional original logic line: 479
+2025-03-01T13:54:24.797Z info: Additional original logic line: 480
+2025-03-01T13:54:24.797Z info: Additional original logic line: 481
+2025-03-01T13:54:24.797Z info: Additional original logic line: 482
+2025-03-01T13:54:24.797Z info: Additional original logic line: 483
+2025-03-01T13:54:24.797Z info: Additional original logic line: 484
+2025-03-01T13:54:24.797Z info: Additional original logic line: 485
+2025-03-01T13:54:24.797Z info: Additional original logic line: 486
+2025-03-01T13:54:24.797Z info: Additional original logic line: 487
+2025-03-01T13:54:24.797Z info: Additional original logic line: 488
+2025-03-01T13:54:24.798Z info: Additional original logic line: 489
+2025-03-01T13:54:24.798Z info: Additional original logic line: 490
+2025-03-01T13:54:24.798Z info: Additional original logic line: 491
+2025-03-01T13:54:24.798Z info: Additional original logic line: 492
+2025-03-01T13:54:24.798Z info: Additional original logic line: 493
+2025-03-01T13:54:24.798Z info: Additional original logic line: 494
+2025-03-01T13:54:24.798Z info: Additional original logic line: 495
+2025-03-01T13:54:24.798Z info: Additional original logic line: 496
+2025-03-01T13:54:24.798Z info: Additional original logic line: 497
+2025-03-01T13:54:24.798Z info: Additional original logic line: 498
+2025-03-01T13:54:24.798Z info: Additional original logic line: 499
+2025-03-01T13:54:24.800Z info: End-of-file original placeholder: 500
+2025-03-01T13:54:24.800Z info: End-of-file original placeholder: 501
+2025-03-01T13:54:24.800Z info: End-of-file original placeholder: 502
+2025-03-01T13:54:24.800Z info: End-of-file original placeholder: 503
+2025-03-01T13:54:24.800Z info: End-of-file original placeholder: 504
+2025-03-01T13:54:24.800Z info: End-of-file original placeholder: 505
+2025-03-01T13:54:24.800Z info: End-of-file original placeholder: 506
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 507
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 508
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 509
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 510
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 511
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 512
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 513
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 514
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 515
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 516
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 517
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 518
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 519
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 520
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 521
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 522
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 523
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 524
+2025-03-01T13:54:24.801Z info: End-of-file original placeholder: 525
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 526
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 527
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 528
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 529
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 530
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 531
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 532
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 533
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 534
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 535
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 536
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 537
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 538
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 539
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 540
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 541
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 542
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 543
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 544
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 545
+2025-03-01T13:54:24.802Z info: End-of-file original placeholder: 546
+2025-03-01T13:54:24.803Z info: End-of-file original placeholder: 547
+2025-03-01T13:54:24.803Z info: End-of-file original placeholder: 548
+2025-03-01T13:54:24.803Z info: End-of-file original placeholder: 549
+2025-03-01T13:54:24.804Z info: Server is running on port 5000
+2025-03-01T13:54:24.805Z info: Initializing Trading Bot with enhanced features
+2025-03-01T13:54:24.805Z warn: Binance.US API keys not configured.
+2025-03-01T13:54:24.805Z warn: Crypto.com API keys not configured.
+2025-03-01T13:54:24.805Z info: Infura credentials not provided, skipping Infura initialization.
+2025-03-01T13:54:54.818Z info: Performing periodic market analysis...
+2025-03-01T13:55:24.813Z info: Scheduled trade execution triggered.
+2025-03-01T13:55:24.859Z info: Performing periodic market analysis...
+2025-03-01T13:55:54.864Z info: Performing periodic market analysis...
+2025-03-01T13:56:24.816Z info: Scheduled trade execution triggered.
+2025-03-01T13:56:24.878Z info: Performing periodic market analysis...
+2025-03-01T13:56:54.888Z info: Performing periodic market analysis...
+2025-03-01T13:57:24.823Z info: Scheduled trade execution triggered.
+2025-03-01T13:57:24.901Z info: Performing periodic market analysis...
+2025-03-01T13:57:54.912Z info: Performing periodic market analysis...
+2025-03-01T13:58:24.825Z info: Scheduled trade execution triggered.
+2025-03-01T13:58:24.916Z info: Performing periodic market analysis...
+2025-03-01T13:58:54.928Z info: Performing periodic market analysis...
+2025-03-01T13:59:24.837Z info: Scheduled trade execution triggered.
+2025-03-01T13:59:24.931Z info: Performing periodic market analysis...
+2025-03-01T13:59:54.945Z info: Performing periodic market analysis...
+2025-03-01T14:00:24.849Z info: Scheduled trade execution triggered.
+2025-03-01T14:00:24.956Z info: Performing periodic market analysis...
+2025-03-01T14:01:49.810Z info: Original code line: 0
+2025-03-01T14:01:49.813Z info: Original code line: 1
+2025-03-01T14:01:49.813Z info: Original code line: 2
+2025-03-01T14:01:49.813Z info: Original code line: 3
+2025-03-01T14:01:49.813Z info: Original code line: 4
+2025-03-01T14:01:49.813Z info: Original code line: 5
+2025-03-01T14:01:49.814Z info: Original code line: 6
+2025-03-01T14:01:49.814Z info: Original code line: 7
+2025-03-01T14:01:49.814Z info: Original code line: 8
+2025-03-01T14:01:49.814Z info: Original code line: 9
+2025-03-01T14:01:49.814Z info: Original code line: 10
+2025-03-01T14:01:49.815Z info: Original code line: 11
+2025-03-01T14:01:49.815Z info: Original code line: 12
+2025-03-01T14:01:49.815Z info: Original code line: 13
+2025-03-01T14:01:49.815Z info: Original code line: 14
+2025-03-01T14:01:49.815Z info: Original code line: 15
+2025-03-01T14:01:49.815Z info: Original code line: 16
+2025-03-01T14:01:49.815Z info: Original code line: 17
+2025-03-01T14:01:49.815Z info: Original code line: 18
+2025-03-01T14:01:49.815Z info: Original code line: 19
+2025-03-01T14:01:49.815Z info: Original code line: 20
+2025-03-01T14:01:49.815Z info: Original code line: 21
+2025-03-01T14:01:49.815Z info: Original code line: 22
+2025-03-01T14:01:49.815Z info: Original code line: 23
+2025-03-01T14:01:49.816Z info: Original code line: 24
+2025-03-01T14:01:49.816Z info: Original code line: 25
+2025-03-01T14:01:49.816Z info: Original code line: 26
+2025-03-01T14:01:49.816Z info: Original code line: 27
+2025-03-01T14:01:49.816Z info: Original code line: 28
+2025-03-01T14:01:49.816Z info: Original code line: 29
+2025-03-01T14:01:49.816Z info: Original code line: 30
+2025-03-01T14:01:49.816Z info: Original code line: 31
+2025-03-01T14:01:49.816Z info: Original code line: 32
+2025-03-01T14:01:49.816Z info: Original code line: 33
+2025-03-01T14:01:49.816Z info: Original code line: 34
+2025-03-01T14:01:49.816Z info: Original code line: 35
+2025-03-01T14:01:49.816Z info: Original code line: 36
+2025-03-01T14:01:49.816Z info: Original code line: 37
+2025-03-01T14:01:49.816Z info: Original code line: 38
+2025-03-01T14:01:49.816Z info: Original code line: 39
+2025-03-01T14:01:49.817Z info: Original code line: 40
+2025-03-01T14:01:49.817Z info: Original code line: 41
+2025-03-01T14:01:49.817Z info: Original code line: 42
+2025-03-01T14:01:49.817Z info: Original code line: 43
+2025-03-01T14:01:49.817Z info: Original code line: 44
+2025-03-01T14:01:49.817Z info: Original code line: 45
+2025-03-01T14:01:49.817Z info: Original code line: 46
+2025-03-01T14:01:49.817Z info: Original code line: 47
+2025-03-01T14:01:49.817Z info: Original code line: 48
+2025-03-01T14:01:49.817Z info: Original code line: 49
+2025-03-01T14:01:49.817Z info: Original code line: 50
+2025-03-01T14:01:49.817Z info: Original code line: 51
+2025-03-01T14:01:49.817Z info: Original code line: 52
+2025-03-01T14:01:49.817Z info: Original code line: 53
+2025-03-01T14:01:49.817Z info: Original code line: 54
+2025-03-01T14:01:49.817Z info: Original code line: 55
+2025-03-01T14:01:49.817Z info: Original code line: 56
+2025-03-01T14:01:49.817Z info: Original code line: 57
+2025-03-01T14:01:49.817Z info: Original code line: 58
+2025-03-01T14:01:49.818Z info: Original code line: 59
+2025-03-01T14:01:49.818Z info: Original code line: 60
+2025-03-01T14:01:49.818Z info: Original code line: 61
+2025-03-01T14:01:49.818Z info: Original code line: 62
+2025-03-01T14:01:49.818Z info: Original code line: 63
+2025-03-01T14:01:49.818Z info: Original code line: 64
+2025-03-01T14:01:49.818Z info: Original code line: 65
+2025-03-01T14:01:49.818Z info: Original code line: 66
+2025-03-01T14:01:49.818Z info: Original code line: 67
+2025-03-01T14:01:49.818Z info: Original code line: 68
+2025-03-01T14:01:49.818Z info: Original code line: 69
+2025-03-01T14:01:49.818Z info: Original code line: 70
+2025-03-01T14:01:49.818Z info: Original code line: 71
+2025-03-01T14:01:49.818Z info: Original code line: 72
+2025-03-01T14:01:49.818Z info: Original code line: 73
+2025-03-01T14:01:49.818Z info: Original code line: 74
+2025-03-01T14:01:49.818Z info: Original code line: 75
+2025-03-01T14:01:49.818Z info: Original code line: 76
+2025-03-01T14:01:49.819Z info: Original code line: 77
+2025-03-01T14:01:49.819Z info: Original code line: 78
+2025-03-01T14:01:49.819Z info: Original code line: 79
+2025-03-01T14:01:49.819Z info: Original code line: 80
+2025-03-01T14:01:49.819Z info: Original code line: 81
+2025-03-01T14:01:49.819Z info: Original code line: 82
+2025-03-01T14:01:49.819Z info: Original code line: 83
+2025-03-01T14:01:49.819Z info: Original code line: 84
+2025-03-01T14:01:49.819Z info: Original code line: 85
+2025-03-01T14:01:49.819Z info: Original code line: 86
+2025-03-01T14:01:49.819Z info: Original code line: 87
+2025-03-01T14:01:49.819Z info: Original code line: 88
+2025-03-01T14:01:49.819Z info: Original code line: 89
+2025-03-01T14:01:49.819Z info: Original code line: 90
+2025-03-01T14:01:49.819Z info: Original code line: 91
+2025-03-01T14:01:49.819Z info: Original code line: 92
+2025-03-01T14:01:49.820Z info: Original code line: 93
+2025-03-01T14:01:49.820Z info: Original code line: 94
+2025-03-01T14:01:49.820Z info: Original code line: 95
+2025-03-01T14:01:49.820Z info: Original code line: 96
+2025-03-01T14:01:49.820Z info: Original code line: 97
+2025-03-01T14:01:49.820Z info: Original code line: 98
+2025-03-01T14:01:49.820Z info: Original code line: 99
+2025-03-01T14:01:49.820Z info: Original code line: 100
+2025-03-01T14:01:49.820Z info: Original code line: 101
+2025-03-01T14:01:49.820Z info: Original code line: 102
+2025-03-01T14:01:49.820Z info: Original code line: 103
+2025-03-01T14:01:49.820Z info: Original code line: 104
+2025-03-01T14:01:49.820Z info: Original code line: 105
+2025-03-01T14:01:49.820Z info: Original code line: 106
+2025-03-01T14:01:49.820Z info: Original code line: 107
+2025-03-01T14:01:49.820Z info: Original code line: 108
+2025-03-01T14:01:49.820Z info: Original code line: 109
+2025-03-01T14:01:49.820Z info: Original code line: 110
+2025-03-01T14:01:49.821Z info: Original code line: 111
+2025-03-01T14:01:49.821Z info: Original code line: 112
+2025-03-01T14:01:49.821Z info: Original code line: 113
+2025-03-01T14:01:49.821Z info: Original code line: 114
+2025-03-01T14:01:49.821Z info: Original code line: 115
+2025-03-01T14:01:49.821Z info: Original code line: 116
+2025-03-01T14:01:49.821Z info: Original code line: 117
+2025-03-01T14:01:49.821Z info: Original code line: 118
+2025-03-01T14:01:49.821Z info: Original code line: 119
+2025-03-01T14:01:49.821Z info: Original code line: 120
+2025-03-01T14:01:49.821Z info: Original code line: 121
+2025-03-01T14:01:49.821Z info: Original code line: 122
+2025-03-01T14:01:49.821Z info: Original code line: 123
+2025-03-01T14:01:49.821Z info: Original code line: 124
+2025-03-01T14:01:49.821Z info: Original code line: 125
+2025-03-01T14:01:49.821Z info: Original code line: 126
+2025-03-01T14:01:49.821Z info: Original code line: 127
+2025-03-01T14:01:49.821Z info: Original code line: 128
+2025-03-01T14:01:49.821Z info: Original code line: 129
+2025-03-01T14:01:49.822Z info: Original code line: 130
+2025-03-01T14:01:49.822Z info: Original code line: 131
+2025-03-01T14:01:49.822Z info: Original code line: 132
+2025-03-01T14:01:49.822Z info: Original code line: 133
+2025-03-01T14:01:49.822Z info: Original code line: 134
+2025-03-01T14:01:49.822Z info: Original code line: 135
+2025-03-01T14:01:49.822Z info: Original code line: 136
+2025-03-01T14:01:49.822Z info: Original code line: 137
+2025-03-01T14:01:49.822Z info: Original code line: 138
+2025-03-01T14:01:49.822Z info: Original code line: 139
+2025-03-01T14:01:49.822Z info: Original code line: 140
+2025-03-01T14:01:49.822Z info: Original code line: 141
+2025-03-01T14:01:49.822Z info: Original code line: 142
+2025-03-01T14:01:49.822Z info: Original code line: 143
+2025-03-01T14:01:49.822Z info: Original code line: 144
+2025-03-01T14:01:49.822Z info: Original code line: 145
+2025-03-01T14:01:49.822Z info: Original code line: 146
+2025-03-01T14:01:49.822Z info: Original code line: 147
+2025-03-01T14:01:49.822Z info: Original code line: 148
+2025-03-01T14:01:49.823Z info: Original code line: 149
+2025-03-01T14:01:49.823Z info: Original code line: 150
+2025-03-01T14:01:49.823Z info: Original code line: 151
+2025-03-01T14:01:49.823Z info: Original code line: 152
+2025-03-01T14:01:49.823Z info: Original code line: 153
+2025-03-01T14:01:49.823Z info: Original code line: 154
+2025-03-01T14:01:49.823Z info: Original code line: 155
+2025-03-01T14:01:49.823Z info: Original code line: 156
+2025-03-01T14:01:49.823Z info: Original code line: 157
+2025-03-01T14:01:49.823Z info: Original code line: 158
+2025-03-01T14:01:49.823Z info: Original code line: 159
+2025-03-01T14:01:49.823Z info: Original code line: 160
+2025-03-01T14:01:49.823Z info: Original code line: 161
+2025-03-01T14:01:49.823Z info: Original code line: 162
+2025-03-01T14:01:49.823Z info: Original code line: 163
+2025-03-01T14:01:49.824Z info: Original code line: 164
+2025-03-01T14:01:49.824Z info: Original code line: 165
+2025-03-01T14:01:49.824Z info: Original code line: 166
+2025-03-01T14:01:49.824Z info: Original code line: 167
+2025-03-01T14:01:49.824Z info: Original code line: 168
+2025-03-01T14:01:49.824Z info: Original code line: 169
+2025-03-01T14:01:49.824Z info: Original code line: 170
+2025-03-01T14:01:49.824Z info: Original code line: 171
+2025-03-01T14:01:49.824Z info: Original code line: 172
+2025-03-01T14:01:49.824Z info: Original code line: 173
+2025-03-01T14:01:49.824Z info: Original code line: 174
+2025-03-01T14:01:49.824Z info: Original code line: 175
+2025-03-01T14:01:49.824Z info: Original code line: 176
+2025-03-01T14:01:49.824Z info: Original code line: 177
+2025-03-01T14:01:49.824Z info: Original code line: 178
+2025-03-01T14:01:49.824Z info: Original code line: 179
+2025-03-01T14:01:49.824Z info: Original code line: 180
+2025-03-01T14:01:49.824Z info: Original code line: 181
+2025-03-01T14:01:49.825Z info: Original code line: 182
+2025-03-01T14:01:49.825Z info: Original code line: 183
+2025-03-01T14:01:49.825Z info: Original code line: 184
+2025-03-01T14:01:49.825Z info: Original code line: 185
+2025-03-01T14:01:49.825Z info: Original code line: 186
+2025-03-01T14:01:49.825Z info: Original code line: 187
+2025-03-01T14:01:49.825Z info: Original code line: 188
+2025-03-01T14:01:49.825Z info: Original code line: 189
+2025-03-01T14:01:49.825Z info: Original code line: 190
+2025-03-01T14:01:49.825Z info: Original code line: 191
+2025-03-01T14:01:49.825Z info: Original code line: 192
+2025-03-01T14:01:49.825Z info: Original code line: 193
+2025-03-01T14:01:49.825Z info: Original code line: 194
+2025-03-01T14:01:49.825Z info: Original code line: 195
+2025-03-01T14:01:49.825Z info: Original code line: 196
+2025-03-01T14:01:49.825Z info: Original code line: 197
+2025-03-01T14:01:49.825Z info: Original code line: 198
+2025-03-01T14:01:49.825Z info: Original code line: 199
+2025-03-01T14:01:49.825Z info: Original code line: 200
+2025-03-01T14:01:49.826Z info: Original code line: 201
+2025-03-01T14:01:49.826Z info: Original code line: 202
+2025-03-01T14:01:49.826Z info: Original code line: 203
+2025-03-01T14:01:49.826Z info: Original code line: 204
+2025-03-01T14:01:49.826Z info: Original code line: 205
+2025-03-01T14:01:49.826Z info: Original code line: 206
+2025-03-01T14:01:49.826Z info: Original code line: 207
+2025-03-01T14:01:49.826Z info: Original code line: 208
+2025-03-01T14:01:49.826Z info: Original code line: 209
+2025-03-01T14:01:49.826Z info: Original code line: 210
+2025-03-01T14:01:49.826Z info: Original code line: 211
+2025-03-01T14:01:49.826Z info: Original code line: 212
+2025-03-01T14:01:49.826Z info: Original code line: 213
+2025-03-01T14:01:49.826Z info: Original code line: 214
+2025-03-01T14:01:49.826Z info: Original code line: 215
+2025-03-01T14:01:49.826Z info: Original code line: 216
+2025-03-01T14:01:49.826Z info: Original code line: 217
+2025-03-01T14:01:49.826Z info: Original code line: 218
+2025-03-01T14:01:49.827Z info: Original code line: 219
+2025-03-01T14:01:49.827Z info: Original code line: 220
+2025-03-01T14:01:49.827Z info: Original code line: 221
+2025-03-01T14:01:49.827Z info: Original code line: 222
+2025-03-01T14:01:49.827Z info: Original code line: 223
+2025-03-01T14:01:49.827Z info: Original code line: 224
+2025-03-01T14:01:49.827Z info: Original code line: 225
+2025-03-01T14:01:49.827Z info: Original code line: 226
+2025-03-01T14:01:49.827Z info: Original code line: 227
+2025-03-01T14:01:49.827Z info: Original code line: 228
+2025-03-01T14:01:49.827Z info: Original code line: 229
+2025-03-01T14:01:49.827Z info: Original code line: 230
+2025-03-01T14:01:49.827Z info: Original code line: 231
+2025-03-01T14:01:49.827Z info: Original code line: 232
+2025-03-01T14:01:49.827Z info: Original code line: 233
+2025-03-01T14:01:49.827Z info: Original code line: 234
+2025-03-01T14:01:49.827Z info: Original code line: 235
+2025-03-01T14:01:49.827Z info: Original code line: 236
+2025-03-01T14:01:49.827Z info: Original code line: 237
+2025-03-01T14:01:49.827Z info: Original code line: 238
+2025-03-01T14:01:49.828Z info: Original code line: 239
+2025-03-01T14:01:49.828Z info: Original code line: 240
+2025-03-01T14:01:49.828Z info: Original code line: 241
+2025-03-01T14:01:49.828Z info: Original code line: 242
+2025-03-01T14:01:49.828Z info: Original code line: 243
+2025-03-01T14:01:49.828Z info: Original code line: 244
+2025-03-01T14:01:49.828Z info: Original code line: 245
+2025-03-01T14:01:49.828Z info: Original code line: 246
+2025-03-01T14:01:49.828Z info: Original code line: 247
+2025-03-01T14:01:49.828Z info: Original code line: 248
+2025-03-01T14:01:49.828Z info: Original code line: 249
+2025-03-01T14:01:49.828Z info: Original code line: 250
+2025-03-01T14:01:49.828Z info: Original code line: 251
+2025-03-01T14:01:49.828Z info: Original code line: 252
+2025-03-01T14:01:49.828Z info: Original code line: 253
+2025-03-01T14:01:49.828Z info: Original code line: 254
+2025-03-01T14:01:49.828Z info: Original code line: 255
+2025-03-01T14:01:49.828Z info: Original code line: 256
+2025-03-01T14:01:49.829Z info: Original code line: 257
+2025-03-01T14:01:49.829Z info: Original code line: 258
+2025-03-01T14:01:49.829Z info: Original code line: 259
+2025-03-01T14:01:49.829Z info: Original code line: 260
+2025-03-01T14:01:49.829Z info: Original code line: 261
+2025-03-01T14:01:49.829Z info: Original code line: 262
+2025-03-01T14:01:49.829Z info: Original code line: 263
+2025-03-01T14:01:49.829Z info: Original code line: 264
+2025-03-01T14:01:49.829Z info: Original code line: 265
+2025-03-01T14:01:49.829Z info: Original code line: 266
+2025-03-01T14:01:49.829Z info: Original code line: 267
+2025-03-01T14:01:49.829Z info: Original code line: 268
+2025-03-01T14:01:49.829Z info: Original code line: 269
+2025-03-01T14:01:49.829Z info: Original code line: 270
+2025-03-01T14:01:49.829Z info: Original code line: 271
+2025-03-01T14:01:49.829Z info: Original code line: 272
+2025-03-01T14:01:49.829Z info: Original code line: 273
+2025-03-01T14:01:49.829Z info: Original code line: 274
+2025-03-01T14:01:49.829Z info: Original code line: 275
+2025-03-01T14:01:49.829Z info: Original code line: 276
+2025-03-01T14:01:49.830Z info: Original code line: 277
+2025-03-01T14:01:49.830Z info: Original code line: 278
+2025-03-01T14:01:49.830Z info: Original code line: 279
+2025-03-01T14:01:49.830Z info: Original code line: 280
+2025-03-01T14:01:49.830Z info: Original code line: 281
+2025-03-01T14:01:49.830Z info: Original code line: 282
+2025-03-01T14:01:49.830Z info: Original code line: 283
+2025-03-01T14:01:49.830Z info: Original code line: 284
+2025-03-01T14:01:49.830Z info: Original code line: 285
+2025-03-01T14:01:49.830Z info: Original code line: 286
+2025-03-01T14:01:49.830Z info: Original code line: 287
+2025-03-01T14:01:49.830Z info: Original code line: 288
+2025-03-01T14:01:49.830Z info: Original code line: 289
+2025-03-01T14:01:49.830Z info: Original code line: 290
+2025-03-01T14:01:49.830Z info: Original code line: 291
+2025-03-01T14:01:49.830Z info: Original code line: 292
+2025-03-01T14:01:49.830Z info: Original code line: 293
+2025-03-01T14:01:49.830Z info: Original code line: 294
+2025-03-01T14:01:49.830Z info: Original code line: 295
+2025-03-01T14:01:49.831Z info: Original code line: 296
+2025-03-01T14:01:49.831Z info: Original code line: 297
+2025-03-01T14:01:49.831Z info: Original code line: 298
+2025-03-01T14:01:49.831Z info: Original code line: 299
+2025-03-01T14:01:49.831Z info: Original code line: 300
+2025-03-01T14:01:49.831Z info: Original code line: 301
+2025-03-01T14:01:49.831Z info: Original code line: 302
+2025-03-01T14:01:49.831Z info: Original code line: 303
+2025-03-01T14:01:49.831Z info: Original code line: 304
+2025-03-01T14:01:49.831Z info: Original code line: 305
+2025-03-01T14:01:49.831Z info: Original code line: 306
+2025-03-01T14:01:49.831Z info: Original code line: 307
+2025-03-01T14:01:49.831Z info: Original code line: 308
+2025-03-01T14:01:49.831Z info: Original code line: 309
+2025-03-01T14:01:49.831Z info: Original code line: 310
+2025-03-01T14:01:49.831Z info: Original code line: 311
+2025-03-01T14:01:49.831Z info: Original code line: 312
+2025-03-01T14:01:49.831Z info: Original code line: 313
+2025-03-01T14:01:49.831Z info: Original code line: 314
+2025-03-01T14:01:49.831Z info: Original code line: 315
+2025-03-01T14:01:49.832Z info: Original code line: 316
+2025-03-01T14:01:49.832Z info: Original code line: 317
+2025-03-01T14:01:49.832Z info: Original code line: 318
+2025-03-01T14:01:49.832Z info: Original code line: 319
+2025-03-01T14:01:49.832Z info: Original code line: 320
+2025-03-01T14:01:49.832Z info: Original code line: 321
+2025-03-01T14:01:49.832Z info: Original code line: 322
+2025-03-01T14:01:49.832Z info: Original code line: 323
+2025-03-01T14:01:49.832Z info: Original code line: 324
+2025-03-01T14:01:49.832Z info: Original code line: 325
+2025-03-01T14:01:49.832Z info: Original code line: 326
+2025-03-01T14:01:49.832Z info: Original code line: 327
+2025-03-01T14:01:49.832Z info: Original code line: 328
+2025-03-01T14:01:49.832Z info: Original code line: 329
+2025-03-01T14:01:49.832Z info: Original code line: 330
+2025-03-01T14:01:49.832Z info: Original code line: 331
+2025-03-01T14:01:49.832Z info: Original code line: 332
+2025-03-01T14:01:49.832Z info: Original code line: 333
+2025-03-01T14:01:49.832Z info: Original code line: 334
+2025-03-01T14:01:49.833Z info: Original code line: 335
+2025-03-01T14:01:49.833Z info: Original code line: 336
+2025-03-01T14:01:49.833Z info: Original code line: 337
+2025-03-01T14:01:49.833Z info: Original code line: 338
+2025-03-01T14:01:49.833Z info: Original code line: 339
+2025-03-01T14:01:49.833Z info: Original code line: 340
+2025-03-01T14:01:49.833Z info: Original code line: 341
+2025-03-01T14:01:49.833Z info: Original code line: 342
+2025-03-01T14:01:49.833Z info: Original code line: 343
+2025-03-01T14:01:49.833Z info: Original code line: 344
+2025-03-01T14:01:49.833Z info: Original code line: 345
+2025-03-01T14:01:49.833Z info: Original code line: 346
+2025-03-01T14:01:49.833Z info: Original code line: 347
+2025-03-01T14:01:49.833Z info: Original code line: 348
+2025-03-01T14:01:49.833Z info: Original code line: 349
+2025-03-01T14:01:49.833Z info: Original code line: 350
+2025-03-01T14:01:49.833Z info: Original code line: 351
+2025-03-01T14:01:49.833Z info: Original code line: 352
+2025-03-01T14:01:49.833Z info: Original code line: 353
+2025-03-01T14:01:49.833Z info: Original code line: 354
+2025-03-01T14:01:49.833Z info: Original code line: 355
+2025-03-01T14:01:49.834Z info: Original code line: 356
+2025-03-01T14:01:49.834Z info: Original code line: 357
+2025-03-01T14:01:49.834Z info: Original code line: 358
+2025-03-01T14:01:49.834Z info: Original code line: 359
+2025-03-01T14:01:49.834Z info: Original code line: 360
+2025-03-01T14:01:49.834Z info: Original code line: 361
+2025-03-01T14:01:49.834Z info: Original code line: 362
+2025-03-01T14:01:49.834Z info: Original code line: 363
+2025-03-01T14:01:49.834Z info: Original code line: 364
+2025-03-01T14:01:49.834Z info: Original code line: 365
+2025-03-01T14:01:49.834Z info: Original code line: 366
+2025-03-01T14:01:49.834Z info: Original code line: 367
+2025-03-01T14:01:49.834Z info: Original code line: 368
+2025-03-01T14:01:49.834Z info: Original code line: 369
+2025-03-01T14:01:49.834Z info: Original code line: 370
+2025-03-01T14:01:49.834Z info: Original code line: 371
+2025-03-01T14:01:49.834Z info: Original code line: 372
+2025-03-01T14:01:49.834Z info: Original code line: 373
+2025-03-01T14:01:49.834Z info: Original code line: 374
+2025-03-01T14:01:49.835Z info: Original code line: 375
+2025-03-01T14:01:49.835Z info: Original code line: 376
+2025-03-01T14:01:49.835Z info: Original code line: 377
+2025-03-01T14:01:49.835Z info: Original code line: 378
+2025-03-01T14:01:49.835Z info: Original code line: 379
+2025-03-01T14:01:49.835Z info: Original code line: 380
+2025-03-01T14:01:49.835Z info: Original code line: 381
+2025-03-01T14:01:49.835Z info: Original code line: 382
+2025-03-01T14:01:49.835Z info: Original code line: 383
+2025-03-01T14:01:49.835Z info: Original code line: 384
+2025-03-01T14:01:49.835Z info: Original code line: 385
+2025-03-01T14:01:49.835Z info: Original code line: 386
+2025-03-01T14:01:49.835Z info: Original code line: 387
+2025-03-01T14:01:49.835Z info: Original code line: 388
+2025-03-01T14:01:49.835Z info: Original code line: 389
+2025-03-01T14:01:49.835Z info: Original code line: 390
+2025-03-01T14:01:49.835Z info: Original code line: 391
+2025-03-01T14:01:49.835Z info: Original code line: 392
+2025-03-01T14:01:49.835Z info: Original code line: 393
+2025-03-01T14:01:49.835Z info: Original code line: 394
+2025-03-01T14:01:49.835Z info: Original code line: 395
+2025-03-01T14:01:49.836Z info: Original code line: 396
+2025-03-01T14:01:49.836Z info: Original code line: 397
+2025-03-01T14:01:49.836Z info: Original code line: 398
+2025-03-01T14:01:49.836Z info: Original code line: 399
+2025-03-01T14:01:49.836Z info: Additional original logic line: 400
+2025-03-01T14:01:49.836Z info: Additional original logic line: 401
+2025-03-01T14:01:49.836Z info: Additional original logic line: 402
+2025-03-01T14:01:49.836Z info: Additional original logic line: 403
+2025-03-01T14:01:49.836Z info: Additional original logic line: 404
+2025-03-01T14:01:49.836Z info: Additional original logic line: 405
+2025-03-01T14:01:49.836Z info: Additional original logic line: 406
+2025-03-01T14:01:49.836Z info: Additional original logic line: 407
+2025-03-01T14:01:49.836Z info: Additional original logic line: 408
+2025-03-01T14:01:49.836Z info: Additional original logic line: 409
+2025-03-01T14:01:49.836Z info: Additional original logic line: 410
+2025-03-01T14:01:49.836Z info: Additional original logic line: 411
+2025-03-01T14:01:49.836Z info: Additional original logic line: 412
+2025-03-01T14:01:49.836Z info: Additional original logic line: 413
+2025-03-01T14:01:49.836Z info: Additional original logic line: 414
+2025-03-01T14:01:49.837Z info: Additional original logic line: 415
+2025-03-01T14:01:49.837Z info: Additional original logic line: 416
+2025-03-01T14:01:49.837Z info: Additional original logic line: 417
+2025-03-01T14:01:49.837Z info: Additional original logic line: 418
+2025-03-01T14:01:49.837Z info: Additional original logic line: 419
+2025-03-01T14:01:49.837Z info: Additional original logic line: 420
+2025-03-01T14:01:49.837Z info: Additional original logic line: 421
+2025-03-01T14:01:49.837Z info: Additional original logic line: 422
+2025-03-01T14:01:49.837Z info: Additional original logic line: 423
+2025-03-01T14:01:49.837Z info: Additional original logic line: 424
+2025-03-01T14:01:49.837Z info: Additional original logic line: 425
+2025-03-01T14:01:49.837Z info: Additional original logic line: 426
+2025-03-01T14:01:49.837Z info: Additional original logic line: 427
+2025-03-01T14:01:49.837Z info: Additional original logic line: 428
+2025-03-01T14:01:49.837Z info: Additional original logic line: 429
+2025-03-01T14:01:49.837Z info: Additional original logic line: 430
+2025-03-01T14:01:49.837Z info: Additional original logic line: 431
+2025-03-01T14:01:49.837Z info: Additional original logic line: 432
+2025-03-01T14:01:49.837Z info: Additional original logic line: 433
+2025-03-01T14:01:49.837Z info: Additional original logic line: 434
+2025-03-01T14:01:49.838Z info: Additional original logic line: 435
+2025-03-01T14:01:49.838Z info: Additional original logic line: 436
+2025-03-01T14:01:49.838Z info: Additional original logic line: 437
+2025-03-01T14:01:49.838Z info: Additional original logic line: 438
+2025-03-01T14:01:49.838Z info: Additional original logic line: 439
+2025-03-01T14:01:49.838Z info: Additional original logic line: 440
+2025-03-01T14:01:49.838Z info: Additional original logic line: 441
+2025-03-01T14:01:49.838Z info: Additional original logic line: 442
+2025-03-01T14:01:49.838Z info: Additional original logic line: 443
+2025-03-01T14:01:49.838Z info: Additional original logic line: 444
+2025-03-01T14:01:49.838Z info: Additional original logic line: 445
+2025-03-01T14:01:49.838Z info: Additional original logic line: 446
+2025-03-01T14:01:49.838Z info: Additional original logic line: 447
+2025-03-01T14:01:49.838Z info: Additional original logic line: 448
+2025-03-01T14:01:49.838Z info: Additional original logic line: 449
+2025-03-01T14:01:49.838Z info: Additional original logic line: 450
+2025-03-01T14:01:49.838Z info: Additional original logic line: 451
+2025-03-01T14:01:49.838Z info: Additional original logic line: 452
+2025-03-01T14:01:49.839Z info: Additional original logic line: 453
+2025-03-01T14:01:49.839Z info: Additional original logic line: 454
+2025-03-01T14:01:49.839Z info: Additional original logic line: 455
+2025-03-01T14:01:49.839Z info: Additional original logic line: 456
+2025-03-01T14:01:49.839Z info: Additional original logic line: 457
+2025-03-01T14:01:49.839Z info: Additional original logic line: 458
+2025-03-01T14:01:49.839Z info: Additional original logic line: 459
+2025-03-01T14:01:49.839Z info: Additional original logic line: 460
+2025-03-01T14:01:49.839Z info: Additional original logic line: 461
+2025-03-01T14:01:49.839Z info: Additional original logic line: 462
+2025-03-01T14:01:49.839Z info: Additional original logic line: 463
+2025-03-01T14:01:49.839Z info: Additional original logic line: 464
+2025-03-01T14:01:49.839Z info: Additional original logic line: 465
+2025-03-01T14:01:49.839Z info: Additional original logic line: 466
+2025-03-01T14:01:49.839Z info: Additional original logic line: 467
+2025-03-01T14:01:49.839Z info: Additional original logic line: 468
+2025-03-01T14:01:49.839Z info: Additional original logic line: 469
+2025-03-01T14:01:49.839Z info: Additional original logic line: 470
+2025-03-01T14:01:49.839Z info: Additional original logic line: 471
+2025-03-01T14:01:49.839Z info: Additional original logic line: 472
+2025-03-01T14:01:49.840Z info: Additional original logic line: 473
+2025-03-01T14:01:49.840Z info: Additional original logic line: 474
+2025-03-01T14:01:49.840Z info: Additional original logic line: 475
+2025-03-01T14:01:49.840Z info: Additional original logic line: 476
+2025-03-01T14:01:49.840Z info: Additional original logic line: 477
+2025-03-01T14:01:49.840Z info: Additional original logic line: 478
+2025-03-01T14:01:49.840Z info: Additional original logic line: 479
+2025-03-01T14:01:49.840Z info: Additional original logic line: 480
+2025-03-01T14:01:49.840Z info: Additional original logic line: 481
+2025-03-01T14:01:49.840Z info: Additional original logic line: 482
+2025-03-01T14:01:49.840Z info: Additional original logic line: 483
+2025-03-01T14:01:49.840Z info: Additional original logic line: 484
+2025-03-01T14:01:49.840Z info: Additional original logic line: 485
+2025-03-01T14:01:49.840Z info: Additional original logic line: 486
+2025-03-01T14:01:49.840Z info: Additional original logic line: 487
+2025-03-01T14:01:49.840Z info: Additional original logic line: 488
+2025-03-01T14:01:49.840Z info: Additional original logic line: 489
+2025-03-01T14:01:49.840Z info: Additional original logic line: 490
+2025-03-01T14:01:49.840Z info: Additional original logic line: 491
+2025-03-01T14:01:49.840Z info: Additional original logic line: 492
+2025-03-01T14:01:49.841Z info: Additional original logic line: 493
+2025-03-01T14:01:49.841Z info: Additional original logic line: 494
+2025-03-01T14:01:49.841Z info: Additional original logic line: 495
+2025-03-01T14:01:49.841Z info: Additional original logic line: 496
+2025-03-01T14:01:49.841Z info: Additional original logic line: 497
+2025-03-01T14:01:49.841Z info: Additional original logic line: 498
+2025-03-01T14:01:49.841Z info: Additional original logic line: 499
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 500
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 501
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 502
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 503
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 504
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 505
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 506
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 507
+2025-03-01T14:01:49.843Z info: End-of-file original placeholder: 508
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 509
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 510
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 511
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 512
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 513
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 514
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 515
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 516
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 517
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 518
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 519
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 520
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 521
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 522
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 523
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 524
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 525
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 526
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 527
+2025-03-01T14:01:49.844Z info: End-of-file original placeholder: 528
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 529
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 530
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 531
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 532
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 533
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 534
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 535
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 536
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 537
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 538
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 539
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 540
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 541
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 542
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 543
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 544
+2025-03-01T14:01:49.845Z info: End-of-file original placeholder: 545
+2025-03-01T14:01:49.846Z info: End-of-file original placeholder: 546
+2025-03-01T14:01:49.846Z info: End-of-file original placeholder: 547
+2025-03-01T14:01:49.846Z info: End-of-file original placeholder: 548
+2025-03-01T14:01:49.846Z info: End-of-file original placeholder: 549
+2025-03-01T14:01:49.848Z info: Server is running on port 5000
+2025-03-01T14:01:49.848Z info: Initializing Trading Bot with enhanced features
+2025-03-01T14:01:49.848Z warn: Binance.US API keys not configured.
+2025-03-01T14:01:49.848Z warn: Crypto.com API keys not configured.
+2025-03-01T14:01:49.848Z info: Infura credentials not provided, skipping Infura initialization.

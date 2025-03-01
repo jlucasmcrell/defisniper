@@ -1,5 +1,5 @@
 import express from 'express';
-import logger from './logger.js';
+import { logger } from './logger.js';
 import { loadConfig } from './configManager.js';
 import settingsRouter from './routes/settings.js';
 import { executeTrades } from './services/tradeLogic.js';
@@ -17,6 +17,18 @@ app.get('/', (req, res) => {
 
 app.get('/status', (req, res) => {
   res.json({ status: 'Running', uptime: process.uptime() });
+});
+
+// New endpoint for live trading data
+app.get('/live-data', async (req, res) => {
+  try {
+    // Replace with actual live data fetching logic
+    const liveData = await getLiveData();
+    res.json(liveData);
+  } catch (error) {
+    logger.error('Error fetching live data:', error);
+    res.status(500).json({ error: 'Failed to fetch live data' });
+  }
 });
 
 // Simulated original trading logic and endpoints (lines 1-400)
@@ -82,3 +94,13 @@ process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully...');
   process.exit(0);
 });
+
+// Placeholder function for fetching live data - replace with actual implementation
+async function getLiveData() {
+    // This is a placeholder - replace with actual API call to get live trading data
+    // For example, you might use an exchange API to get the current price and portfolio balance.
+    return {
+        currentPrice: 1500, // Replace with actual current price
+        portfolioBalance: 10 // Replace with actual portfolio balance
+    };
+}

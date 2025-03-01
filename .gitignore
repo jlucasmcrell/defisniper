@@ -4,3 +4,4 @@ node_modules/.bin/asar
 alchemy-to-infura.js
 alchemy-to-infura.js
 /node_modules
+/frontend/node_modules
