@@ -1,8 +1,8 @@
 import express from 'express';
-import logger from './js/logger.js';
-import { loadConfig } from './js/configManager.js';
-import settingsRouter from './js/routes/settings.js';
-import { executeTrades } from './js/services/tradeLogic.js';
+import logger from './logger.js';
+import { loadConfig } from './configManager.js';
+import settingsRouter from './routes/settings.js';
+import { executeTrades } from './services/tradeLogic.js';
 
 const app = express();
 const config = loadConfig();
