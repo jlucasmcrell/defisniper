@@ -32,7 +32,7 @@ timeout /t 5 /nobreak > nul
 REM Start the frontend server
 echo Starting frontend server...
 cd frontend
-start "Frontend Server" cmd /k "serve -s build > frontend.log 2>&1 & type frontend.log"
+start "Frontend Server" cmd /k "npx serve -s build > frontend.log 2>&1 & type frontend.log"
 
 echo Bot and frontend are running. Press Ctrl+C to stop.
 pause
