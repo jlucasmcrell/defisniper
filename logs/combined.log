@@ -31,3 +31,20 @@
 {"level":"warn","message":"MetaMask private key not configured.","timestamp":"2025-03-01T09:06:11.108Z"}
 {"level":"info","message":"Trading bot started successfully.","timestamp":"2025-03-01T09:06:11.108Z"}
 {"level":"info","message":"Backend trading bot server running on port 5000","timestamp":"2025-03-01T09:06:11.111Z"}
+{"config":{"binanceUS":{"apiKey":"","secretKey":""},"cryptoCom":{"apiKey":"","secretKey":""},"infura":{"projectId":"","projectSecret":""},"metamask":{"privateKey":""}},"level":"info","message":"Trading bot initialized with existing exchange connectors","timestamp":"2025-03-01T09:32:31.307Z"}
+{"level":"warn","message":"Binance.US API keys not configured.","timestamp":"2025-03-01T09:32:31.310Z"}
+{"level":"warn","message":"Crypto.com API keys not configured.","timestamp":"2025-03-01T09:32:31.310Z"}
+{"level":"warn","message":"Infura configuration not set.","timestamp":"2025-03-01T09:32:31.310Z"}
+{"level":"warn","message":"Phantom wallet private key not configured.","timestamp":"2025-03-01T09:32:31.310Z"}
+{"level":"warn","message":"Trade parameters not configured.","timestamp":"2025-03-01T09:32:31.310Z"}
+{"level":"info","message":"Trading bot started successfully.","timestamp":"2025-03-01T09:32:31.311Z"}
+{"level":"info","message":"Backend trading bot server running on port 5000","timestamp":"2025-03-01T09:32:31.313Z"}
+{"binanceUS":{"apiKey":"","secretKey":""},"cryptoCom":{"apiKey":"","secretKey":""},"infura":{"projectId":"","projectSecret":""},"level":"info","message":"Trading bot initialized with the following configuration:","metamask":{"privateKey":""},"timestamp":"2025-03-01T09:41:51.862Z"}
+{"level":"warn","message":"Binance.US API keys not configured.","timestamp":"2025-03-01T09:41:51.865Z"}
+{"level":"warn","message":"Crypto.com API keys not configured.","timestamp":"2025-03-01T09:41:51.865Z"}
+{"level":"warn","message":"Infura configuration not set.","timestamp":"2025-03-01T09:41:51.866Z"}
+{"level":"warn","message":"Phantom wallet private key not configured.","timestamp":"2025-03-01T09:41:51.866Z"}
+{"level":"warn","message":"Trade parameters not configured.","timestamp":"2025-03-01T09:41:51.866Z"}
+{"level":"info","message":"Starting periodic scanning for token pairs...","timestamp":"2025-03-01T09:41:51.866Z"}
+{"level":"info","message":"Trading bot started successfully.","timestamp":"2025-03-01T09:41:51.866Z"}
+{"level":"info","message":"Backend trading bot server running on port 5000","timestamp":"2025-03-01T09:41:51.869Z"}

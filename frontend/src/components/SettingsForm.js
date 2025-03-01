@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 
 const SettingsForm = () => {
   const [config, setConfig] = useState({
-    binanceUS: { apiKey: "", secretKey: "" },
-    cryptoCom: { apiKey: "", secretKey: "" },
+    binanceUS: { apiKey: "", secretKey: "", baseCurrency: "USDT" },
+    cryptoCom: { apiKey: "", secretKey: "", baseCurrency: "USDT" },
     infura: { projectId: "", projectSecret: "" },
     phantom: { privateKey: "" },
     tradeParameters: {
@@ -13,13 +13,19 @@ const SettingsForm = () => {
       slippageTolerance: "",
       gasFees: "",
       tradeSize: "",
-      walletBuyPercentage: ""
+      walletBuyPercentage: "",
+      executionDelay: "",
+      rsiOverboughtThreshold: "",
+      rsiOversoldThreshold: ""
+    },
+    monitoring: {
+      popularPairs: ["BTC/USDT", "ETH/USDT", "ADA/USDT", "DOGE/USDT"],
+      uniswapPairs: ["USDT/ETH"]
     }
   });
   const [status, setStatus] = useState("");
 
   useEffect(() => {
-    // Fetch existing configuration from the backend
     fetch('/api/config')
       .then(res => res.json())
       .then(data => setConfig(data))
@@ -42,6 +48,30 @@ const SettingsForm = () => {
       tradeParameters: {
         ...prevConfig.tradeParameters,
         [field]: value
+      }
+    }));
+  };
+
+  const handleMonitoringChange = (section, index, value) => {
+    setConfig(prevConfig => {
+      let updatedArray = [...prevConfig.monitoring[section]];
+      updatedArray[index] = value;
+      return {
+        ...prevConfig,
+        monitoring: {
+          ...prevConfig.monitoring,
+          [section]: updatedArray
+        }
+      };
+    });
+  };
+
+  const handleAddMonitoringPair = (section) => {
+    setConfig(prevConfig => ({
+      ...prevConfig,
+      monitoring: {
+        ...prevConfig.monitoring,
+        [section]: [...prevConfig.monitoring[section], ""]
       }
     }));
   };
@@ -94,6 +124,7 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">Base Currency: USDT</p>
         </div>
 
         {/* Crypto.com Settings */}
@@ -117,6 +148,7 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">Base Currency: USDT</p>
         </div>
 
         {/* Infura Settings */}
@@ -154,6 +186,7 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">Phantom wallet will be used for Uniswap trades (USDT/ETH).</p>
         </div>
 
         {/* Trade Parameters Settings */}
@@ -168,6 +201,9 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">
+            Maximum percentage of your wallet funds to use per trade (e.g., "2" for 2%).
+          </p>
           <label className="block mt-2">
             Stop Loss:
             <input 
@@ -177,6 +213,9 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">
+            Percentage loss threshold to exit a trade (e.g., "1.5" for 1.5%).
+          </p>
           <label className="block mt-2">
             Take Profit:
             <input 
@@ -186,6 +225,9 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">
+            Target profit percentage at which to close a trade (e.g., "3" for 3%).
+          </p>
           <label className="block mt-2">
             Slippage Tolerance:
             <input 
@@ -195,6 +237,9 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">
+            Acceptable deviation from the expected price during execution (percentage value).
+          </p>
           <label className="block mt-2">
             Gas Fees:
             <input 
@@ -204,6 +249,9 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">
+            Gas fee amount to spend on transactions (in ETH, e.g., "0.001").
+          </p>
           <label className="block mt-2">
             Trade Size:
             <input 
@@ -213,6 +261,9 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">
+            The monetary value (in USDT) allocated per trade.
+          </p>
           <label className="block mt-2">
             Wallet Buy Percentage:
             <input 
@@ -222,6 +273,91 @@ const SettingsForm = () => {
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
+          <p className="mt-1 text-gray-400">
+            The percentage of your wallet balance to use when buying (e.g., "5" for 5%).
+          </p>
+          <label className="block mt-2">
+            Execution Delay:
+            <input 
+              type="text"
+              value={config.tradeParameters.executionDelay}
+              onChange={(e) => handleTradeParamChange('executionDelay', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <p className="mt-1 text-gray-400">
+            Delay in seconds before order execution (optional).
+          </p>
+          <label className="block mt-2">
+            RSI Overbought Threshold:
+            <input 
+              type="text"
+              value={config.tradeParameters.rsiOverboughtThreshold}
+              onChange={(e) => handleTradeParamChange('rsiOverboughtThreshold', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <p className="mt-1 text-gray-400">
+            RSI value above which the asset is considered overbought (typically 70).
+          </p>
+          <label className="block mt-2">
+            RSI Oversold Threshold:
+            <input 
+              type="text"
+              value={config.tradeParameters.rsiOversoldThreshold}
+              onChange={(e) => handleTradeParamChange('rsiOversoldThreshold', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <p className="mt-1 text-gray-400">
+            RSI value below which the asset is considered oversold (typically 30).
+          </p>
+        </div>
+
+        {/* Monitoring Settings: Popular Pairs */}
+        <div>
+          <h3 className="text-xl font-semibold">Monitoring - Popular Pairs</h3>
+          {config.monitoring.popularPairs.map((pair, index) => (
+            <label className="block mt-2" key={`popular-${index}`}>
+              Pair {index + 1}:
+              <input 
+                type="text"
+                value={pair}
+                onChange={(e) => handleMonitoringChange('popularPairs', index, e.target.value)}
+                className="w-full p-2 bg-gray-800 text-white mt-1"
+              />
+            </label>
+          ))}
+          <button
+            type="button"
+            onClick={() => handleAddMonitoringPair('popularPairs')}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-2"
+          >
+            Add Popular Pair
+          </button>
+        </div>
+
+        {/* Monitoring Settings: Uniswap Pairs */}
+        <div>
+          <h3 className="text-xl font-semibold">Monitoring - Uniswap Pairs</h3>
+          {config.monitoring.uniswapPairs.map((pair, index) => (
+            <label className="block mt-2" key={`uniswap-${index}`}>
+              Pair {index + 1}:
+              <input 
+                type="text"
+                value={pair}
+                onChange={(e) => handleMonitoringChange('uniswapPairs', index, e.target.value)}
+                className="w-full p-2 bg-gray-800 text-white mt-1"
+              />
+            </label>
+          ))}
+          <button
+            type="button"
+            onClick={() => handleAddMonitoringPair('uniswapPairs')}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-2"
+          >
+            Add Uniswap Pair
+          </button>
         </div>
 
         <button 
