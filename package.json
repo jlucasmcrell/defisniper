@@ -1,25 +1,32 @@
 {
-  "name": "defisniper",
+  "name": "live-trading-bot",
   "version": "1.0.0",
+  "description": "A live functional trading bot that uses live market data from Binance.US, Crypto.com, and Uniswap using Phantom wallet.",
   "type": "module",
-  "description": "Trading bot and frontend for DeFi Sniper",
   "main": "src/index.js",
   "scripts": {
-    "start": "concurrently \"node frontend/server.js\" \"node src/index.js\"",
-    "build": "npm --prefix frontend run build",
-    "setup": "node setup.js"
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
-  "author": "jlucasmcrell",
-  "license": "MIT",
   "dependencies": {
-    "concurrently": "^8.2.0",
+    "axios": "^1.4.0",
     "express": "^4.18.2",
-    "dotenv": "^16.0.3",
-    "axios": "^1.3.4",
-    "ws": "^8.13.0",
+    "technicalindicators": "^3.0.8",
+    "ethers": "^6.0.0",
     "winston": "^3.9.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
-  }
+  },
+  "keywords": [
+    "trading",
+    "bot",
+    "live-data",
+    "Binance.US",
+    "Crypto.com",
+    "Uniswap",
+    "Phantom"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
 }
