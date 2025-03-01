@@ -1,0 +1,17 @@
+{
+  "binanceUS": {
+    "apiKey": "",
+    "secretKey": ""
+  },
+  "cryptoCom": {
+    "apiKey": "",
+    "secretKey": ""
+  },
+  "infura": {
+    "projectId": "",
+    "projectSecret": ""
+  },
+  "metamask": {
+    "privateKey": ""
+  }
+}

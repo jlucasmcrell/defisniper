@@ -5,7 +5,16 @@ const SettingsForm = () => {
     binanceUS: { apiKey: "", secretKey: "" },
     cryptoCom: { apiKey: "", secretKey: "" },
     infura: { projectId: "", projectSecret: "" },
-    metamask: { privateKey: "" }
+    phantom: { privateKey: "" },
+    tradeParameters: {
+      maxPercentage: "",
+      stopLoss: "",
+      takeProfit: "",
+      slippageTolerance: "",
+      gasFees: "",
+      tradeSize: "",
+      walletBuyPercentage: ""
+    }
   });
   const [status, setStatus] = useState("");
 
@@ -17,11 +26,21 @@ const SettingsForm = () => {
       .catch(err => console.error(err));
   }, []);
 
-  const handleChange = (exchange, field, value) => {
+  const handleChange = (section, field, value) => {
     setConfig(prevConfig => ({
       ...prevConfig,
-      [exchange]: {
-        ...prevConfig[exchange],
+      [section]: {
+        ...prevConfig[section],
+        [field]: value
+      }
+    }));
+  };
+
+  const handleTradeParamChange = (field, value) => {
+    setConfig(prevConfig => ({
+      ...prevConfig,
+      tradeParameters: {
+        ...prevConfig.tradeParameters,
         [field]: value
       }
     }));
@@ -53,7 +72,8 @@ const SettingsForm = () => {
   return (
     <div className="p-4 text-white">
       <h2 className="text-2xl font-bold">Settings</h2>
-      <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+      <form onSubmit={handleSubmit} className="space-y-6 mt-4">
+        {/* Binance.US Settings */}
         <div>
           <h3 className="text-xl font-semibold">Binance.US</h3>
           <label className="block">
@@ -75,6 +95,8 @@ const SettingsForm = () => {
             />
           </label>
         </div>
+
+        {/* Crypto.com Settings */}
         <div>
           <h3 className="text-xl font-semibold">Crypto.com</h3>
           <label className="block">
@@ -96,6 +118,8 @@ const SettingsForm = () => {
             />
           </label>
         </div>
+
+        {/* Infura Settings */}
         <div>
           <h3 className="text-xl font-semibold">Infura</h3>
           <label className="block">
@@ -117,21 +141,92 @@ const SettingsForm = () => {
             />
           </label>
         </div>
+
+        {/* Phantom Wallet Settings */}
         <div>
-          <h3 className="text-xl font-semibold">MetaMask</h3>
+          <h3 className="text-xl font-semibold">Phantom Wallet</h3>
           <label className="block">
             Private Key:
             <input 
               type="text"
-              value={config.metamask.privateKey}
-              onChange={(e) => handleChange('metamask', 'privateKey', e.target.value)}
+              value={config.phantom.privateKey}
+              onChange={(e) => handleChange('phantom', 'privateKey', e.target.value)}
               className="w-full p-2 bg-gray-800 text-white mt-1"
             />
           </label>
         </div>
+
+        {/* Trade Parameters Settings */}
+        <div>
+          <h3 className="text-xl font-semibold">Trade Parameters</h3>
+          <label className="block">
+            Max Percentage:
+            <input 
+              type="text"
+              value={config.tradeParameters.maxPercentage}
+              onChange={(e) => handleTradeParamChange('maxPercentage', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <label className="block mt-2">
+            Stop Loss:
+            <input 
+              type="text"
+              value={config.tradeParameters.stopLoss}
+              onChange={(e) => handleTradeParamChange('stopLoss', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <label className="block mt-2">
+            Take Profit:
+            <input 
+              type="text"
+              value={config.tradeParameters.takeProfit}
+              onChange={(e) => handleTradeParamChange('takeProfit', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <label className="block mt-2">
+            Slippage Tolerance:
+            <input 
+              type="text"
+              value={config.tradeParameters.slippageTolerance}
+              onChange={(e) => handleTradeParamChange('slippageTolerance', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <label className="block mt-2">
+            Gas Fees:
+            <input 
+              type="text"
+              value={config.tradeParameters.gasFees}
+              onChange={(e) => handleTradeParamChange('gasFees', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <label className="block mt-2">
+            Trade Size:
+            <input 
+              type="text"
+              value={config.tradeParameters.tradeSize}
+              onChange={(e) => handleTradeParamChange('tradeSize', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+          <label className="block mt-2">
+            Wallet Buy Percentage:
+            <input 
+              type="text"
+              value={config.tradeParameters.walletBuyPercentage}
+              onChange={(e) => handleTradeParamChange('walletBuyPercentage', e.target.value)}
+              className="w-full p-2 bg-gray-800 text-white mt-1"
+            />
+          </label>
+        </div>
+
         <button 
           type="submit" 
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4"
         >
           Save Settings
         </button>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import SettingsForm from './components/SettingsForm';
+import SettingsForm from './components/SettingsForm.js';
 
 function App() {
   const [activeTab, setActiveTab] = useState("Dashboard");

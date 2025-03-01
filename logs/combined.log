@@ -19,3 +19,15 @@
 {"level":"info","message":"Starting trading on crypto-com","timestamp":"2025-03-01T08:40:34.820Z"}
 {"level":"info","message":"Trading bot started successfully","timestamp":"2025-03-01T08:40:34.820Z"}
 {"level":"info","message":"Bot started successfully","timestamp":"2025-03-01T08:40:34.820Z"}
+{"level":"info","message":"Trading bot initialized with existing exchange connectors","timestamp":"2025-03-01T08:51:19.161Z"}
+{"level":"info","message":"Starting trading on binance-us","timestamp":"2025-03-01T08:51:19.164Z"}
+{"level":"info","message":"Starting trading on crypto-com","timestamp":"2025-03-01T08:51:19.164Z"}
+{"level":"info","message":"Trading bot started successfully","timestamp":"2025-03-01T08:51:19.164Z"}
+{"level":"info","message":"Backend trading bot server running on port 5000","timestamp":"2025-03-01T08:51:19.167Z"}
+{"config":{"binanceUS":{"apiKey":"","secretKey":""},"cryptoCom":{"apiKey":"","secretKey":""},"infura":{"projectId":"","projectSecret":""},"metamask":{"privateKey":""}},"level":"info","message":"Trading bot initialized with existing exchange connectors","timestamp":"2025-03-01T09:06:11.105Z"}
+{"level":"warn","message":"Binance.US API keys not configured.","timestamp":"2025-03-01T09:06:11.107Z"}
+{"level":"warn","message":"Crypto.com API keys not configured.","timestamp":"2025-03-01T09:06:11.108Z"}
+{"level":"warn","message":"Infura configuration not set.","timestamp":"2025-03-01T09:06:11.108Z"}
+{"level":"warn","message":"MetaMask private key not configured.","timestamp":"2025-03-01T09:06:11.108Z"}
+{"level":"info","message":"Trading bot started successfully.","timestamp":"2025-03-01T09:06:11.108Z"}
+{"level":"info","message":"Backend trading bot server running on port 5000","timestamp":"2025-03-01T09:06:11.111Z"}

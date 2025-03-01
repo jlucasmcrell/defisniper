@@ -14,7 +14,16 @@ if (fs.existsSync(configPath)) {
     binanceUS: { apiKey: "", secretKey: "" },
     cryptoCom: { apiKey: "", secretKey: "" },
     infura: { projectId: "", projectSecret: "" },
-    metamask: { privateKey: "" }
+    phantom: { privateKey: "" },
+    tradeParameters: {
+      maxPercentage: "",
+      stopLoss: "",
+      takeProfit: "",
+      slippageTolerance: "",
+      gasFees: "",
+      tradeSize: "",
+      walletBuyPercentage: ""
+    }
   };
   fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 }
@@ -42,6 +51,7 @@ app.get('/api/status', (req, res) => {
 // Initialize trading bot logic using configuration
 const initTradingBot = () => {
   logger.info('Trading bot initialized with existing exchange connectors', { config });
+  
   // Initialize Binance.US connector if configured
   if (config.binanceUS && config.binanceUS.apiKey && config.binanceUS.secretKey) {
     logger.info('Initializing Binance.US connector');
@@ -66,12 +76,20 @@ const initTradingBot = () => {
     logger.warn('Infura configuration not set.');
   }
   
-  // Initialize MetaMask wallet if configured
-  if (config.metamask && config.metamask.privateKey) {
-    logger.info('Initializing MetaMask wallet');
-    // TODO: Initialize wallet connection using config.metamask
+  // Initialize Phantom wallet if configured
+  if (config.phantom && config.phantom.privateKey) {
+    logger.info('Initializing Phantom wallet connector');
+    // TODO: Initialize Phantom wallet connection using config.phantom
   } else {
-    logger.warn('MetaMask private key not configured.');
+    logger.warn('Phantom wallet private key not configured.');
+  }
+  
+  // Log current trade parameters for reference
+  if (config.tradeParameters) {
+    logger.info('Using trade parameters:', config.tradeParameters);
+    // TODO: Initialize or update trading strategy logic with trade parameters here
+  } else {
+    logger.warn('Trade parameters not configured.');
   }
   
   logger.info('Trading bot started successfully.');
