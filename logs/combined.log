@@ -1,0 +1,11 @@
+{"level":"error","message":"Failed to initialize trading bot: secureConfig.getAllConfigs is not a function","stack":"TypeError: secureConfig.getAllConfigs is not a function\n    at TradingBot.initialize (file:///C:/Users/Test/Desktop/NO%20API/DeFiSniperMain/src/trading/TradingBot.js:13:42)\n    at main (file:///C:/Users/Test/Desktop/NO%20API/DeFiSniperMain/src/index.js:12:19)","timestamp":"2025-03-01T01:21:55.163Z"}
+{"level":"info","message":"Trading bot initialized with existing exchange connectors","timestamp":"2025-03-01T01:24:57.226Z"}
+{"level":"info","message":"Starting trading on binance-us","timestamp":"2025-03-01T01:24:57.229Z"}
+{"level":"info","message":"Starting trading on crypto-com","timestamp":"2025-03-01T01:24:57.230Z"}
+{"level":"info","message":"Trading bot started successfully","timestamp":"2025-03-01T01:24:57.230Z"}
+{"level":"info","message":"Bot started successfully","timestamp":"2025-03-01T01:24:57.230Z"}
+{"level":"info","message":"Trading bot initialized with existing exchange connectors","timestamp":"2025-03-01T01:25:30.601Z"}
+{"level":"info","message":"Starting trading on binance-us","timestamp":"2025-03-01T01:25:30.604Z"}
+{"level":"info","message":"Starting trading on crypto-com","timestamp":"2025-03-01T01:25:30.604Z"}
+{"level":"info","message":"Trading bot started successfully","timestamp":"2025-03-01T01:25:30.605Z"}
+{"level":"info","message":"Bot started successfully","timestamp":"2025-03-01T01:25:30.605Z"}

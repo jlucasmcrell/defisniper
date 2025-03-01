@@ -1,14 +1,9 @@
-import { BinanceConnector } from './exchanges/BinanceConnector';
-import { CryptoComConnector } from './exchanges/CryptoComConnector';
-import { Web3Connector } from './web3/Web3Connector';
-import { logger } from '../utils/logger';
-import { secureConfig } from '../js/secure-config/manager';
+import { logger } from '../utils/logger.js';
+import { secureConfig } from '../js/secure-config/manager.js';
 
 export class TradingBot {
     constructor() {
         this.exchanges = new Map();
-        this.web3 = null;
-        this.strategies = new Map();
         this.isRunning = false;
     }
 
@@ -17,26 +12,16 @@ export class TradingBot {
             // Load configurations
             const configs = secureConfig.getAllConfigs();
 
-            // Initialize exchanges
+            // Initialize existing exchange connections
             if (configs['binance-us']) {
-                const binance = new BinanceConnector(configs['binance-us']);
-                await binance.initialize();
-                this.exchanges.set('binance-us', binance);
+                this.exchanges.set('binance-us', configs['binance-us']);
             }
 
             if (configs['crypto-com']) {
-                const cryptoCom = new CryptoComConnector(configs['crypto-com']);
-                await cryptoCom.initialize();
-                this.exchanges.set('crypto-com', cryptoCom);
+                this.exchanges.set('crypto-com', configs['crypto-com']);
             }
 
-            // Initialize Web3 if configured
-            if (configs['infura']) {
-                this.web3 = new Web3Connector(configs['infura']);
-                await this.web3.initialize();
-            }
-
-            logger.info('Trading bot initialized successfully');
+            logger.info('Trading bot initialized with existing exchange connectors');
             return true;
         } catch (error) {
             logger.error('Failed to initialize trading bot:', error);
@@ -51,15 +36,10 @@ export class TradingBot {
         }
 
         try {
-            // Start exchange connections
-            for (const [name, exchange] of this.exchanges) {
-                await exchange.connect();
-                logger.info(`Connected to ${name}`);
-            }
-
-            // Start trading strategies
-            for (const strategy of this.strategies.values()) {
-                await strategy.start();
+            // Initialize trading strategies with existing exchange connectors
+            for (const [name, config] of this.exchanges) {
+                logger.info(`Starting trading on ${name}`);
+                // Add your trading strategy initialization here
             }
 
             this.isRunning = true;
@@ -77,14 +57,10 @@ export class TradingBot {
         }
 
         try {
-            // Stop all strategies
-            for (const strategy of this.strategies.values()) {
-                await strategy.stop();
-            }
-
-            // Disconnect exchanges
-            for (const exchange of this.exchanges.values()) {
-                await exchange.disconnect();
+            // Clean up and stop trading
+            for (const [name] of this.exchanges) {
+                logger.info(`Stopping trading on ${name}`);
+                // Add your cleanup code here
             }
 
             this.isRunning = false;

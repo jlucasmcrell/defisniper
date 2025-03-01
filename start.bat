@@ -1,5 +1,16 @@
 @echo off
-echo Starting trading bot...
+echo Building frontend...
+
+REM Build the frontend
+npm run frontend-build
+
+if %ERRORLEVEL% NEQ 0 (
+    echo Error: Failed to build frontend.
+    pause
+    exit /b 1
+)
+
+echo Starting trading bot and frontend...
 
 REM Check if setup has been completed
 if not exist "secure-config\master.key" (
@@ -8,8 +19,8 @@ if not exist "secure-config\master.key" (
     exit /b 1
 )
 
-REM Start the bot
-node scripts/start.js
+REM Start the bot and frontend with ES modules
+npm start
 
 if %ERRORLEVEL% NEQ 0 (
     echo Error: Failed to start bot.
@@ -17,5 +28,5 @@ if %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-echo Bot is running. Press Ctrl+C to stop.
+echo Bot and frontend are running. Press Ctrl+C to stop.
 pause
